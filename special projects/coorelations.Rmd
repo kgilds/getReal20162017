@@ -1,0 +1,40 @@
+---
+title: "Coorelations"
+author: "Kevin Gilds, MPA"
+date: "September 1, 2016"
+output: html_document
+---
+
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+
+
+library(sqldf)
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+library(dplyr)
+library(dplyr)
+library(pander)
+library(ggplot2)
+library(effsize)
+library(knitr)
+
+```
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+hr <-dbReadTable(getReal_2016db,"hr_history")
+
+ae <-dbReadTable(getReal_2016db,"ae_history")
+
+am <-dbReadTable(getReal_2016db,"am_history")
+
+
+
+
+
+```
+
