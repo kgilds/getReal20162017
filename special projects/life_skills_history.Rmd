@@ -59,6 +59,16 @@ hr$council <-sub("Girl Scouts of Gulfcoast Florida Inc.",  "Gulfcoast Council", 
 
 ```
 
+# Introduction
+
+Matching survey data set from the past three membership years.
+
+* M1 = MY: 2013-2014
+
+* M2 = MY: 2014-2015
+
+* M3 = MY: 2015-2016
+
 ```{r}
 council_status <- with(hr,table(council, Year_Id))
 
@@ -72,17 +82,38 @@ pander(council_status)
 
 ## Healthy Relationships Life Skills
 
+### Post Survey Healthy Relationships
+
 ```{r}
 council_hr <- hr %>%
     group_by(council, Year_Id)
 
+```
+
+```{r}
+achieved_hr_post <- with(council_hr, table(council, Post >= 4.45))
+
+achieved_hr_post
+
+achieved_hr_post <-prop.table(achieved_hr_post,1)
+
+achieved_hr_post<-round(achieved_hr_post*100,2)
+
+pander(achieved_hr_post)
+
+```
+
+
+```{r}
+
 
 head(council_hr)
 
-council_hr_pre <-summarise(council_hr, Pre =mean(Pre))
-          
-#daily <- group_by(flights, year, month, day)
-#(per_day   <- summarise(daily, flights = n()))
+council_hr_post <-summarise(council_hr, Post =mean(Post))
+
+datatable (council_hr_post)
+
+
 ```
 
 ```{r}
@@ -101,12 +132,14 @@ pander(achieved_hr_p)
 
 ### Pre Surveys
 
-* M1  Membership Year 2013-2014
-
 ```{r}
+council_hr_pre <-summarise(council_hr, Pre =mean(Pre))
+
 
 datatable(council_hr_pre)
 
 
 ```
+
+
 
