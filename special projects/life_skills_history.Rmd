@@ -47,14 +47,24 @@ hr$council <-sub("Girl Scouts of Southeast Florida", "Southeast Council", fixed=
 
 hr$council <-sub("Southeast Council, Inc", "Southeast Council", fixed=TRUE, hr$council)
 
+hr$council <-sub("Southeast Council.", "Southeast Council", fixed=TRUE, hr$council)
+
 hr$council <-sub("Girl Scout Council of Tropical Florida", "Tropical Council", fixed = TRUE, hr$council)
 
 hr$council <-sub("Girl Scouts of West Central Florida", "West Central Council", fixed = TRUE, hr$council)
 
 hr$council <-sub("Girl Scout Council of the Panhandle", "Panhandle Council", fixed = TRUE, hr$council)
 
+hr$council <-sub("Girl Scouts of Gulfcoast Florida Inc.",  "Gulfcoast Council", fixed = TRUE, hr$council)
+
 ```
 
+```{r}
+council_status <- with(hr,table(council, Year_Id))
+
+pander(council_status)
+
+```
 
 
 
@@ -74,6 +84,24 @@ council_hr_pre <-summarise(council_hr, Pre =mean(Pre))
 #daily <- group_by(flights, year, month, day)
 #(per_day   <- summarise(daily, flights = n()))
 ```
+
+```{r}
+achieved_hr <- with(council_hr, table(council, Pre >= 4.45))
+
+achieved_hr
+
+achieved_hr_p <-prop.table(achieved_hr,1)
+
+achieved_hr_p<-round(achieved_hr_p*100,2)
+
+pander(achieved_hr_p)
+```
+
+
+
+### Pre Surveys
+
+* M1  Membership Year 2013-2014
 
 ```{r}
 
