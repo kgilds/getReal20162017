@@ -153,7 +153,6 @@ pander (council_hr_post)
 ```
 
 
-
 ### Pre Surveys
 ```{r}
 achieved_hr <- with(council_hr, table(council, Pre >= 4.45))
@@ -168,10 +167,80 @@ pander(achieved_hr_p)
 ```
 
 
+```{r}
+council_hr_pre <-summarise(council_hr, Pre =mean(Pre))
+
+
+datatable(council_hr_pre, rownames = FALSE)
+
+
+```
+
 
 ### General Information 
 
 The mean difference between pre and post survey is `r pander(mean(hr$hr.diff))`
+
+
+
+```{r}
+healthy_change_p <- ggplot(hr,(aes(x=hr.diff, y=council)))
+healthy_change_p + geom_count() + geom_vline(xintercept = 0, col="red") + labs(x="Pre and Post Difference", y="Pre Outcome Score", title="Healthy Releationship Survey Results")
+
+
+```
+
+
+```{r}
+year_id_hr <- hr %>%
+    group_by(Year_Id)
+
+year_id_hr <- summarize(year_id_hr, hr.diff = mean(hr.diff))
+
+pander(year_id_hr)
+
+year_id_hr$Year_Id <- as.factor(year_id_hr$Year_Id)
+
+summary(year_id_hr)
+
+
+
+ggplot(year_id_hr, aes(y=hr.diff, x=Year_Id, group=2)) + geom_line() + geom_point()
+
+```
+
+
+
+### Average Difference between Pre and Post by Council
+
+```{r}
+council_hr <- hr %>%
+    group_by(council)
+
+council_hr_c <-summarise(council_hr, hr.diff =mean(hr.diff))
+
+pander(council_hr_c)
+
+
+
+```
+
+
+### Avergage Difference between Pre and Post by Membership Year
+
+```{r council_hr}
+council_hr <- hr %>%
+    group_by(council, Year_Id)
+
+council_hr_diff <-summarise(council_hr, hr.diff =mean(hr.diff))
+
+pander(council_hr_diff)
+
+datatable(council_hr_diff)
+
+```
+
+
 
 ```{r}
 
@@ -213,82 +282,10 @@ cohen.d(hr$Pre, hr$Post)
 
 
 
-```{r}
-healthy_change_p <- ggplot(hr,(aes(x=hr.diff, y=council)))
-healthy_change_p + geom_count() + geom_hline(yintercept = 4.45) + geom_vline(xintercept = 0, col="red") + labs(x="Pre and Post Difference", y="Pre Outcome Score", title="Healthy Releationship Survey Results")
-
-
-```
-
-
-```{r}
-year_id_hr <- hr %>%
-    group_by(Year_Id)
-
-year_id_hr <- summarize(year_id_hr, hr.diff = mean(hr.diff))
-
-pander(year_id_hr)
-
-year_id_hr$Year_Id <- as.factor(year_id_hr$Year_Id)
-
-summary(year_id_hr)
-
-
-
-ggplot(year_id_hr, aes(y=hr.diff, x=Year_Id, group=2)) + geom_line()
-
-```
-
-
-
-### Average Difference between Pre and Post by Council
-
-```{r}
-council_hr <- hr %>%
-    group_by(council)
-
-council_hr_c <-summarise(council_hr, hr.diff =mean(hr.diff))
-
-pander(council_hr_c)
-
-
-
-```
-
-
-### Avergage Difference between Pre and Post by Membership Year
-
-```{r council_hr}
-council_hr <- hr %>%
-    group_by(council, Year_Id)
-
-council_hr_diff <-summarise(council_hr, hr.diff =mean(hr.diff))
-
-pander(council_hr_diff)
-
-datatable(council_hr_diff)
-
-```
 
 
 
 
-### Pre Surveys
-
-```{r}
-
-
-```
-
-
-```{r}
-council_hr_pre <-summarise(council_hr, Pre =mean(Pre))
-
-
-datatable(council_hr_pre)
-
-
-```
 
 
 
