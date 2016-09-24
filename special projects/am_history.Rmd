@@ -1,0 +1,286 @@
+---
+title: "am_history"
+author: "Kevin Gilds, MPA"
+date: "September 24, 2016"
+output: html_document
+---
+
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+
+
+library(sqldf)
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+library(DT)
+library(getREAL)
+library(dplyr)
+library(pander)
+library(ggplot2)
+library(effsize)
+library(knitr)
+library(catspec)
+
+```
+
+
+```{r read_databases}
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+am <-dbReadTable(getReal_2016db,"am_history")
+
+
+```
+
+
+```{r}
+## Change council names to be consistent wiht how they displayed with the surveys
+am$council <-sub("Girl Scouts of the Gateway Council", "Gateway Council", fixed=TRUE, am$council)
+
+am$council <-sub("Girl Scouts of Citrus Council", "Citrus Council", fixed=TRUE, am$council)
+
+am$council <-sub("Girl Scouts of Southeast Florida", "Southeast Council", fixed=TRUE, am$council)
+
+am$council <-sub("Southeast Council, Inc", "Southeast Council", fixed=TRUE, am$council)
+
+am$council <-sub("Southeast Council.", "Southeast Council", fixed=TRUE, am$council)
+
+am$council <-sub("Girl Scout Council of Tropical Florida", "Tropical Council", fixed = TRUE, am$council)
+
+am$council <-sub("Girl Scouts of West Central Florida", "West Central Council", fixed = TRUE, am$council)
+
+am$council <-sub("Girl Scout Council of the Panhandle", "Panhandle Council", fixed = TRUE, am$council)
+
+am$council <-sub("Girl Scouts of Gulfcoast Florida Inc.",  "Gulfcoast Council", fixed = TRUE, am$council)
+
+```
+
+# Introduction
+
+Matching survey data set from the past three membership years.
+
+* M1 = MY: 2013-2014
+
+* M2 = MY: 2014-2015
+
+* M3 = MY: 2015-2016
+
+
+# Data Entry Status 
+
+```{r}
+council_status <- with(am,table(council, Year_Id))
+
+pander(council_status)
+
+```
+
+
+
+# Academic Mastery
+
+##Post Survey History
+
+```{r}
+
+council_am <- am %>%
+    group_by(council)
+
+achieved_am_post <- with(council_am, table(council, Post >= 4.8))
+
+achieved_am_post <-prop.table(achieved_am_post,1)
+
+achieved_am_post<-round(achieved_am_post*100,2)
+
+
+
+pander(achieved_am_post)
+
+```
+
+
+
+#### Post survey by Year (by Counts)
+```{r}
+
+
+council_am_test <-council_am %>%
+    group_by(council,Year_Id) %>%
+    count(Post >=4.8)
+
+datatable(council_am_test)
+
+```
+
+
+
+### Post Survey AM Average Score
+
+```{r}
+am_avg <- am %>%
+    group_by(Year_Id) %>%
+    summarise(Post =mean(Post))
+
+pander(am_avg)
+
+```
+
+```{r}
+ggplot(am_avg, aes(y=Post, x=Year_Id, group=2)) + geom_line() + geom_point()
+
+
+```
+
+
+### Post Survey Average Score by Council
+
+```{r council_am_post_tbl}
+
+
+head(council_am)
+
+council_am_post <-summarise(council_am, Post =mean(Post))
+
+pander (council_am_post)
+
+```
+
+
+### Pre Surveys
+```{r}
+achieved_am <- with(council_am, table(council, Pre >= 4.8))
+
+achieved_am
+
+achieved_am_p <-prop.table(achieved_am,1)
+
+achieved_am_p<-round(achieved_am_p*100,2)
+
+pander(achieved_am_p)
+```
+
+
+```{r}
+council_am_pre <-summarise(council_am, Pre =mean(Pre))
+
+
+datatable(council_am_pre, rownames = FALSE)
+
+
+```
+
+
+### General Information 
+
+The mean difference between pre and post survey is `r pander(mean(am$am.diff))`
+
+
+
+```{r}
+am_change_p <- ggplot(am,(aes(x=am.diff, y=council)))
+am_change_p + geom_count() + geom_vline(xintercept = 0, col="red") + labs(x="Pre and Post Difference", y="Pre Outcome Score", title="Healthy Releationship Survey Results")
+
+
+```
+
+
+```{r}
+year_id_am <- am %>%
+    group_by(Year_Id)
+
+year_id_am <- summarize(year_id_am, am.diff = mean(am.diff))
+
+pander(year_id_am)
+
+year_id_am$Year_Id <- as.factor(year_id_am$Year_Id)
+
+summary(year_id_am)
+
+
+
+ggplot(year_id_am, aes(y=am.diff, x=Year_Id, group=2)) + geom_line() + geom_point()
+
+```
+
+
+
+### Average Difference between Pre and Post by Council
+
+```{r}
+council_am <- am %>%
+    group_by(council)
+
+council_am_c <-summarise(council_am, am.diff =mean(am.diff))
+
+pander(council_am_c)
+
+
+
+```
+
+
+### Avergage Difference between Pre and Post by Membership Year
+
+```{r council_am}
+council_am <- am %>%
+    group_by(council, Year_Id)
+
+council_am_diff <-summarise(council_am, am.diff =mean(am.diff))
+
+pander(council_am_diff)
+
+datatable(council_am_diff)
+
+```
+
+
+
+```{r}
+
+
+
+
+
+hist(am$am.diff, col="red", freq=FALSE)
+am_dent <- density(am$am.diff)
+lines(am_dent)
+
+
+
+```
+
+QNorm test
+```{r}
+
+qqnorm(am$am.diff)
+qqline(am$am.diff, col = 2)
+
+```
+
+Shapiro Test
+```{r}
+shapiro.test(am$am.diff)
+```
+
+
+T-Test
+
+```{r}
+t.test(am$Pre, am$Post)
+
+
+
+cohen.d(am$Pre, am$Post)
+```
+
+
+
+
+
+
+
+
+
+
