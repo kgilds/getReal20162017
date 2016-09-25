@@ -1,0 +1,169 @@
+---
+title: "language_arts_history"
+author: "Kevin Gilds, MPA"
+date: "September 24, 2016"
+output: html_document
+---
+
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+
+
+library(sqldf)
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+library(DT)
+library(getREAL)
+library(dplyr)
+library(pander)
+library(ggplot2)
+library(effsize)
+library(knitr)
+library(catspec)
+
+```
+
+```{r}
+lang_1516 <-dbReadTable(getReal_2016db, "langarts_1516")
+
+
+```
+
+```{r}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Reports/MY-2014-2015/Summ Evaluation Report/data")
+
+getReal_2015db<- dbConnect(SQLite(), dbname="data_Final_GetReal_2014_2015.sqlite")
+
+
+#lang_1415 <- readRDS("langarts_final.RDS")
+
+#dim(lang_1415)
+
+#head(lang_1415)
+
+
+dbListTables(getReal_2015db)
+
+
+lang_1415 <-dbReadTable(getReal_2015db, "langarts_final_matched")
+
+head(lang_1415)
+
+lang_1415 <- lang_1415%>% 
+    select(council.x, q4Grade, q1Grade, langDiff) %>%
+    rename(council = council.x, finish = q4Grade, baseline = q1Grade)
+
+head(lang_1415)
+
+```
+
+
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Analyis_data")
+
+getReal_2014db<- dbConnect(SQLite(), dbname="getReal.sqlite")
+
+lang_1314 <-dbReadTable(getReal_2014db, "langArtsFinal")
+
+str(lang_1314)
+head(lang_1314)
+
+```
+
+```{r}
+three_14 <- lang_1314[grep("^314", lang_1314$girlCode),]
+
+three_14
+
+three_14 <- three_14 %>%
+    mutate("council" = "Gulfcoast Council") %>%
+    mutate("langdiff" = finish - start)
+
+three_14
+
+```
+
+
+
+```{r}
+
+three_13 <- lang_1314[grep("^313", lang_1314$girlCode),]
+
+
+
+three_13 <-three_13 %>% 
+    mutate("council" = "Gateway Council") %>%
+    mutate("langdiff" = finish- start)
+
+
+
+three_13
+
+
+```
+
+```{r}
+
+three_20 <- lang_1314[grep("^320", lang_1314$girlCode),]
+
+three_20
+
+three_20 <- three_20 %>%
+    mutate("council" = "West Central Council") %>%
+    mutate("langdiff" = finish - start)
+
+
+three_20
+
+```
+
+
+```{r}
+three_21 <- lang_1314[grep("^321", lang_1314$girlCode),]
+
+three_21
+
+three_21 <- three_21 %>%
+    mutate("council" = "Southeast Council") %>%
+    mutate("langdiff" = finish - start)
+
+
+three_21
+
+```
+
+
+```{r}
+
+three_22 <- lang_1314[grep("^322", lang_1314$girlCode),]
+
+three_22
+
+three_22 <- three_22 %>%
+    mutate("council" = "Pandhandle Council") %>%
+    mutate("langdiff" = finish - start)
+
+
+three_22
+```
+
+
+```{r}
+
+gateway_gulf <- rbind(three_13, three_14)
+
+wcf <- rbind(gateway_gulf, three_20)
+
+southeast <- rbind(wcf, three_21)
+
+lang_1314_a <- rbind(southeast, three_22)
+
+dim(lang_1314_a)
+
+```
+
+
