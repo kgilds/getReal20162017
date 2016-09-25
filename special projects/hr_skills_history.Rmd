@@ -30,10 +30,6 @@ setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
 
 hr <-dbReadTable(getReal_2016db,"hr_history")
 
-ae <-dbReadTable(getReal_2016db,"ae_history")
-
-am <-dbReadTable(getReal_2016db,"am_history")
-
 
 ```
 
