@@ -210,6 +210,31 @@ summary(lang_history)
 ```
 
 
+```{r}
+## Change council names to be consistent wiht how they displayed with the surveys
+lang_history$council <-sub("Girl Scouts of the Gateway Council", "Gateway Council", fixed=TRUE, lang_history$council)
+
+lang_history$council <-sub("Girl Scouts of Citrus Council", "Citrus Council", fixed=TRUE, lang_history$council)
+
+lang_history$council <-sub("Girl Scouts of Southeast Florida", "Southeast Council", fixed=TRUE, lang_history$council)
+
+lang_history$council <-sub("Southeast Council, Inc", "Southeast Council", fixed=TRUE, lang_history$council)
+
+lang_history$council <-sub("Southeast Council.", "Southeast Council", fixed=TRUE, lang_history$council)
+
+lang_history$council <-sub("Girl Scout Council of Tropical Florida", "Tropical Council", fixed = TRUE, lang_history$council)
+
+lang_history$council <-sub("Girl Scouts of West Central Florida", "West Central Council", fixed = TRUE, lang_history$council)
+
+lang_history$council <-sub("Girl Scout Council of the Panhandle", "Panhandle Council", fixed = TRUE, lang_history$council)
+
+lang_history$council <-sub("Pandhandle Council", "Panhandle Council", fixed = TRUE, lang_history$council)
+
+
+lang_history$council <-sub("Girl Scouts of Gulfcoast Florida Inc.",  "Gulfcoast Council", fixed = TRUE, lang_history$council)
+
+```
+
 
 ```{r}
 lang_history_filtered <- lang_history %>%
@@ -242,3 +267,41 @@ cohen.d(lang_history_filtered$baseline, lang_history_filtered$final)
 
 ```
 
+
+```{r}
+
+council_lang_summary <- lang_history %>%
+    group_by(Year_Id)
+
+council_lang_summary
+
+council_lang_summary <-summarise(council_lang_summary, Grade_Change =mean(Grade_Change))
+
+council_lang_summary
+
+
+```
+
+
+
+
+```{r}
+
+ggplot(council_lang_summary, aes(y=Grade_Change, x=Year_Id, group=2)) + geom_line() + geom_point()
+
+```
+
+
+
+```{r }
+
+council_lang_summary_c <- lang_history %>%
+    group_by(council,Year_Id)
+
+
+council_lang_summary_c <-summarise(council_lang_summary_c, Grade_Change =mean(Grade_Change))
+
+
+pander(council_lang_summary_c)
+
+ggplot(council_lang_summary_c, aes(y=Grade_Change, x=Year_Id, colour=council, group=2)) + geom_line()  + geom_point()
