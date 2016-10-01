@@ -6,13 +6,13 @@ output: html_document
 ---
 
 
-```{r echo=FALSE, warning=FALSE, message=FALSE}
+```{r lang_dbase, echo=FALSE, warning=FALSE, message=FALSE}
 
 
 library(sqldf)
-setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite") 
 
-getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite") #established connection with database
 
 library(DT)
 library(getREAL)
@@ -25,192 +25,167 @@ library(catspec)
 
 ```
 
-```{r}
-lang_1516 <-dbReadTable(getReal_2016db, "langarts_1516")
+```{r lang_1516, echo=FALSE}
+lang_1516 <-dbReadTable(getReal_2016db, "langarts_1516") #read langarts1516 table
 
 lang_1516 <- lang_1516 %>%
-    select(council, 1:4,6) %>%
-    mutate("Year_Id" = "M3")
+    select(council, 1:4,6) %>%  #select variables of interest
+    mutate("Year_Id" = "M3")  # add new variable and name M3
     
 
 
 ```
 
-```{r}
+```{r lang_1415, echo=FALSE}
 
-setwd("C:/Users/kevin/Dropbox/GetReal/Reports/MY-2014-2015/Summ Evaluation Report/data")
+setwd("C:/Users/kevin/Dropbox/GetReal/Reports/MY-2014-2015/Summ Evaluation Report/data") #change working directory to find database
 
-getReal_2015db<- dbConnect(SQLite(), dbname="data_Final_GetReal_2014_2015.sqlite")
+getReal_2015db<- dbConnect(SQLite(),   dbname="data_Final_GetReal_2014_2015.sqlite") #read database
 
-
-#lang_1415 <- readRDS("langarts_final.RDS")
-
-#dim(lang_1415)
-
-#head(lang_1415)
-
-
-
-
-lang_1415 <-dbReadTable(getReal_2015db, "langarts_final_matched")
+lang_1415 <-dbReadTable(getReal_2015db, "langarts_final_matched") #read lang_1415
 
 
 
 lang_1415 <- lang_1415%>% 
-    select(girlCode,council.x, q4Grade, q1Grade, langDiff) %>%
-    rename(council = council.x, final = q4Grade, baseline = q1Grade, Grade_Change =langDiff) %>%
-    mutate("Year_Id" = "M2")
+    select(girlCode,council.x, q4Grade, q1Grade, langDiff) %>% #select variables
+    rename(council = council.x, final = q4Grade, baseline = q1Grade, Grade_Change =langDiff) %>%  #rename variable names to match rest of df
+    mutate("Year_Id" = "M2") #add variable and name it M2. 
 
 ```
 
 
 
-```{r}
+```{r lang_1314, echo=FALSE}
 setwd("C:/Users/kevin/Dropbox/GetReal/Analyis_data")
 
-getReal_2014db<- dbConnect(SQLite(), dbname="getReal.sqlite")
+getReal_2014db<- dbConnect(SQLite(), dbname="getReal.sqlite") #find database 
 
-lang_1314 <-dbReadTable(getReal_2014db, "langArtsFinal")
+lang_1314 <-dbReadTable(getReal_2014db, "langArtsFinal") #Need langarts table 13_14
 
 
 
 ```
 
-```{r}
-three_14 <- lang_1314[grep("^314", lang_1314$girlCode),]
+```{r three_14, echo=FALSE}
+three_14 <- lang_1314[grep("^314", lang_1314$girlCode),] #find and subset council codes with 314
 
 
 
 three_14 <- three_14 %>%
-    mutate("council" = "Gulfcoast Council") %>%
-    mutate("langdiff" = finish - start)
+    mutate("council" = "Gulfcoast Council") %>% #add council variable and name it
+    mutate("langdiff" = finish - start) #add vairable and name it to match other df
 
 ```
 
 
 
-```{r}
+```{r three_13, echo=FALSE}
 
-three_13 <- lang_1314[grep("^313", lang_1314$girlCode),]
+three_13 <- lang_1314[grep("^313", lang_1314$girlCode),] #find and subset girl codess with 313
 
 
 
 three_13 <-three_13 %>% 
-    mutate("council" = "Gateway Council") %>%
-    mutate("langdiff" = finish- start)
+    mutate("council" = "Gateway Council") %>% #add council varialbe and name it
+    mutate("langdiff" = finish- start) #add variable to find grade difference for comparison
 
 
 ```
 
-```{r}
+```{r three_20, echo=FALSE}
 
-three_20 <- lang_1314[grep("^320", lang_1314$girlCode),]
+three_20 <- lang_1314[grep("^320", lang_1314$girlCode),] #find girlcodes that start with 320 and subset them
 
 
 three_20 <- three_20 %>%
-    mutate("council" = "West Central Council") %>%
-    mutate("langdiff" = finish - start)
+    mutate("council" = "West Central Council") %>% #add council varialbe to summarize data and match other datasets
+    mutate("langdiff" = finish - start) #add calculdated field to provide analyiss.
 
 
 ```
 
 
-```{r}
-three_21 <- lang_1314[grep("^321", lang_1314$girlCode),]
+```{r three_21, echo=FALSE}
+three_21 <- lang_1314[grep("^321", lang_1314$girlCode),] #find girlCode that starts with 321 and subset them
 
 
 three_21 <- three_21 %>%
-    mutate("council" = "Southeast Council") %>%
-    mutate("langdiff" = finish - start)
+    mutate("council" = "Southeast Council") %>% #add council to match other data sets and 
+    mutate("langdiff" = finish - start)#add calculated fied to mathch other datasets for analysis
 
 
 ```
 
 
-```{r}
+```{r three_22, echo=FALSE}
 
-three_22 <- lang_1314[grep("^322", lang_1314$girlCode),]
+three_22 <- lang_1314[grep("^322", lang_1314$girlCode),] #find girlCode records that start with 322 and subset theem
 
 
 three_22 <- three_22 %>%
-    mutate("council" = "Pandhandle Council") %>%
-    mutate("langdiff" = finish - start)
+    mutate("council" = "Pandhandle Council") %>% #add variable council to summarize data and match other datasets
+    mutate("langdiff" = finish - start) #add calculated field to match other datasets 
    
 
 ```
 
 
-```{r}
+```{r the_binding, echo=FALSE}
 
-gateway_gulf <- rbind(three_13, three_14)
+gateway_gulf <- rbind(three_13, three_14) #bind council 313 and 314
 
-wcf <- rbind(gateway_gulf, three_20)
+wcf <- rbind(gateway_gulf, three_20) #bind council wcf with 313_314
 
-southeast <- rbind(wcf, three_21)
+southeast <- rbind(wcf, three_21)  #bind southeast, with 313, 314, and 320
 
-lang_1314_a <- rbind(southeast, three_22)
+lang_1314_a <- rbind(southeast, three_22) #bind southeast with 322)
 
 dim(lang_1314_a)
 
 lang_1314_a <- lang_1314_a %>%
-    mutate("Year_Id" = "M1") %>%
-    rename(baseline = start, final = finish, Grade_Change = langdiff)
+    mutate("Year_Id" = "M1") %>% #add MY variable to remind what year this is
+    rename(baseline = start, final = finish, Grade_Change = langdiff) # re-name variable to match other set and merge all togheter
 
 ```
 
-```{r}
-head(lang_1516)
-head(lang_1415)
-head(lang_1314_a)
-
-```
-
-```{r}
-lang_1516 <- lang_1516[,c(2,1,6,3,4,5)]
+```{r reorder_1516, echo=FALSE}
+lang_1516 <- lang_1516[,c(2,1,6,3,4,5)] #reorder variables
 #df2[,c(1,3,2,4)]
 
-head(lang_1516)
+
 
 ```
 
 
 
-```{r}
-lang_1314_a<-lang_1314_a[,c(1,4, 6,2,3,5)]
+```{r reorder 1314, echo=FALSE}
+lang_1314_a<-lang_1314_a[,c(1,4, 6,2,3,5)] #rearrange variables
 #df2[,c(1,3,2,4)]
 
-head(lang_1314_a)
+
 
 ```
 
-```{r}
-lang_1415 <- lang_1415[,c(1,2,6, 4, 3, 5)]
+```{r reorder_1415}
+lang_1415 <- lang_1415[,c(1,2,6, 4, 3, 5)] #reorder 1415
 
 head(lang_1415)
 
 ```
 
-```{r}
+```{r lang_history, echo=FALSE}
 
-lang_1 <-rbind(lang_1314_a, lang_1415)
+lang_1 <-rbind(lang_1314_a, lang_1415) #combine 1314 and 1415
 
-lang_history <- rbind(lang_1, lang_1516)
-
-dim(lang_history)
-
-
-
+lang_history <- rbind(lang_1, lang_1516) #combined 1415_1314 & 1516
 
 
 
 ```
 
-```{r}
-summary(lang_history)
-```
 
 
-```{r}
+```{r council_name_fix}
 ## Change council names to be consistent wiht how they displayed with the surveys
 lang_history$council <-sub("Girl Scouts of the Gateway Council", "Gateway Council", fixed=TRUE, lang_history$council)
 
@@ -236,20 +211,20 @@ lang_history$council <-sub("Girl Scouts of Gulfcoast Florida Inc.",  "Gulfcoast 
 ```
 
 
-```{r}
+```{r lang_history_filtered, echo=FALSE}
 lang_history_filtered <- lang_history %>%
-    filter(baseline !=4 | final != 4)
+    filter(baseline !=4 | final != 4) #filter out all A's. Compare means
 
-summary(lang_history_filtered$Grade_Change)
+summary(lang_history_filtered$Grade_Change) #summarize filtered data
 
 
-hist(lang_history_filtered$Grade_Change)
+hist(lang_history_filtered$Grade_Change) #create historgram to look at distribution
 
 
 ```
 
 
-```{r}
+```{r stat_test, echo=FALSE}
 
 t.test(lang_history$baseline, lang_history$final)
 
@@ -259,7 +234,7 @@ cohen.d(lang_history$baseline, lang_history$final)
 
 
 Tests with filtered data
-```{r}
+```{r stat test filtered, echo=FALSE}
 
 t.test(lang_history_filtered$baseline, lang_history_filtered$final)
 
@@ -268,16 +243,16 @@ cohen.d(lang_history_filtered$baseline, lang_history_filtered$final)
 ```
 
 
-```{r}
+```{r council_lang_summary, echo=FALSE}
 
-council_lang_summary <- lang_history %>%
-    group_by(Year_Id)
+year_id_lang_summary <- lang_history %>%
+    group_by(Year_Id) #groupd data by Year_Id
 
-council_lang_summary
 
-council_lang_summary <-summarise(council_lang_summary, Grade_Change =mean(Grade_Change))
 
-council_lang_summary
+year_id_lang_summary <-summarise(year_id_lang_summary, Grade_Change =mean(Grade_Change)) #summarize Grade change by year id
+
+pander(year_id_lang_summary) #review the data
 
 
 ```
@@ -285,23 +260,23 @@ council_lang_summary
 
 
 
-```{r}
+```{r plot_council_lang_summary}
 
-ggplot(council_lang_summary, aes(y=Grade_Change, x=Year_Id, group=2)) + geom_line() + geom_point()
+ggplot(year_id_lang_summary, aes(y=Grade_Change, x=Year_Id, group=2)) + geom_line() + geom_point()
 
 ```
 
 
 
-```{r }
+```{r lang_summary_council, echo=FALSE }
 
 council_lang_summary_c <- lang_history %>%
     group_by(council,Year_Id)
 
 
-council_lang_summary_c <-summarise(council_lang_summary_c, Grade_Change =mean(Grade_Change))
+council_lang_summary_c <-summarise(council_lang_summary_c, Grade_Change =mean(Grade_Change)) #summarize council grade change
 
 
-pander(council_lang_summary_c)
+pander(council_lang_summary_c)  #print summary nicely
 
-ggplot(council_lang_summary_c, aes(y=Grade_Change, x=Year_Id, colour=council, group=2)) + geom_line()  + geom_point()
+ggplot(council_lang_summary_c, aes(y=Grade_Change, x=Year_Id, colour=council, group=2)) + geom_line()  + geom_point()  #graphical summary
