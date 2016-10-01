@@ -279,4 +279,4 @@ council_lang_summary_c <-summarise(council_lang_summary_c, Grade_Change =mean(Gr
 
 pander(council_lang_summary_c)  #print summary nicely
 
-ggplot(council_lang_summary_c, aes(y=Grade_Change, x=Year_Id, colour=council, group=2)) + geom_line()  + geom_point()  #graphical summary
+ggplot(council_lang_summary_c, aes(y=Grade_Change, x=Year_Id, colour=council, group=2))  + geom_point(size=3)   #graphical summary
