@@ -1,0 +1,254 @@
+---
+title: "student_survey_dm"
+author: "Kevin Gilds, MPA"
+date: "October 9, 2016"
+output: html_document
+---
+# Data Management
+
+### Set working directory, library, and read raw data (needs updated data)
+
+
+```{r}
+########################Set Working Directories##################
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/October 2016")
+
+library(tidyverse)
+
+
+
+###########################Read Data#############################################
+rawdata <- read_csv("girl_survey_10092016.csv", skip=1)
+dim(rawdata)
+
+
+```
+
+
+### Change column names to make them human readable.
+```{r}
+
+########################### Change Column Name #################################
+
+colnames (rawdata)[6] <- "hr.sum"
+colnames (rawdata)[7] <- "hr.avg"
+colnames (rawdata)[8] <- "hr.stddev"
+colnames (rawdata)[9] <- "hr.disqualify.sum"
+colnames (rawdata)[10]<- "hr.disqualify.avg"
+colnames (rawdata)[11]<- "hr.disqualify.std"
+colnames (rawdata)[12] <- "ae.sum"
+colnames (rawdata)[13] <- "ae.avg"
+colnames (rawdata)[14] <- "ae.stddev"
+colnames (rawdata)[15] <- "am.sum"
+colnames (rawdata)[16] <- "am.avg"
+colnames (rawdata)[17] <- "am.stddev"
+colnames (rawdata)[18] <- "ae.disqualify.sum"
+colnames (rawdata)[19] <- "ae.disqualify.avg"
+colnames (rawdata)[20] <- "ae.disqualify.std"
+colnames (rawdata)[21] <- "am.disqualify.sum"
+colnames (rawdata)[22] <- "am.disqualify.avg"
+colnames (rawdata)[23] <- "am.disqualify.std"
+colnames (rawdata)[24] <- "council"
+colnames (rawdata)[25] <- "girlCode"
+colnames (rawdata)[26] <- "school"
+colnames (rawdata)[27] <- "grade"
+colnames (rawdata)[28] <- "Time"
+colnames (rawdata)[29] <- "inProgramLastYear"
+colnames (rawdata)[31] <- "iamMotivatedToGraduateHighSchool"
+colnames (rawdata)[32] <- "iReadBooksforFun"
+colnames (rawdata)[33] <- "ireallyLikeWhoIam..."
+colnames (rawdata)[34] <- "..ImproveMySkilsThisYear"
+colnames (rawdata)[35] <- "...UnderstandMyClassWork"
+colnames (rawdata)[36] <-  "learningatSchoolIsImportantToMe"
+colnames (rawdata)[37] <- "oneOfMyGoalsIstoLearn..."
+colnames (rawdata)[38] <- "...WillHelpMeLaterInLife"
+colnames (rawdata)[39] <- "ifIHaveASeriousProblem..."
+colnames (rawdata)[40] <- "inAnyRelationshipOrNotIMakeItClear"
+colnames (rawdata)[42] <- "iTalkWithMyTeachersBeforeOrAfter..."
+colnames (rawdata)[43] <- "iHandinMyAssignmentsOnTime"
+colnames (rawdata)[44] <- "iFinishMyHomeworkEvenIfItisBoring"
+colnames (rawdata)[45] <- "ifICantUnderstandMySchoolatFirstI..."
+colnames (rawdata)[46] <- "iLetPeopleKnowIfTheyHurtMyFeelings"
+colnames (rawdata)[47] <- "iLetMyFriendsKnowWhenIThinkTheyAreGoodAtSomething"
+colnames (rawdata)[49] <- "ILearnedFromTheBooksWeReadThisYear"
+colnames (rawdata)[50] <- "myReadingSkillsImprovedThisYear"
+colnames (rawdata)[51] <- "EstablishedAPostiveRelationship..."
+colnames (rawdata)[52] <- "...HelpedMeRecognizeThingsIDoWell"
+colnames (rawdata)[53] <- "whatDidYouLearnThisYear. "
+
+
+```
+
+### Make Student Code as class character and make all codes upper case.
+
+```{r}
+
+######################## Change Girl Code #################################
+
+rawdata$girlCode <- as.character(rawdata$girlCode)
+
+rawdata$girlCode <- toupper(rawdata$girlCode)
+
+
+
+
+
+
+
+
+str(rawdata$girlCode)
+
+dim(rawdata)
+
+```
+
+
+### Test Chunk
+```{r}
+###Test to see if any test girlCode in system
+#rawdata$girlCode
+
+####Test to see if any test schools in syste
+#rawdata$school
+
+###Fix if any girlCode is in Test
+rawdata <- filter(rawdata, girlCode !="TEST")
+
+council_girlCode <-with(rawdata,table(girlCode, council))
+
+#council_girlCode
+
+```
+
+
+
+
+### Subset all finished surveys
+
+```{r}
+
+####################Subset Finished#####################################
+# Finished 
+
+fin <- subset (rawdata, Finished  == 1)
+
+
+str(fin$girlCode)
+
+
+
+
+dim(fin)
+
+
+```
+
+#Pre Surveys
+
+### Subset Pre surveys
+
+```{r}
+
+############################## Subset Pre ############################3
+
+pre <- subset (fin, Time == "Pre")
+dim(pre)
+
+```
+
+
+### Subset Pre Surveys with unique student codes
+
+```{r}
+
+######################Find Unique Values################################################
+preUnique<- pre [!(duplicated(pre$girlCode) | duplicated(pre$girlCode, fromLast = TRUE)), ]
+
+dim(preUnique)
+
+```
+
+
+### Subset Pre Surveys with duplicate student codes (needs updated data)
+```{r}
+##############################Subset duplicated girl codes##################
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+preDupes <-duplicated(pre$girlCode) | duplicated(pre$girlCode, fromLast=TRUE)
+
+preDupes <-pre[preDupes, ]
+
+dim(preDupes)
+
+
+
+```
+
+
+
+
+# Post Survey 
+
+### Subset post girl surveys
+
+```{r}
+##############################Subset Post###############################
+post <-subset (fin, Time == "Post")
+
+
+```
+
+
+### Find unique student codes from post surveys
+```{r}
+##########################Subset Unique Post Values####################
+
+postUnique<- post [!(duplicated(post$girlCode) | duplicated(post$girlCode, fromLast = TRUE)), ]
+
+dim(postUnique)
+```
+
+
+### Find duplicate student codes from post surveys
+```{r}
+
+#########################Subset Unique Post Values######################
+postDupes <-duplicated(post$girlCode) | duplicated(post$girlCode, fromLast=TRUE)
+
+##### I think this is pulling the actuall duplicate values####################
+postDupes <-post[postDupes, ]
+
+
+```
+
+### Save Data to Shiny (Web Application)
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Reports/Apps/girl_survey_app")
+
+saveRDS(preUnique, file="girl_survey_03092016.rds")
+
+```
+
+
+
+
+### Send data to Sqlite database
+```{r}
+library(sqldf)
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+### Write Q1 Expelled data to sqlite database
+dbWriteTable(conn = getReal_2016db, name = "girl_pre_1617", value = preUnique, row.names=FALSE, overwrite=TRUE)
+
+dbWriteTable(conn = getReal_2016db, name = "girl_pre_duplicates_1617", value = preDupes, row.names=FALSE, overwrite=TRUE)
+
+dbWriteTable(conn = getReal_2016db, name = "girl_post_1617", value = postUnique, row.names=FALSE, overwrite=TRUE)
+
+
+
+
+```
+
