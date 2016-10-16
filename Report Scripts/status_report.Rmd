@@ -1,0 +1,183 @@
+---
+title: "Status Report"
+author: "Kevin Gilds, MPA"
+date: '`r Sys.Date()`'
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    toc: yes
+---
+Data entry status as of. 
+
+
+```{r echo=FALSE, message=FALSE, warning= FALSE}
+library(sqldf)
+library(dplyr)
+library(dplyr)
+library(pander)
+library(ggplot2)
+
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+getReal_db<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+
+```
+
+```{r pre_student, echo=FALSE, message=FALSE, warning=FALSE}
+
+
+### Make connection with database
+pre_girl <- dbReadTable(getReal_db, "girl_pre_1617")
+
+###Select the neeeded data for data entry status update
+pre_girl <- select(pre_girl, council)
+###Create and add column for status update
+
+
+
+pre_girl$dataSource <-"Pre-Student"
+
+```
+
+
+```{r post_girl, echo=FALSE}
+
+###Post Girl
+
+post_girl <-dbReadTable(getReal_db, "girl_post_1617") #read table
+
+post_girl <- post_girl %>%
+    select(council) %>%  #select variables
+    mutate("dataSource" = "Post Student") #add new column
+
+
+```
+
+```{r pre_parent, echo=FALSE}
+
+### Make connection with database
+pre_parent <-dbReadTable(getReal_db,"pre_parent_1617")
+###Select the neeeded data for data entry status update
+pre_parent <- select(pre_parent,council)
+###Create and add column for status update
+pre_parent$dataSource <- "Pre-Parent"
+
+
+```
+
+
+
+```{r post_parent, echo=FALSE}
+
+###Post Parent
+
+post_parent <-dbReadTable(getReal_db, "post_parent_1617") #read table 
+
+post_parent <- post_parent %>%
+    select(council) %>%  #select columns
+    mutate("dataSource"= "Post Parent") #add colummns
+
+
+
+```
+
+```{r pre_teacher, echo=FALSE}
+### Make connection with database
+pre_teacher <-dbReadTable(getReal_db, "pre_teacher_1617")
+###Select the neeeded data for data entry status update
+pre_teacher <-select(pre_teacher,council)
+###Create and add column for status update
+pre_teacher$dataSource <- "Pre Teacher"
+
+
+
+
+```
+
+```{r post_teacher, echo=FALSE}
+
+#Post Teacher
+
+post_teacher <-dbReadTable(getReal_db, "post_teacher_1617") #read table from database
+
+post_teacher <- post_teacher %>%
+    select(council) %>%
+    mutate("dataSource"= "Post Teacher")
+
+
+```
+
+
+```{r counts, echo=FALSE}
+##### Geyset counts of Pre and Post Surveys
+girl <- nrow(pre_girl) + nrow(post_girl)
+
+#class(girl)
+parent <- nrow(pre_parent) + nrow(post_parent)
+teacher <- nrow(pre_teacher) + nrow(post_teacher)
+
+```
+
+```{r total_survey_count, echo=FALSE}
+Data_Entry<- c(girl, parent, teacher)
+
+Data_Source <- c("Student", "Parent", "Teacher")
+
+total_survey_count <- data.frame(Data_Source, Data_Entry)
+
+
+```
+
+
+```{r survey_status, echo=FALSE}
+### Add the teacher to binding for status report
+
+girl_parent <- rbind(pre_girl,pre_parent)
+
+
+survey_status <- rbind(girl_parent, pre_teacher)
+
+survey_status <- rbind(survey_status, post_girl)
+
+survey_status <- rbind(survey_status, post_parent)
+
+survey_status <- rbind(survey_status, post_teacher)
+
+
+
+```
+
+
+
+
+```{r survey_stats, echo=FALSE}
+
+survey_status3 <- with(survey_status,table(dataSource))
+
+survey_status3 <- addmargins(survey_status3)
+
+pander(survey_status3)
+
+
+
+```
+
+```{r council, survey_status, echo=FALSE}
+
+survey_status2 <-with(survey_status,table(council, dataSource))
+
+survey_status2 <- addmargins(survey_status2)
+
+pander(survey_status2)
+
+
+```
+
+
+
+
+
+
