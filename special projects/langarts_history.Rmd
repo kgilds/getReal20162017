@@ -299,10 +299,6 @@ The percent of students who went from failing to passing is **`r fail_to_pass_p`
 
 
 
-
-
-
-# Outcome Table by Council and Membership Year
 ```{r lang_increase_tbl, echo=FALSE, eval=FALSE}
 
 lang_increase_tbl <- lang_history %>%
