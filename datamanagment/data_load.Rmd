@@ -1,0 +1,46 @@
+---
+title: "read_data"
+author: "Kevin Gilds, MPA"
+date: "October 16, 2016"
+output: html_document
+---
+
+```{r student_survey, echo=FALSE}
+
+library(tidyverse)
+
+```
+
+
+
+```{r}
+
+########################Set Working Directories##################
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/October 2016")
+
+
+```
+
+```{r read_data, echo=FALSE}
+
+rawdata <- read_csv("girl_survey_10092016.csv", skip=1) #reads student survey
+
+parent <- read.csv("parent_survey_10142016.csv", skip=1) #reads parent survey
+
+
+teacher <- read.csv("teacher_survey_10142016.csv", skip=1) # reads teacher survey
+
+
+```
+
+
+
+```{r parent_survye, echo=FALSE}
+
+
+
+
+```
+
+
+
