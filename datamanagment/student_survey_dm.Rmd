@@ -17,9 +17,7 @@ library(tidyverse)
 
 
 
-###########################Read Data#############################################
-rawdata <- read_csv("girl_survey_10092016.csv", skip=1)
-dim(rawdata)
+###########################Read 
 
 
 ```

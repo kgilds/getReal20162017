@@ -21,7 +21,6 @@ library(dplyr)
 
 setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/October 2016")
 
-parent <- read.csv("parent_survey_10142016.csv", skip=1)
 
 names(parent)
 
