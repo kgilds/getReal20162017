@@ -170,12 +170,12 @@ dim(preUnique)
 
 
 #
-```{r student_file_function}
+```{r pre_student_file_function}
 
 
-student_file <- function(x) {
+pre_student_file <- function(x) {
     student_file <- filter(preUnique, council == x)
-    write.csv (student_file, file="student_survey.csv", row.names=FALSE)
+    write.csv (student_file, file="pre_student_survey.csv", row.names=FALSE)
     
     
 }
@@ -283,7 +283,7 @@ dbWriteTable(conn = getReal_2016db, name = "girl_post_1617", value = postUnique,
 setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/citrus_council")
 
 
-student_file("Citrus Council")
+pre_student_file("Citrus Council")
 
 ```
 
@@ -293,7 +293,7 @@ student_file("Citrus Council")
 ```{r}
 setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/gateway_council")
 
-student_file("Gateway Council")
+pre_student_file("Gateway Council")
 
 
 
@@ -306,7 +306,7 @@ student_file("Gateway Council")
 setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/southeast")
 
 
-student_file("Southeast Council")
+pre_student_file("Southeast Council")
 
 
 
@@ -318,7 +318,7 @@ student_file("Southeast Council")
 ```{r}
 setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/tropical_council")
 
-student_file("Tropical Council")
+pre_student_file("Tropical Council")
 
 ```
 
@@ -329,7 +329,7 @@ student_file("Tropical Council")
 
 setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/panhandle_council")
 
-student_file("Panhandle Council")
+pre_student_file("Panhandle Council")
 
 
 
@@ -342,7 +342,7 @@ student_file("Panhandle Council")
 ```{r}
 setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/west_central_council")
 
-student_file("West Central Council")
+pre_student_file("West Central Council")
 
 
 
@@ -351,7 +351,7 @@ student_file("West Central Council")
 ```
 
 
-```{r render_report}
+```{r render_status_report}
 setwd("~/GitHub/getReal20162017/Report Scripts")
 
 rmarkdown::render("status_report.Rmd")
