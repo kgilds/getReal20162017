@@ -169,6 +169,45 @@ dim(preUnique)
 ```
 
 
+### Data Entry Status for Pre Survey
+
+```{r data_source_tbl}
+
+pre_girl_status <- preUnique %>% 
+    select(council) %>%
+    mutate("Data Source" = "Pre-Student")
+
+
+pre_girl_status
+
+pre_girl_tbl <- with(pre_girl_status,table(council))
+
+pre_girl_tbl <- addmargins(pre_girl_tbl)
+
+pre_girl_tbl
+```
+
+
+```{r student_file_function}
+
+
+student_file <- function(x) {
+    student_file <- filter(preUnique, council == x)
+    write.csv (student_file, file="student_survey.csv" == x, row.names=FALSE)
+    
+    
+}
+
+student_file("Citrus Council")
+
+
+
+
+
+```
+
+
+
 ### Subset Pre Surveys with duplicate student codes (needs updated data)
 ```{r}
 ##############################Subset duplicated girl codes##################
@@ -183,7 +222,9 @@ dim(preDupes)
 
 
 
+
 ```
+
 
 
 
