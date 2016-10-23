@@ -26,6 +26,7 @@ setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/October 2016")
 
 rawdata <- read_csv("girl_survey_10092016.csv", skip=1) #reads student survey
 
+
 parent <- read.csv("parent_survey_10142016.csv", skip=1) #reads parent survey
 
 
@@ -35,13 +36,18 @@ teacher <- read.csv("teacher_survey_10142016.csv", skip=1) # reads teacher surve
 ```
 
 
+```{r}
+
+saveRDS(rawdata,"rawdata.Rds")
+
+
+```
+
+
 
 ```{r source_markdowns, echo=FALSE}
 
-render("student_survey_dm.Rmd")
-render("parent_survey_dm.Rmd")
-render("teacher_survey_dm.Rmd")
-
+rmarkdown::render("student_survey_dm.Rmd") #run student_survey
 
 ```
 
