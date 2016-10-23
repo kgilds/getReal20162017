@@ -193,18 +193,20 @@ pre_girl_tbl
 
 student_file <- function(x) {
     student_file <- filter(preUnique, council == x)
-    write.csv (student_file, file="student_survey.csv" == x, row.names=FALSE)
+    write.csv (student_file, file="student_survey.csv", row.names=FALSE)
     
     
 }
 
-student_file("Citrus Council")
+
 
 
 
 
 
 ```
+
+
 
 
 
@@ -288,6 +290,89 @@ dbWriteTable(conn = getReal_2016db, name = "girl_pre_duplicates_1617", value = p
 
 dbWriteTable(conn = getReal_2016db, name = "girl_post_1617", value = postUnique, row.names=FALSE, overwrite=TRUE)
 
+
+
+
+```
+
+### Citrus Council
+```{r make_student}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/citrus_council")
+
+
+student_file("Citrus Council")
+
+```
+
+
+### Gateway Council
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/gateway_council")
+
+student_file("Gateway Council")
+
+
+
+```
+
+
+### Southeast Council
+```{r}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/southeast")
+
+
+student_file("Southeast Council")
+
+
+
+```
+
+
+### Tropical Council
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/tropical_council")
+
+student_file("Tropical Council")
+
+```
+
+
+### Panhandle Council
+
+```{r}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/panhandle_council")
+
+student_file("Panhandle Council")
+
+
+
+
+
+```
+
+### West Central Council
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/west_central_council")
+
+student_file("West Central Council")
+
+
+
+
+
+```
+
+
+```{r render_report}
+setwd("~/GitHub/getReal20162017/Report Scripts")
+
+rmarkdown::render("status_report.Rmd")
 
 
 
