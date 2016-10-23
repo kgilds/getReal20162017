@@ -209,6 +209,17 @@ dim(preDupes)
 
 ```
 
+### Dupe Girl File Functions
+```{r}
+
+ 
+
+pre_student_dupe_file <- function(x) {
+    pre_survey_dupes <- filter(preDupes, council == x)
+    write.csv(pre_survey_dupes, "girl_survey_dupes.csv", row.names=FALSE)
+}
+
+```
 
 
 
@@ -285,6 +296,8 @@ setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/citrus_council")
 
 pre_student_file("Citrus Council")
 
+pre_student_dupe_file("Citrus Council")
+
 ```
 
 
@@ -294,6 +307,8 @@ pre_student_file("Citrus Council")
 setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/gateway_council")
 
 pre_student_file("Gateway Council")
+
+pre_student_dupe_file("Citrus Council")
 
 
 
@@ -308,6 +323,7 @@ setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/southeast")
 
 pre_student_file("Southeast Council")
 
+pre_student_dupe_file("Southeast Council")
 
 
 ```
@@ -320,6 +336,8 @@ setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/tropical_council")
 
 pre_student_file("Tropical Council")
 
+pre_student_dupe_file("Tropical Council")
+
 ```
 
 
@@ -331,6 +349,7 @@ setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/panhandle_council")
 
 pre_student_file("Panhandle Council")
 
+pre_student_dupe_file("Panhandle Council")
 
 
 
@@ -344,6 +363,8 @@ setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/west_central_council")
 
 pre_student_file("West Central Council")
 
+
+pre_student_dupe_file("West Central Council")
 
 
 
