@@ -24,7 +24,7 @@ library(tidyverse)
 
 setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/October 2016")
 
-rawdata <- read_csv("girl_survey_10092016.csv", skip=1) #reads student survey
+rawdata <- read_csv("student_survey10232016.csv", skip=1) #reads student survey
 
 
 parent <- read.csv("parent_survey_10142016.csv", skip=1) #reads parent survey
