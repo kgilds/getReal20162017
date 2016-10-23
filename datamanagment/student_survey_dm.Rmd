@@ -169,25 +169,7 @@ dim(preUnique)
 ```
 
 
-### Data Entry Status for Pre Survey
-
-```{r data_source_tbl}
-
-pre_girl_status <- preUnique %>% 
-    select(council) %>%
-    mutate("Data Source" = "Pre-Student")
-
-
-pre_girl_status
-
-pre_girl_tbl <- with(pre_girl_status,table(council))
-
-pre_girl_tbl <- addmargins(pre_girl_tbl)
-
-pre_girl_tbl
-```
-
-
+#
 ```{r student_file_function}
 
 
