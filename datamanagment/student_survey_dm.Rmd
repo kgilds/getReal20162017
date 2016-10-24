@@ -251,3 +251,15 @@ dbWriteTable(conn = getReal_2016db, name = "girl_post_1617", value = postUnique,
 
 ```
 
+
+
+```{r render_status_report}
+setwd("~/GitHub/getReal20162017/Report Scripts")
+
+rmarkdown::render("status_report.Rmd")
+
+
+
+```
+
+
