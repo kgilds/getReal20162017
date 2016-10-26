@@ -16,7 +16,7 @@ output:
 
 
 ## Set up R to receive the data and load the data into R. (update directory and file name)
-```{r}
+```{r parent_read}
 library(dplyr)
 
 setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/October 2016")
@@ -30,7 +30,7 @@ names(parent)
 
 
 ## Make variable names easier to read
-```{r}
+```{r parent_names}
 
 
 colnames (parent) [6] <- "council"
@@ -53,7 +53,7 @@ colnames (parent) [22] <-  "ImproveTheGetRealProgram"
 ```
 
 
-```{r}
+```{r fix_parent}
 parent <- filter(parent, girlCode !="Test")
 parent <- filter(parent, schoolName !="Emerson")
 
@@ -80,7 +80,7 @@ parent$council <-sub("Girl Scout Council of the Panhandle", "Panhandle Council",
 
 
 ## Fix varaibles that will be trouble later
-```{r}
+```{r parent_fix_girl_code}
 ##################Data management########################33
 
 
@@ -98,7 +98,7 @@ parent$girlCode <- toupper(parent$girlCode)
 
 ## Subset for finished surveys
 
-```{r}
+```{r parfin}
 parfin <- subset (parent, Finished == 1)
 ### Find the finished data entry
 
@@ -115,7 +115,7 @@ dim(parfin)
 
 
 # Pre Survey
-```{r}
+```{r parentPre}
 
 parentPre <-filter(parfin, Time =="Pre")
 
@@ -125,7 +125,7 @@ parentPre <-filter(parfin, Time =="Pre")
 
 
 ### Find and subset unduplicated Pre cases
-```{r}
+```{r parentPreUnique}
 
 
 parentPreUnique <- parentPre [!(duplicated(parentPre$girlCode) | duplicated(parentPre$girlCode, fromLast=TRUE)), ]
@@ -137,7 +137,7 @@ dim(parentPreUnique)
 
 ### Find the duplicated student codes
 
-```{r}
+```{r parent_pre_dupes}
 
 
 
@@ -160,7 +160,7 @@ dim(parent_pre_dupes)
 
 
 # Post Surveys
-```{r}
+```{r parentPost}
 
 #### Subset Post Surveys
 parentPost <-filter(parfin, Time == "Post")
@@ -170,7 +170,7 @@ parentPost <-filter(parfin, Time == "Post")
 
 ## Find and subset unduplicated Post cases
 
-```{r}
+```{r parentPostUnique}
 
 parentPostUnique <- parentPost [!(duplicated(parentPost$girlCode) | duplicated(parentPost$girlCode, fromLast=TRUE)), ]
 
@@ -180,7 +180,7 @@ parentPostUnique <- parentPost [!(duplicated(parentPost$girlCode) | duplicated(p
 
 
 ### Send data to Sqlite database
-```{r}
+```{r parent_sqlite}
 library(sqldf)
 setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
 
