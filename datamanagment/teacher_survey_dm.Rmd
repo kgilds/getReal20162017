@@ -23,6 +23,7 @@ setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/October 2016")
 #### Required Libraries
 library(dplyr)
 
+teacher <- readRDS("teacher.Rds")
 
 
 names(teacher)
