@@ -16,15 +16,14 @@ output:
 
 ## Set up R to receive the data and load the data into R. 
 
-```{r}
+```{r teacher_read}
 ###Read Working directory
 setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/October 2016")
 
 #### Required Libraries
 library(dplyr)
 
-############Read the data in R
-teacher <- read.csv("teacher_survey_10142016.csv", skip=1)
+teacher <- readRDS("teacher.Rds")
 
 
 names(teacher)
@@ -35,7 +34,7 @@ names(teacher)
 
 ## Make variable names easier to read
 
-```{r}
+```{r teacher_variable_names}
 colnames (teacher)[6] <- "council"
 colnames (teacher)[7] <- "girlCode"
 colnames (teacher)[8] <- "school"
@@ -58,7 +57,7 @@ colnames (teacher)[23] <- "whatCouldBeDoneToImroveTheProgram"
 
 ## Fix varaibles that will be trouble later
 
-```{r}
+```{r test}
 teacher <- filter(teacher, girlCode !="Test")
 teacher <- filter(teacher, school !="Emerson")
 
@@ -75,7 +74,7 @@ teacher$girlCode <- toupper(teacher$girlCode)
 
 ## Subset for finished surveys
 
-```{r}
+```{r find_finished_teacher}
 
 #####Subset Finished data entry
 teacherfin <- subset (teacher, Finished == 1)
@@ -88,7 +87,7 @@ teacherfin <- subset (teacher, Finished == 1)
 
 # Pre Survey
 
-```{r}
+```{r preTeacher}
 
 ###Subset Pre Survey Values#######################3
 preTeacher <-filter(teacherfin, Time == "Pre")
@@ -98,7 +97,7 @@ preTeacher <-filter(teacherfin, Time == "Pre")
 
 
 ## Find and subset unduplicated Pre cases
-```{r}
+```{r pre_teacher_unique}
 
 ###Finds and subset uniquie Girl Code data entry
 pre_teacher_unique <- preTeacher [!(duplicated(preTeacher$girlCode) | duplicated(preTeacher$girlCode, fromLast=TRUE)),]
@@ -108,7 +107,7 @@ pre_teacher_unique <- preTeacher [!(duplicated(preTeacher$girlCode) | duplicated
 
 
 
-```{r}
+```{r teacher_pre_dupes}
 
 
 ### Set working directory to save data to correct file folder
@@ -135,7 +134,7 @@ dim(teacher_pre_dupes)
 
 # Post Survey
 
-```{r}
+```{r post_teacher_unique}
 
 #####Subset Post Survey Values#################
 postTeacherUnique <- filter(teacherfin, Time == "Post")
@@ -145,7 +144,7 @@ postTeacherUnique <- filter(teacherfin, Time == "Post")
 
 
 ## Find and subset unduplicated Post cases
-```{r}
+```{r post_teacher_Unique}
 #########################Find Unique Values Post Survey################
 post_teacher_unique <-  postTeacherUnique [!(duplicated(postTeacherUnique$girlCode) | duplicated(postTeacherUnique$girlCode, fromLast=TRUE)),]
 
@@ -154,7 +153,7 @@ post_teacher_unique <-  postTeacherUnique [!(duplicated(postTeacherUnique$girlCo
 
 
 ### Send data to Sqlite database
-```{r}
+```{r teacher_sqllite}
 library(sqldf)
 setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
 

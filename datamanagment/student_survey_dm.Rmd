@@ -11,15 +11,12 @@ output: html_document
 
 ```{r}
 ########################Set Working Directories##################
-setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/October 2016")
 
 library(tidyverse)
 
 
 
-###########################Read Data#############################################
-rawdata <- read_csv("girl_survey_10092016.csv", skip=1)
-dim(rawdata)
+###########################Read 
 
 
 ```
@@ -27,6 +24,7 @@ dim(rawdata)
 
 ### Change column names to make them human readable.
 ```{r}
+rawdata <- readRDS("rawdata.Rds")
 
 ########################### Change Column Name #################################
 
@@ -251,4 +249,16 @@ dbWriteTable(conn = getReal_2016db, name = "girl_post_1617", value = postUnique,
 
 
 ```
+
+
+
+```{r render_status_report}
+setwd("~/GitHub/getReal20162017/Report Scripts")
+
+rmarkdown::render("status_report.Rmd")
+
+
+
+```
+
 

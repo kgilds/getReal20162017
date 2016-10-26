@@ -1,0 +1,60 @@
+---
+title: "read_data"
+author: "Kevin Gilds, MPA"
+date: "October 16, 2016"
+output: html_document
+---
+
+```{r student_survey, echo=FALSE}
+
+library(tidyverse)
+
+```
+
+
+
+
+
+```{r read_data, echo=FALSE}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/October 2016")
+
+rawdata <- read_csv("student_survey10232016.csv", skip=1) #reads student survey
+
+
+parent <- read.csv("parent_survey_10142016.csv", skip=1) #reads parent survey
+
+
+teacher <- read.csv("teacher_survey_10142016.csv", skip=1) # reads teacher survey
+
+
+```
+
+
+```{r}
+
+saveRDS(rawdata,"rawdata.Rds") #save student survey data in rds format
+
+saveRDS(parent, "parent.Rds") #save parent survey data in rds format
+
+saveRDS(teacher, "teacher.Rds") #save teacher survey data in rds format
+
+
+```
+
+
+
+```{r source_markdowns, echo=FALSE}
+
+rmarkdown::render("student_survey_dm.Rmd") #run student_survey
+
+rmarkdown::render("parent_survey_dm.Rmd") #run parent_survey
+
+rmarkdown::render("teacher_survey_dm.Rmd") #run teacher_survey
+
+
+
+```
+
+
+
