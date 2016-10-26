@@ -13,12 +13,7 @@ library(tidyverse)
 
 
 
-```{r}
 
-########################Set Working Directories##################
-
-
-```
 
 ```{r read_data, echo=FALSE}
 
@@ -38,7 +33,11 @@ teacher <- read.csv("teacher_survey_10142016.csv", skip=1) # reads teacher surve
 
 ```{r}
 
-saveRDS(rawdata,"rawdata.Rds")
+saveRDS(rawdata,"rawdata.Rds") #save student survey data in rds format
+
+saveRDS(parent, "parent.Rds") #save parent survey data in rds format
+
+saveRDS(teacher, "teacher.Rds") #save teacher survey data in rds format
 
 
 ```
@@ -48,6 +47,12 @@ saveRDS(rawdata,"rawdata.Rds")
 ```{r source_markdowns, echo=FALSE}
 
 rmarkdown::render("student_survey_dm.Rmd") #run student_survey
+
+rmarkdown::render("parent_survey_dm.Rmd") #run parent_survey
+
+rmarkdown::render("teacher_survey_dm.Rmd") #run teacher_survey
+
+
 
 ```
 

@@ -19,7 +19,6 @@ output:
 ```{r parent_read}
 library(dplyr)
 
-setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/October 2016")
 
 parent <- readRDS("parent.Rds")
 
