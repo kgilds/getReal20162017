@@ -9,6 +9,9 @@ output:
     toc: yes
 ---
 
+```{r}
+Sys.time()
+```
 
 
 
