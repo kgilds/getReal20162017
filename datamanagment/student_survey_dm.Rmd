@@ -6,11 +6,6 @@ output: html_document
 ---
 # Data Management
 
-```{r}
-Sys.time()
-```
-
-
 
 
 ### Set working directory, library, and read raw data (needs updated data)
@@ -20,11 +15,6 @@ Sys.time()
 ########################Set Working Directories##################
 
 library(tidyverse)
-
-
-
-###########################Read 
-
 
 ```
 
