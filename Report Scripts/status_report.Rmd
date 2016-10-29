@@ -8,9 +8,14 @@ output:
   html_document:
     toc: yes
 ---
+Run time
+```{r status_library, echo=FALSE}
+library(pander)
+```
 
-```{r}
-Sys.time()
+
+```{r system_time, echo=FALSE}
+pander(Sys.time())
 ```
 
 
