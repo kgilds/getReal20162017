@@ -167,6 +167,29 @@ dim(preUnique)
 ```
 
 
+#
+```{r pre_student_file_function}
+
+
+pre_student_file <- function(x) {
+    student_file <- filter(preUnique, council == x)
+    write.csv (student_file, file="pre_student_survey.csv", row.names=FALSE)
+    
+    
+}
+
+
+
+
+
+
+
+```
+
+
+
+
+
 ### Subset Pre Surveys with duplicate student codes (needs updated data)
 ```{r}
 ##############################Subset duplicated girl codes##################
@@ -180,6 +203,19 @@ preDupes <-pre[preDupes, ]
 dim(preDupes)
 
 
+
+
+```
+
+### Dupe Girl File Functions
+```{r}
+
+ 
+
+pre_student_dupe_file <- function(x) {
+    pre_survey_dupes <- filter(preDupes, council == x)
+    write.csv(pre_survey_dupes, "girl_survey_dupes.csv", row.names=FALSE)
+}
 
 ```
 
@@ -250,6 +286,89 @@ dbWriteTable(conn = getReal_2016db, name = "girl_post_1617", value = postUnique,
 
 ```
 
+### Citrus Council
+```{r make_student}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/citrus_council")
+
+
+pre_student_file("Citrus Council")
+
+pre_student_dupe_file("Citrus Council")
+
+```
+
+
+### Gateway Council
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/gateway_council")
+
+pre_student_file("Gateway Council")
+
+pre_student_dupe_file("Citrus Council")
+
+
+
+```
+
+
+### Southeast Council
+```{r}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/southeast")
+
+
+pre_student_file("Southeast Council")
+
+pre_student_dupe_file("Southeast Council")
+
+
+```
+
+
+### Tropical Council
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/tropical_council")
+
+pre_student_file("Tropical Council")
+
+pre_student_dupe_file("Tropical Council")
+
+```
+
+
+### Panhandle Council
+
+```{r}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/panhandle_council")
+
+pre_student_file("Panhandle Council")
+
+pre_student_dupe_file("Panhandle Council")
+
+
+
+
+```
+
+### West Central Council
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/west_central_council")
+
+pre_student_file("West Central Council")
+
+
+pre_student_dupe_file("West Central Council")
+
+
+
+
+```
+=======
 
 
 ```{r render_status_report}
@@ -260,5 +379,4 @@ rmarkdown::render("status_report.Rmd")
 
 
 ```
-
 
