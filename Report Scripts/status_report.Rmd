@@ -4,11 +4,11 @@ author: "Kevin Gilds, MPA"
 date: '`r Sys.Date()`'
 output:
   pdf_document:
-    toc: yes
+    toc: no
   html_document:
     toc: yes
 ---
-Run time
+Run time:
 ```{r status_library, echo=FALSE}
 library(pander)
 ```
@@ -19,7 +19,7 @@ pander(Sys.time())
 ```
 
 
-
+# Survey Data Entry Status
 ```{r echo=FALSE, message=FALSE, warning= FALSE}
 library(sqldf)
 library(dplyr)
@@ -149,11 +149,6 @@ girl_parent <- rbind(pre_girl,pre_parent)
 
 survey_status <- rbind(girl_parent, pre_teacher)
 
-survey_status <- rbind(survey_status, post_girl)
-
-survey_status <- rbind(survey_status, post_parent)
-
-survey_status <- rbind(survey_status, post_teacher)
 
 
 
@@ -174,6 +169,7 @@ pander(survey_status3)
 
 ```
 
+# Data Entry Status by Council
 ```{r council, survey_status, echo=FALSE}
 
 survey_status2 <-with(survey_status,table(council, dataSource))
@@ -186,6 +182,73 @@ pander(survey_status2)
 ```
 
 
+
+# Duplicate Entries
+
+```{r student_dupes, echo=FALSE}
+
+student_dupes <- dbReadTable(getReal_db, "girl_pre_duplicates_1617")
+
+student_dupes <- student_dupes %>%
+    select(council) %>%
+    mutate("data_Source" = "Student_dupes")
+
+```
+
+
+```{r parent_dupes, echo=FALSE}
+
+parent_dupes <- dbReadTable(getReal_db, "pre_parent_duplicate_1617")
+
+parent_dupes <- parent_dupes %>%
+    select(council) %>%
+    mutate("data_Source" = "Parent_dupes")
+
+```
+
+
+```{r teacher_dupes, echo=FALSE}
+
+teacher_dupes <- dbReadTable(getReal_db, "pre_teacher_dups_1617")
+
+teacher_dupes <- teacher_dupes %>% 
+    select(council) %>%
+    mutate("data_Source" = "Teacher_dupes")
+
+
+```
+
+
+```{r bind_dupes, echo=FALSE}
+
+student_d_parent_d <- rbind(student_dupes, parent_dupes)
+
+dupe_status <- rbind(student_d_parent_d, teacher_dupes)
+
+```
+
+
+```{r dupe_status, echo=FALSE}
+
+dupe_status_r <-with(dupe_status,table(data_Source))
+
+dupe_status_r <- addmargins(dupe_status_r)
+
+pander(dupe_status_r)
+
+```
+
+
+
+```{r dupe_status_counci, echo=FALSE}
+
+dupe_status_c <-with(dupe_status,table(council,data_Source))
+
+dupe_status_c <- addmargins(dupe_status_c)
+
+pander(dupe_status_c)
+
+```
 
 
 
