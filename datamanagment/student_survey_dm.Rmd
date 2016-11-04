@@ -303,7 +303,7 @@ setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/gateway_council")
 
 pre_student_file("Gateway Council")
 
-pre_student_dupe_file("Citrus Council")
+pre_student_dupe_file("Gateway Council")
 
 
 
