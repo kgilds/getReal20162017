@@ -133,13 +133,25 @@ dim(parentPreUnique)
 
 ```
 
+```{r pre_parent_file_function}
+### Parent Survey File Function
+
+
+pre_parent_file <- function(x) {
+    pre_parent <- filter(parentPreUnique, council ==x)
+    write.csv(pre_parent, "pre_parent_survey.csv", row.names = FALSE)
+}
+
+
+```
+
+```
+
+
 
 ### Find the duplicated student codes
 
 ```{r parent_pre_dupes}
-
-
-
 ### Find duplicates
 parent_pre_dupes<-duplicated(parentPre$girlCode) | duplicated(parentPre$girlCode, fromLast=TRUE)
 
@@ -152,7 +164,17 @@ dim(parent_pre_dupes)
 
 ```
 
+### Pre Parent Duplicate
+```{r pre_parent_dupe}
 
+pre_parent_dupe <- function(x) {
+    parent_survey_dupes <- filter(parent_pre_dupes, council == x)
+    write.csv(parent_survey_dupes, "pre_parent_survey_dupes.csv", row.names = FALSE )
+    
+}
+
+
+```
 
 
 
@@ -176,7 +198,30 @@ parentPostUnique <- parentPost [!(duplicated(parentPost$girlCode) | duplicated(p
 
 ```
 
+```{r parent_post_dupes}
+### Find duplicates
+parent_post_dupes<-duplicated(parentPost$girlCode) | duplicated(parentPost$girlCode, fromLast=TRUE)
 
+##### I think this is pulling the actuall duplicate values####################
+
+parent_post_dupes<- parentPost[parent_post_dupes,]
+
+## How many duplicates
+dim(parent_post_dupes)
+
+```
+
+
+### Post Parent Duplicate
+```{r post parent_dupe_function}
+
+post_parent_dupe <- function(x) {
+    parent_post_dupes <- filter(parent_post_dupes, council == x)
+    write.csv(parent_post_dupes, "post_parent_survey_dupes.csv", row.names = FALSE )
+    
+}
+
+```
 
 ### Send data to Sqlite database
 ```{r parent_sqlite}
@@ -194,7 +239,98 @@ dbWriteTable(conn = getReal_2016db, name = "pre_parent_duplicate_1617", value = 
 
 dbWriteTable(conn = getReal_2016db, name = "post_parent_1617", value = parentPostUnique, row.names=FALSE, overwrite=TRUE)
 
+dbWriteTable(conn = getReal_2016db, name = "post_parent_duplicate_1617", value = parent_post_dupes, row.names=FALSE, overwrite=TRUE)
 
 
+
+```
+
+
+### Citrus Council
+```{r citrus_student_data}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/citrus_council")
+
+
+pre_parent_file("Citrus Council")
+
+pre_parent_dupe("Citrus Council")
+
+post_parent_dupe("Citrus Council")
+
+```
+
+
+### Gateway Council
+
+```{r gateway_parent_data}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/gateway_council")
+
+pre_parent_file("Gateway Council")
+
+pre_parent_dupe("Gateway Council")
+
+post_parent_dupe("Gateway Council")
+
+
+```
+
+
+### Southeast Council
+```{r southeast_parent_data}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/southeast")
+
+
+pre_parent_file("Southeast Council")
+
+pre_parent_dupe("Southeast Council")
+
+post_parent_dupe("Southeast Council")
+
+```
+
+
+### Tropical Council
+
+```{r tropical_parent_data}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/tropical_council")
+
+pre_parent_file("Tropical Council")
+
+pre_parent_dupe("Tropical Council")
+
+post_parent_dupe("Tropical Council")
+
+
+```
+
+
+### Panhandle Council
+
+```{r panhandle_parent_data}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/panhandle_council")
+
+pre_parent_file("Panhandle Council")
+
+pre_parent_dupe("Panhandle Council")
+
+post_parent_dupe("Panhandle Council")
+
+
+
+```
+
+### West Central Council
+
+```{r wscf_parent_file}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/west_central_council")
+
+pre_parent_file("West Central Council")
+
+pre_parent_dupe("West Central Council")
+
+post_parent_dupe("West Central Council")
 
 ```
