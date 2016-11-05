@@ -94,27 +94,27 @@ pre_Teacher <-filter(teacherfin, Time == "Pre")
 
 ```
 
-```{r pre_teacher_file_fun}
-
-pre_teacher_file <- function(x) {
-    pre_teacher_file <- filter(pre_Teacher, council == x)
-    write.csv(pre_teacher_file, "pre_teacher.csv", row.names = FALSE)
-}
-
-
-```
-
 
 
 ## Find and subset unduplicated Pre cases
 ```{r pre_teacher_unique}
 
 ###Finds and subset uniquie Girl Code data entry
-pre_teacher_unique <- preTeacher [!(duplicated(preTeacher$girlCode) | duplicated(preTeacher$girlCode, fromLast=TRUE)),]
+pre_teacher_unique <- pre_Teacher [!(duplicated(preTeacher$girlCode) | duplicated(preTeacher$girlCode, fromLast=TRUE)),]
 
 
 ```
 
+
+```{r pre_teacher_file_fun}
+
+pre_teacher_file <- function(x) {
+    pre_teacher_file <- filter(pre_teacher_unique, council == x)
+    write.csv(pre_teacher_file, "pre_teacher.csv", row.names = FALSE)
+}
+
+
+```
 
 
 ```{r teacher_pre_dupes}
