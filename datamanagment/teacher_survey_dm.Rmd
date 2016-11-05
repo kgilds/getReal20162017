@@ -100,7 +100,7 @@ pre_Teacher <-filter(teacherfin, Time == "Pre")
 ```{r pre_teacher_unique}
 
 ###Finds and subset uniquie Girl Code data entry
-pre_teacher_unique <- pre_Teacher [!(duplicated(preTeacher$girlCode) | duplicated(preTeacher$girlCode, fromLast=TRUE)),]
+pre_teacher_unique <- pre_Teacher [!(duplicated(pre_Teacher$girlCode) | duplicated(pre_Teacher$girlCode, fromLast=TRUE)),]
 
 
 ```
@@ -120,11 +120,11 @@ pre_teacher_file <- function(x) {
 ```{r teacher_pre_dupes}
 
 ### Find duplicates
-teacher_pre_dupes<-duplicated(preTeacher$girlCode) | duplicated(preTeacher$girlCode, fromLast=TRUE)
+teacher_pre_dupes<-duplicated(pre_Teacher$girlCode) | duplicated(pre_Teacher$girlCode, fromLast=TRUE)
 
 ##### I think this is pulling the actuall duplicate values####################
 
-teacher_pre_dupes<- preTeacher[teacher_pre_dupes,]
+teacher_pre_dupes<- pre_Teacher[teacher_pre_dupes,]
 
 ## How many duplicates
 dim(teacher_pre_dupes)
@@ -136,11 +136,13 @@ dim(teacher_pre_dupes)
 ### Pre Teacher Dupes
 
 ```{r pre_teacher_dupe_file}
-teacher_file_dupe <- function(x) {
+pre_teacher_dupe <- function(x) {
     teacher_survey_dupes <- filter(teacher_pre_dupes, council == x)
     write.csv(teacher_survey_dupes, "pre_teacher_survey_dupes.csv", row.names = FALSE )
     
 }
+
+
 ```
 
 
