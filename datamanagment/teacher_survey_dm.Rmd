@@ -89,36 +89,42 @@ teacherfin <- subset (teacher, Finished == 1)
 ```{r preTeacher}
 
 ###Subset Pre Survey Values#######################3
-preTeacher <-filter(teacherfin, Time == "Pre")
+pre_Teacher <-filter(teacherfin, Time == "Pre")
 
 
 ```
+
 
 
 ## Find and subset unduplicated Pre cases
 ```{r pre_teacher_unique}
 
 ###Finds and subset uniquie Girl Code data entry
-pre_teacher_unique <- preTeacher [!(duplicated(preTeacher$girlCode) | duplicated(preTeacher$girlCode, fromLast=TRUE)),]
+pre_teacher_unique <- pre_Teacher [!(duplicated(pre_Teacher$girlCode) | duplicated(pre_Teacher$girlCode, fromLast=TRUE)),]
 
 
 ```
 
 
+```{r pre_teacher_file_fun}
+
+pre_teacher_file <- function(x) {
+    pre_teacher_file <- filter(pre_teacher_unique, council == x)
+    write.csv(pre_teacher_file, "pre_teacher.csv", row.names = FALSE)
+}
+
+
+```
+
 
 ```{r teacher_pre_dupes}
 
-
-### Set working directory to save data to correct file folder
-setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
-
-
 ### Find duplicates
-teacher_pre_dupes<-duplicated(preTeacher$girlCode) | duplicated(preTeacher$girlCode, fromLast=TRUE)
+teacher_pre_dupes<-duplicated(pre_Teacher$girlCode) | duplicated(pre_Teacher$girlCode, fromLast=TRUE)
 
 ##### I think this is pulling the actuall duplicate values####################
 
-teacher_pre_dupes<- preTeacher[teacher_pre_dupes,]
+teacher_pre_dupes<- pre_Teacher[teacher_pre_dupes,]
 
 ## How many duplicates
 dim(teacher_pre_dupes)
@@ -127,6 +133,17 @@ dim(teacher_pre_dupes)
 ```
 
 
+### Pre Teacher Dupes
+
+```{r pre_teacher_dupe_file}
+pre_teacher_dupe <- function(x) {
+    teacher_survey_dupes <- filter(teacher_pre_dupes, council == x)
+    write.csv(teacher_survey_dupes, "pre_teacher_survey_dupes.csv", row.names = FALSE )
+    
+}
+
+
+```
 
 
 
@@ -173,4 +190,90 @@ dbWriteTable(conn = getReal_2016db, name = "post_teacher_1617", value = postTeac
 
 ```
 
+### Citrus Council
+```{r citrus_student_data}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/citrus_council")
+
+
+pre_teacher_file("Citrus Council")
+
+pre_teacher_dupe("Citrus Council")
+
+
+
+```
+
+
+### Gateway Council
+
+```{r gateway_parent_data}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/gateway_council")
+
+pre_teacher_file("Gateway Council")
+
+pre_teacher_dupe("Gateway Council")
+
+
+
+
+```
+
+
+### Southeast Council
+```{r southeast_parent_data}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/southeast")
+
+
+pre_teacher_file("Southeast Council")
+
+pre_teacher_dupe("Southeast Council")
+
+
+
+```
+
+
+### Tropical Council
+
+```{r tropical_parent_data}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/tropical_council")
+
+pre_teacher_file("Tropical Council")
+
+pre_teacher_dupe("Tropical Council")
+
+
+
+
+```
+
+
+### Panhandle Council
+
+```{r panhandle_parent_data}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/panhandle_council")
+
+pre_teacher_file("Panhandle Council")
+
+pre_teacher_dupe("Panhandle Council")
+
+
+
+
+```
+
+### West Central Council
+
+```{r wscf_parent_file}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/west_central_council")
+
+pre_teacher_file("West Central Council")
+
+pre_teacher_dupe("West Central Council")
+
+
+```
 
