@@ -119,11 +119,6 @@ pre_teacher_unique <- preTeacher [!(duplicated(preTeacher$girlCode) | duplicated
 
 ```{r teacher_pre_dupes}
 
-
-### Set working directory to save data to correct file folder
-setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
-
-
 ### Find duplicates
 teacher_pre_dupes<-duplicated(preTeacher$girlCode) | duplicated(preTeacher$girlCode, fromLast=TRUE)
 
@@ -138,6 +133,15 @@ dim(teacher_pre_dupes)
 ```
 
 
+### Pre Teacher Dupes
+
+```{r pre_teacher_dupe_file}
+teacher_file_dupe <- function(x) {
+    teacher_survey_dupes <- filter(teacher_pre_dupes, council == x)
+    write.csv(teacher_survey_dupes, "pre_teacher_survey_dupes.csv", row.names = FALSE )
+    
+}
+```
 
 
 
