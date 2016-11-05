@@ -89,10 +89,21 @@ teacherfin <- subset (teacher, Finished == 1)
 ```{r preTeacher}
 
 ###Subset Pre Survey Values#######################3
-preTeacher <-filter(teacherfin, Time == "Pre")
+pre_Teacher <-filter(teacherfin, Time == "Pre")
 
 
 ```
+
+```{r pre_teacher_file_fun}
+
+pre_teacher_file <- function(x) {
+    pre_teacher_file <- filter(pre_Teacher, council == x)
+    write.csv(pre_teacher_file, "pre_teacher.csv", row.names = FALSE)
+}
+
+
+```
+
 
 
 ## Find and subset unduplicated Pre cases
