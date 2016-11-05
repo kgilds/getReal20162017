@@ -188,4 +188,90 @@ dbWriteTable(conn = getReal_2016db, name = "post_teacher_1617", value = postTeac
 
 ```
 
+### Citrus Council
+```{r citrus_student_data}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/citrus_council")
+
+
+pre_teacher_file("Citrus Council")
+
+pre_teacher_dupe("Citrus Council")
+
+
+
+```
+
+
+### Gateway Council
+
+```{r gateway_parent_data}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/gateway_council")
+
+pre_teacher_file("Gateway Council")
+
+pre_teacher_dupe("Gateway Council")
+
+
+
+
+```
+
+
+### Southeast Council
+```{r southeast_parent_data}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/southeast")
+
+
+pre_teacher_file("Southeast Council")
+
+pre_teacher_dupe("Southeast Council")
+
+
+
+```
+
+
+### Tropical Council
+
+```{r tropical_parent_data}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/tropical_council")
+
+pre_teacher_file("Tropical Council")
+
+pre_teacher_dupe("Tropical Council")
+
+
+
+
+```
+
+
+### Panhandle Council
+
+```{r panhandle_parent_data}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/panhandle_council")
+
+pre_teacher_file("Panhandle Council")
+
+pre_teacher_dupe("Panhandle Council")
+
+
+
+
+```
+
+### West Central Council
+
+```{r wscf_parent_file}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/west_central_council")
+
+pre_teacher_file("West Central Council")
+
+pre_teacher_dupe("West Central Council")
+
+
+```
 
