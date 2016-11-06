@@ -1,0 +1,76 @@
+---
+title: "Healthy Relationship Notebook"
+output: html_notebook
+params:
+    council: West Central Council
+---
+
+```{r hr_import_libaries, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(pander)
+library(ggplot2)
+library(sqldf)
+library(psych)
+library(knitr)
+library(gridExtra)
+library(effsize)
+library(likert)
+library(getREAL)
+
+```
+
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+### Make connection with database
+getRealdb<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+pre_hr <- dbReadTable(getRealdb,"girl_pre_1617")
+
+
+```
+
+```{r}
+pre_hr <- pre_hr %>%
+    select(council,grade, hr.avg,inProgramLastYear)
+
+head(pre_hr)
+
+
+```
+
+
+
+
+
+
+
+## Healthy Relationship Outcome 
+
+Relationship skills are a critical component of success in all realms of life. 
+The Healthy Relationship questions measures the behaviors and attitudes of the respondent regarding their relationship skills. Questions that measure healthy relationships skills include the following:
+
+
+*Healthy Relationship Questions*
+
+1. If I have a serious problem, I have people to talk with.
+2. I let people know if they have hurt my feelings.
+3. I let my friends know when I think they are good at something.
+4. In any relationship - romantic or not - I make it clear when I don't feel comfortable.
+
+
+````{r pre_hr_tbl}
+
+pre_hr_table <- with(pre_hr,table(hr.avg >=4.45))
+
+pre_hr_table
+
+```
+
+
+
+```{r pre_hr_function }
+hr_achieved_pre()
+```
+
