@@ -1,8 +1,10 @@
 ---
 title: "Healthy Relationship Notebook"
-output: html_notebook
 params:
-    council: West Central Council
+  council: West Central Council
+output:
+  html_document: default
+  html_notebook: default
 ---
 
 ```{r hr_import_libaries, echo=FALSE, message=FALSE, warning=FALSE}
@@ -20,7 +22,7 @@ library(getREAL)
 ```
 
 
-```{r}
+```{r pre_hr&setup, echo=FALSE, warnings=FALSE, message=FALSE}
 setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
 
 ### Make connection with database
@@ -28,25 +30,17 @@ getRealdb<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
 
 pre_hr <- dbReadTable(getRealdb,"girl_pre_1617")
 
+hr_history <-dbReadTable(getRealdb, "basic_view")
 
 ```
 
-```{r}
+```{r pre_hr, echo=FALSE}
 pre_hr <- pre_hr %>%
     select(council,grade, hr.avg,inProgramLastYear)
 
-head(pre_hr)
-
-
 ```
 
-
-
-
-
-
-
-## Healthy Relationship Outcome 
+# Healthy Relationship Outcome 
 
 Relationship skills are a critical component of success in all realms of life. 
 The Healthy Relationship questions measures the behaviors and attitudes of the respondent regarding their relationship skills. Questions that measure healthy relationships skills include the following:
@@ -59,18 +53,41 @@ The Healthy Relationship questions measures the behaviors and attitudes of the r
 3. I let my friends know when I think they are good at something.
 4. In any relationship - romantic or not - I make it clear when I don't feel comfortable.
 
+## Pre Survey Analysis
 
-````{r pre_hr_tbl}
+```{r pre_num, echo=FALSE}
+pre_num <- pre_hr %>%
+    filter(hr.avg >=4.45)
 
-pre_hr_table <- with(pre_hr,table(hr.avg >=4.45))
 
-pre_hr_table
+
 
 ```
 
 
+The number of valid surveys entered is  `r nrow(pre_hr)`
 
-```{r pre_hr_function }
-hr_achieved_pre()
+The number of students achieving at a high level is `r nrow(pre_num)`
+and that equates to `r hr_achieved_pre()`
+
+```{r pre_hr_hist, echo=FALSE}
+
+pre_hr_histq <- qplot(pre_hr$hr.avg, geom="histogram", main= "Pre Survey",ylim=c(0,60), bins=40, xlab="Outcome Scores") + geom_vline(xintercept = 4.45, col="red") 
+
+pre_hr_histq
+
+```
+
+
+# Healthy Relationship History
+
+```{r hr_history}
+head(hr_history)
+
+hr_history_1 <- hr_history %>%
+    select(Year, population, achieved, outcome.1) %>%
+    filter(outcome.1 =="Healthy Relationships")
+
+pander(hr_history_1)
 ```
 
