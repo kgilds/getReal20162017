@@ -8,23 +8,25 @@ output:
 ### Set working directory, library, and read raw data (needs updated data)
 
 
-```{r}
-library(tidyverse)
+```{r q1_library}
+library(tidyverse) #load tidy package
 
 ```
 .
-```{r}
-setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/November 2016")
+```{r q1_read_data}
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/November 2016") #set directory to find data
 
-q1_data <-read_csv("q1_grades_11122016.csv", skip = 1)
+q1_data <-read_csv("q1_grades_11122016.csv", skip = 1) #read csv file
 
 ```
 
-```{r}
+```{r q1_colnames}
 
+#change column names averages
 colnames (q1_data)[7] <- "reading_avg"
 colnames (q1_data)[10] <- "lang_avg"
 
+# change column names demographics
 colnames (q1_data)[13] <- "council"
 colnames (q1_data)[14] <- "girl_code"
 colnames (q1_data)[15] <- "school"
@@ -49,7 +51,7 @@ colnames (q1_data)[32] <- "M/J READ3, ADV"
 colnames (q1_data)[33] <- "free_reading1"
 colnames (q1_data)[34] <- "free_reading2"
 
-
+# change colnmaes lang arts section
 colnames (q1_data)[37] <- "M/J LANG ARTS 1 ESOL"
 colnames (q1_data)[38] <- "M/J LANG ARTS 2 ESOL"
 colnames (q1_data)[39] <- "M/J LANG ARTS 3 ESOL"
@@ -79,12 +81,12 @@ head(q1_data)
 
 # Attendance: 
 
-```{r}
+```{r q1_attendance}
 q1_attendance <- q1_data %>%
-    select(13:16,19:20) %>%
-    mutate("total" = unexcused + excused)
+    select(13:16,19:20) %>% #take columns of interest
+    mutate("total" = unexcused + excused) #calculated column  to get total absences
 
-head(q1_attendance)
+head(q1_attendance) #check work
 
 ```
 
@@ -92,19 +94,19 @@ head(q1_attendance)
 
 # Behavior
 
-```{r}
+```{r q1_behavior}
 q1_behavior <- q1_data %>%
-    select(13:16, 21:22) %>%
-    mutate("total"= in_school + out_school)
+    select(13:16, 21:22) %>% #take columns of interest
+    mutate("total"= in_school + out_school) #calculate total 
     
-head(q1_behavior)
+head(q1_behavior) #check work
 ```
 
 # Expelled
 
-```{r}
+```{r q1_expelled}
 q1_expelled <- q1_data %>%
-    select(13:16, 23)
+    select(13:16, 23) #take columns of interest
 
 head(q1_expelled)
 ```
@@ -115,14 +117,14 @@ head(q1_expelled)
 
 
 
-```{r}
+```{r q1_reading}
 q1_reading <- q1_data %>%
-    gather("reading_course", "Grade",26:32) %>%
-    select(7,13:16,52:53)
+    gather("reading_course", "Grade",26:32) %>% #gather reading columns and put them in row
+    select(7,13:16,52:53) #select reading columns
 
 dim(q1_reading)
 
-q1_reading <-na.omit(q1_reading)
+q1_reading <-na.omit(q1_reading) #get rid of cases with no data
 
 #mq1Reading <-na.omit(mq1Reading)
 
@@ -135,19 +137,19 @@ q1_reading
 
 
 
-```{r}
+```{r q1_freereading}
 q1_freereading <- q1_data %>%
-    select(7,13:16, 33:34)
+    select(7,13:16, 33:34) #select free enter
     
-q1_freereading <- q1_freereading[,c(1,2,3,4,5,7,6)]
+q1_freereading <- q1_freereading[,c(1,2,3,4,5,7,6)] #re-arrange columns to make them align with q1 readind df
 
 q1_freereading <- q1_freereading %>%
-    rename("reading_course" = free_reading2) %>%
-    rename("Grade" = free_reading1)
+    rename("reading_course" = free_reading2) %>% #rename to match q1_reading
+    rename("Grade" = free_reading1) #rename to match q1_reading
     
 
 dim(q1_freereading)
-q1_freereading <- na.omit(q1_freereading)
+q1_freereading <- na.omit(q1_freereading) #clean up to find cases with data
 dim(q1_freereading)
 
 q1_freereading
@@ -157,9 +159,9 @@ q1_freereading
 
 ```
 
-```{r}
+```{r q1_reading_bind}
 
-q1_reading <- rbind(q1_reading, q1_freereading)
+q1_reading <- rbind(q1_reading, q1_freereading) #bind main q1_reading and free text
 
 dim(q1_reading)
 
@@ -167,27 +169,29 @@ dim(q1_reading)
 
 # Language Arts
 
-```{r}
+```{r q1_langarts}
 q1_langarts <- q1_data %>% 
-    gather("langarts_course", "grade", 37:53,56:57)%>%
-    select(10, 13:16, 40:41)
+    gather("langarts_course", "grade", 37:53,56:57)%>% #put lang arts classes in rows
+    select(10, 13:16, 40:41) #select lang arts courses and grades
 
-q1_langarts <- na.omit(q1_langarts)
+q1_langarts <- na.omit(q1_langarts) #get rid of cases with no entry
 
 q1_langarts
 ```
 
 ```{r}
 q1_freelang <- q1_data %>%
-    select(10, 13:16,54:55)
+    select(10, 13:16,54:55) #find free entry lang cases
 
 names(q1_freelang)
 
-q1_freelang <- q1_freelang[,c(1,2,3,4,5,7,6)]
+q1_freelang <- q1_freelang[,c(1,2,3,4,5,7,6)] #rearrange columns to match regular lang courses 
+
+table(q1_freelang$free_lang1) #check for data
 
 q1_freelang <- q1_freelang %>%
-    rename("langarts_course" = free_lang2) %>%
-    rename("Grade" = freelang1)
+    rename("langarts_course" = free_lang2) %>% #rename columns to match reg lang courses
+    rename("Grade" = free_lang1)
 
 
 q1_freelang
@@ -195,3 +199,4 @@ q1_freelang
 
 
 
+```
