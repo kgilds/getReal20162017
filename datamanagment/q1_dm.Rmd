@@ -113,21 +113,24 @@ head(q1_expelled)
 
 # Reading
 
+
+
 ```{r}
 q1_reading <- q1_data %>%
-    unite(reading,26:32) %>%
-    select(7,13:16, 26)
+    gather("reading_course", "Grade",26:32) %>%
+    select(7,13:16,52:53)
 
-head(q1_reading)
-```
+dim(q1_reading)
 
-```{r}
-q1_reading_test <- q1_data %>%
-    gather(reading, "n",26:32) %>%
-    select(7,13:16, 26)
+q1_reading <-na.omit(q1_reading)
 
-head(q1_reading_test)
-tail(q1_reading_test)
+#mq1Reading <-na.omit(mq1Reading)
+
+
+dim(q1_reading)
+
+q1_reading
+
 ```
 
 
@@ -135,11 +138,60 @@ tail(q1_reading_test)
 ```{r}
 q1_freereading <- q1_data %>%
     select(7,13:16, 33:34)
+    
+q1_freereading <- q1_freereading[,c(1,2,3,4,5,7,6)]
+
+q1_freereading <- q1_freereading %>%
+    rename("reading_course" = free_reading2) %>%
+    rename("Grade" = free_reading1)
+    
+
+dim(q1_freereading)
+q1_freereading <- na.omit(q1_freereading)
+dim(q1_freereading)
 
 q1_freereading
 
-table(q1_freereading$free_reading1)
+
 
 
 ```
+
+```{r}
+
+q1_reading <- rbind(q1_reading, q1_freereading)
+
+dim(q1_reading)
+
+```
+
+# Language Arts
+
+```{r}
+q1_langarts <- q1_data %>% 
+    gather("langarts_course", "grade", 37:53,56:57)%>%
+    select(10, 13:16, 40:41)
+
+q1_langarts <- na.omit(q1_langarts)
+
+q1_langarts
+```
+
+```{r}
+q1_freelang <- q1_data %>%
+    select(10, 13:16,54:55)
+
+names(q1_freelang)
+
+q1_freelang <- q1_freelang[,c(1,2,3,4,5,7,6)]
+
+q1_freelang <- q1_freelang %>%
+    rename("langarts_course" = free_lang2) %>%
+    rename("Grade" = freelang1)
+
+
+q1_freelang
+
+
+
 
