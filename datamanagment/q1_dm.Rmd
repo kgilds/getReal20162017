@@ -1,0 +1,145 @@
+---
+title: "q1_dm"
+output:
+  html_document: default
+  html_notebook: default
+---
+
+### Set working directory, library, and read raw data (needs updated data)
+
+
+```{r}
+library(tidyverse)
+
+```
+.
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/November 2016")
+
+q1_data <-read_csv("q1_grades_11122016.csv", skip = 1)
+
+```
+
+```{r}
+
+colnames (q1_data)[7] <- "reading_avg"
+colnames (q1_data)[10] <- "lang_avg"
+
+colnames (q1_data)[13] <- "council"
+colnames (q1_data)[14] <- "girl_code"
+colnames (q1_data)[15] <- "school"
+colnames (q1_data)[16] <- "enrolled"
+
+# Attendance and Behavior
+colnames (q1_data)[19] <- "unexcused"
+colnames (q1_data)[20] <- "excused"
+colnames (q1_data)[21] <- "in_school"
+colnames (q1_data)[22] <- "out_school"
+colnames (q1_data)[23] <- "expelled"
+
+
+# Reading 
+colnames (q1_data)[26] <- "M/J INTENS READ"
+colnames (q1_data)[27] <- "M/J READ 1"
+colnames (q1_data)[28] <- "M/J READ 1, ADV"
+colnames (q1_data)[29] <- "M/J READ 2"
+colnames (q1_data)[30] <- "M/J READ 2, ADV"
+colnames (q1_data)[31] <- "M/J READ 3"
+colnames (q1_data)[32] <- "M/J READ3, ADV"
+colnames (q1_data)[33] <- "free_reading1"
+colnames (q1_data)[34] <- "free_reading2"
+
+
+colnames (q1_data)[37] <- "M/J LANG ARTS 1 ESOL"
+colnames (q1_data)[38] <- "M/J LANG ARTS 2 ESOL"
+colnames (q1_data)[39] <- "M/J LANG ARTS 3 ESOL"
+colnames (q1_data)[40] <- "M/J DEVELOPMENTAL  LANG ARTS ESOL"
+colnames (q1_data)[41] <- "M/J LANG ARTS 1"
+colnames (q1_data)[42] <- "M/J LANG ARTS 1 ADV"
+colnames (q1_data)[43] <- "M/J LANG ARTS 2"
+colnames (q1_data)[44] <- "M/J LANG ARTS 2 ADV"
+colnames (q1_data)[45] <- "M/J LANG ARTS 3"
+colnames (q1_data)[46] <- "M/J LANG ARTS 3 ADv"
+colnames (q1_data)[47] <- "M/J ENG 2 CAMB SEC 2"
+colnames (q1_data)[48] <- "M/J IB MYP LANG LIT 1"
+colnames (q1_data)[49] <- "M/J ENG 1 CAMB SEC 1"
+colnames (q1_data)[50] <- "M/J IB MYP LANG & LIT 3"
+colnames (q1_data)[51] <- "M/J IB MYP LANG & LIT 2"
+colnames (q1_data)[52] <- "M/J ENG 3 CAMB SEC 3"
+colnames (q1_data)[53] <- "M/J INTENS LANG ARTS"
+colnames (q1_data)[54] <- "free_lang1"
+colnames (q1_data)[55] <- "free_lang2"
+colnames (q1_data)[56] <- "M/J INTENS LANG ARTS II"
+colnames (q1_data)[57] <- "M/J DE LANG ARTS ESOL"
+
+
+head(q1_data)
+
+```
+
+# Attendance: 
+
+```{r}
+q1_attendance <- q1_data %>%
+    select(13:16,19:20) %>%
+    mutate("total" = unexcused + excused)
+
+head(q1_attendance)
+
+```
+
+
+
+# Behavior
+
+```{r}
+q1_behavior <- q1_data %>%
+    select(13:16, 21:22) %>%
+    mutate("total"= in_school + out_school)
+    
+head(q1_behavior)
+```
+
+# Expelled
+
+```{r}
+q1_expelled <- q1_data %>%
+    select(13:16, 23)
+
+head(q1_expelled)
+```
+
+
+
+# Reading
+
+```{r}
+q1_reading <- q1_data %>%
+    unite(reading,26:32) %>%
+    select(7,13:16, 26)
+
+head(q1_reading)
+```
+
+```{r}
+q1_reading_test <- q1_data %>%
+    gather(reading, "n",26:32) %>%
+    select(7,13:16, 26)
+
+head(q1_reading_test)
+tail(q1_reading_test)
+```
+
+
+
+```{r}
+q1_freereading <- q1_data %>%
+    select(7,13:16, 33:34)
+
+q1_freereading
+
+table(q1_freereading$free_reading1)
+
+
+```
+
