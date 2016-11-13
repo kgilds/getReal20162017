@@ -22,6 +22,8 @@ library(getREAL)
 ```
 
 
+
+
 ```{r pre_hr&setup, echo=FALSE, warnings=FALSE, message=FALSE}
 setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
 
@@ -32,7 +34,72 @@ pre_hr <- dbReadTable(getRealdb,"girl_pre_1617")
 
 hr_history <-dbReadTable(getRealdb, "basic_view")
 
+pre_hr_1415 <-dbReadTable(getRealdb, "girl_pre_1415")
+
+pre_hr_1314 <-dbReadTable(getRealdb, "girl_pre2013")
+
+pre_hr_1516 <- dbReadTable(getRealdb, "girl_pre_1516")
+
 ```
+
+
+
+```{r pre_hr_1516}
+
+pre_hr_1516 <- pre_hr_1516 %>%
+    select(council, girlCode, hr.avg) %>% #select columns of interest
+    mutate("Year" = "MY-15-16") # add time frame
+
+
+high_1516 <- pre_hr_1516 %>%
+    filter(hr.avg >=4.45)  #find cases above 4.45
+
+
+mean(pre_hr_1516$hr.avg)
+
+nrow(high_1516)
+
+nrow(pre_hr_1516)
+
+achieved_1516 <- nrow(high_1516) / nrow(pre_hr_1516)  #find percent
+
+achieved_1516 <- round(achieved_1516*100,2) #clean up percent
+
+achieved_1516 <- paste0(achieved_1516,"%", sep="")  # add percent sign
+
+achieved_1516
+
+
+
+
+```
+
+
+
+```{r pre_hr_1314}
+
+
+pre_hr_1314 <- pre_hr_1314 %>% #start cleaning up df
+    rename( council = girlScoutCouncil) %>% #rename council
+    select(council, girlCode, hr_avg) %>% #select columns of interest
+    mutate("Year" = "MY-13-14") # add time frame
+
+
+high_1314 <- pre_hr_1314 %>%
+    filter(hr_avg >=4.45)  #find cases above 4.45
+
+
+achieved_1314 <- nrow(high_1314) / nrow(pre_hr_1314)  #find percent
+
+achieved_1314 <- round(achieved_1314*100,2) #clean up percent
+
+achieved_1314 <- paste0(achieved_1314,"%", sep="")  # add percent sign
+
+pander(achieved_1314)  #make nice with pander
+
+```
+
+
 
 ```{r pre_hr, echo=FALSE}
 pre_hr <- pre_hr %>%
@@ -65,9 +132,7 @@ pre_num <- pre_hr %>%
 ```
 
 
-The number of valid surveys entered is  `r nrow(pre_hr)`
-
-The number of students achieving at a high level is `r nrow(pre_num)`
+The number of valid surveys entered is  `r nrow(pre_hr)`, and the number of students achieving at a high level is `r nrow(pre_num)`
 and that equates to `r hr_achieved_pre()`
 
 ```{r pre_hr_hist, echo=FALSE}
@@ -79,14 +144,16 @@ pre_hr_histq
 ```
 
 
-# Healthy Relationship History
+# Pre Survey Healthy Relationship History
 
-```{r hr_history}
-head(hr_history)
 
+```{r}
 hr_history_1 <- hr_history %>%
-    select(Year, population, achieved, outcome.1) %>%
-    filter(outcome.1 =="Healthy Relationships")
+    select(Year, population, achieved, outcome.1, percent_achieved, mean) %>%
+    filter(outcome.1 =="Healthy Relationships") %>%
+    select(Year, population, percent_achieved, mean )
+    
+    
 
 pander(hr_history_1)
 ```
