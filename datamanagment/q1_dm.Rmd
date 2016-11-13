@@ -10,13 +10,19 @@ output:
 
 ```{r q1_library}
 library(tidyverse) #load tidy package
+library(sqldf)
+library(pander)
 
 ```
 .
 ```{r q1_read_data}
 setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/November 2016") #set directory to find data
 
-q1_data <-read_csv("q1_grades_11122016.csv", skip = 1) #read csv file
+q1_data <-read_csv("q1_data_11132016.csv", skip = 1) #read csv file
+
+names(q1_data)
+
+
 
 ```
 
@@ -33,57 +39,124 @@ colnames (q1_data)[15] <- "school"
 colnames (q1_data)[16] <- "enrolled"
 
 # Attendance and Behavior
-colnames (q1_data)[19] <- "unexcused"
-colnames (q1_data)[20] <- "excused"
-colnames (q1_data)[21] <- "in_school"
-colnames (q1_data)[22] <- "out_school"
-colnames (q1_data)[23] <- "expelled"
+colnames (q1_data)[18] <- "unexcused"
+colnames (q1_data)[19] <- "excused"
+colnames (q1_data)[20] <- "in_school"
+colnames (q1_data)[21] <- "out_school"
+colnames (q1_data)[22] <- "expelled"
+colnames (q1_data)[23] <- "Nothing"
 
 
 # Reading 
-colnames (q1_data)[26] <- "M/J INTENS READ"
-colnames (q1_data)[27] <- "M/J READ 1"
-colnames (q1_data)[28] <- "M/J READ 1, ADV"
-colnames (q1_data)[29] <- "M/J READ 2"
-colnames (q1_data)[30] <- "M/J READ 2, ADV"
-colnames (q1_data)[31] <- "M/J READ 3"
-colnames (q1_data)[32] <- "M/J READ3, ADV"
-colnames (q1_data)[33] <- "free_reading1"
-colnames (q1_data)[34] <- "free_reading2"
+colnames (q1_data)[25] <- "M/J INTENS READ"
+colnames (q1_data)[26] <- "M/J READ 1"
+colnames (q1_data)[27] <- "M/J READ 1, ADV"
+colnames (q1_data)[28] <- "M/J READ 2"
+colnames (q1_data)[29] <- "M/J READ 2, ADV"
+colnames (q1_data)[30] <- "M/J READ 3"
+colnames (q1_data)[31] <- "M/J READ3, ADV"
+colnames (q1_data)[32] <- "free_reading1"
+colnames (q1_data)[33] <- "free_reading2"
+colnames (q1_data)[34] <- "M/J DE LA ESOL-READ"
 
 # change colnmaes lang arts section
-colnames (q1_data)[37] <- "M/J LANG ARTS 1 ESOL"
-colnames (q1_data)[38] <- "M/J LANG ARTS 2 ESOL"
-colnames (q1_data)[39] <- "M/J LANG ARTS 3 ESOL"
-colnames (q1_data)[40] <- "M/J DEVELOPMENTAL  LANG ARTS ESOL"
-colnames (q1_data)[41] <- "M/J LANG ARTS 1"
-colnames (q1_data)[42] <- "M/J LANG ARTS 1 ADV"
-colnames (q1_data)[43] <- "M/J LANG ARTS 2"
-colnames (q1_data)[44] <- "M/J LANG ARTS 2 ADV"
-colnames (q1_data)[45] <- "M/J LANG ARTS 3"
-colnames (q1_data)[46] <- "M/J LANG ARTS 3 ADv"
-colnames (q1_data)[47] <- "M/J ENG 2 CAMB SEC 2"
-colnames (q1_data)[48] <- "M/J IB MYP LANG LIT 1"
-colnames (q1_data)[49] <- "M/J ENG 1 CAMB SEC 1"
-colnames (q1_data)[50] <- "M/J IB MYP LANG & LIT 3"
-colnames (q1_data)[51] <- "M/J IB MYP LANG & LIT 2"
-colnames (q1_data)[52] <- "M/J ENG 3 CAMB SEC 3"
-colnames (q1_data)[53] <- "M/J INTENS LANG ARTS"
-colnames (q1_data)[54] <- "free_lang1"
-colnames (q1_data)[55] <- "free_lang2"
-colnames (q1_data)[56] <- "M/J INTENS LANG ARTS II"
-colnames (q1_data)[57] <- "M/J DE LANG ARTS ESOL"
+colnames (q1_data)[36] <- "M/J LANG ARTS 1 ESOL"
+colnames (q1_data)[37] <- "M/J LANG ARTS 2 ESOL"
+colnames (q1_data)[38] <- "M/J LANG ARTS 3 ESOL"
+colnames (q1_data)[39] <- "M/J DEVELOPMENTAL  LANG ARTS ESOL"
+colnames (q1_data)[40] <- "M/J LANG ARTS 1"
+colnames (q1_data)[41] <- "M/J LANG ARTS 1 ADV"
+colnames (q1_data)[42] <- "M/J LANG ARTS 2"
+colnames (q1_data)[43] <- "M/J LANG ARTS 2 ADV"
+colnames (q1_data)[44] <- "M/J LANG ARTS 3"
+colnames (q1_data)[45] <- "M/J LANG ARTS 3 ADv"
+colnames (q1_data)[46] <- "M/J ENG 2 CAMB SEC 2"
+colnames (q1_data)[47] <- "M/J IB MYP LANG LIT 1"
+colnames (q1_data)[48] <- "M/J ENG 1 CAMB SEC 1"
+colnames (q1_data)[49] <- "M/J IB MYP LANG & LIT 3"
+colnames (q1_data)[50] <- "M/J IB MYP LANG & LIT 2"
+colnames (q1_data)[51] <- "M/J ENG 3 CAMB SEC 3"
+colnames (q1_data)[52] <- "M/J INTENS LANG ARTS"
+colnames (q1_data)[53] <- "free_lang1"
+colnames (q1_data)[54] <- "free_lang2"
+colnames (q1_data)[55] <- "M/J LANG ARTS TRAN"
+colnames (q1_data)[56] <- "M/J DE LANG ARTS ESOL"
+colnames (q1_data)[57] <- "blankspace"
 
-
-head(q1_data)
+names(q1_data)
 
 ```
+
+
+```{r q1_data_clean}
+
+
+
+
+q1_data$girl_code <- as.character(q1_data$girl_code)
+
+### Make all girCode to upper case for matching
+q1_data$girl_code <- toupper(q1_data$girl_code)
+
+
+
+q1_data <- q1_data %>%
+    filter(Finished ==1)
+
+#pander(table(q1_data$girl_code)) #test for duplicate girl codes
+
+```
+
+
+```{r q1_data_unique}
+
+q1_data <- q1_data[!(duplicated(q1_data$girl_code) | duplicated(q1_data$girl_code, fromLast = TRUE)), ]  #find and extract unique cases
+
+dim(q1_data)
+
+#pander(table(q1_data$girl_code)) #test for duplicate girl codes
+
+#preUnique<- pre [!(duplicated(pre$girlCode) | duplicated(pre$girlCode, fromLast = TRUE)), ]
+
+#dim(preUnique)
+
+
+```
+
+
+
+
+
+```{r q1_dupes}
+
+q1Dupes <- duplicated(q1_data$girl_code) | duplicated(q1_data$girl_code, fromLast=TRUE)
+
+
+#preDupes <-duplicated(pre$girlCode) | duplicated(pre$girlCode, fromLast=TRUE)
+
+#preDupes <-pre[preDupes, ]
+
+#dim(preDupes)
+
+
+
+### Subset the duplicates
+q1Dupes <-q1_data[q1Dupes, ]
+
+
+q1Dupes
+
+```
+
+
+
+
 
 # Attendance: 
 
 ```{r q1_attendance}
 q1_attendance <- q1_data %>%
-    select(13:16,19:20) %>% #take columns of interest
+    select(13:16,18:19) %>% #take columns of interest
     mutate("total" = unexcused + excused) #calculated column  to get total absences
 
 head(q1_attendance) #check work
@@ -96,7 +169,7 @@ head(q1_attendance) #check work
 
 ```{r q1_behavior}
 q1_behavior <- q1_data %>%
-    select(13:16, 21:22) %>% #take columns of interest
+    select(13:16, 20:21) %>% #take columns of interest
     mutate("total"= in_school + out_school) #calculate total 
     
 head(q1_behavior) #check work
@@ -106,7 +179,7 @@ head(q1_behavior) #check work
 
 ```{r q1_expelled}
 q1_expelled <- q1_data %>%
-    select(13:16, 23) #take columns of interest
+    select(13:16, 22) #take columns of interest
 
 head(q1_expelled)
 ```
@@ -119,19 +192,24 @@ head(q1_expelled)
 
 ```{r q1_reading}
 q1_reading <- q1_data %>%
-    gather("reading_course", "Grade",26:32) %>% #gather reading columns and put them in row
-    select(7,13:16,52:53) #select reading columns
+    gather("reading_course", "Grade",25:31, 34) %>% #gather reading columns and put them in row
+    select(7,13:16, 50:51) #select reading columns
+    
+
+names(q1_reading)
 
 dim(q1_reading)
 
 q1_reading <-na.omit(q1_reading) #get rid of cases with no data
 
-#mq1Reading <-na.omit(mq1Reading)
+
 
 
 dim(q1_reading)
 
 q1_reading
+
+
 
 ```
 
@@ -139,7 +217,7 @@ q1_reading
 
 ```{r q1_freereading}
 q1_freereading <- q1_data %>%
-    select(7,13:16, 33:34) #select free enter
+    select(7,13:16, 32:33) #select free enter
     
 q1_freereading <- q1_freereading[,c(1,2,3,4,5,7,6)] #re-arrange columns to make them align with q1 readind df
 
@@ -165,6 +243,8 @@ q1_reading <- rbind(q1_reading, q1_freereading) #bind main q1_reading and free t
 
 dim(q1_reading)
 
+q1_reading
+
 ```
 
 # Language Arts
@@ -172,7 +252,9 @@ dim(q1_reading)
 ```{r q1_langarts}
 q1_langarts <- q1_data %>% 
     gather("langarts_course", "grade", 37:53,56:57)%>% #put lang arts classes in rows
-    select(10, 13:16, 40:41) #select lang arts courses and grades
+    select(10, 13:16, 39:40) #select lang arts courses and grades
+
+names(q1_langarts)
 
 q1_langarts <- na.omit(q1_langarts) #get rid of cases with no entry
 
@@ -181,7 +263,7 @@ q1_langarts
 
 ```{r}
 q1_freelang <- q1_data %>%
-    select(10, 13:16,54:55) #find free entry lang cases
+    select(10, 13:16,53:54) #find free entry lang cases
 
 names(q1_freelang)
 
@@ -200,3 +282,27 @@ q1_freelang
 
 
 ```
+
+
+```{r "sq1_sqlite", root.dir= "C:/Users/kevin/Dropbox/GetReal/Data/sqlite" }
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+
+getReal_db<- dbConnect(SQLite(), dbname="outcome_history.sqlite") #established connection with database
+
+dbWriteTable(conn =getReal_db, name= "Q1_attendance_1617", value= q1_attendance, row.names=FALSE, overwrite=TRUE)
+
+dbWriteTable(conn =getReal_db, name= "Q1_behavior_1617", value= q1_behavior, row.names=FALSE, overwrite=TRUE)
+
+dbWriteTable(conn =getReal_db, name= "Q1_expelled_1617", value= q1_expelled, row.names=FALSE, overwrite=TRUE)
+
+dbWriteTable(conn =getReal_db, name= "Q1_reading_1617", value= q1_reading, row.names=FALSE, overwrite=TRUE)
+
+dbWriteTable(conn =getReal_db, name= "Q1_langarts_1617", value= q1_langarts, row.names=FALSE, overwrite=TRUE)
+
+
+
+
+```
+
