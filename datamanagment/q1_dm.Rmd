@@ -228,14 +228,26 @@ q1_freereading <- q1_freereading %>%
 
 dim(q1_freereading)
 q1_freereading <- na.omit(q1_freereading) #clean up to find cases with data
+
+
+
 dim(q1_freereading)
 
 q1_freereading
 
 
+```
 
+
+```{r}
+
+q1_freereading <- q1_freereading[grep("READ", q1_freereading$reading_course, ignore.case=TRUE, fixed=TRUE),]
+
+q1_freereading
 
 ```
+
+
 
 ```{r q1_reading_bind}
 
