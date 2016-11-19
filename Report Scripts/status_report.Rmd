@@ -3,10 +3,9 @@ title: "Status Report"
 author: "Kevin Gilds, MPA"
 date: '`r Sys.Date()`'
 output:
+  
   pdf_document:
     toc: no
-  html_document:
-    toc: yes
 ---
 Run time:
 ```{r status_library, echo=FALSE}
@@ -120,6 +119,20 @@ post_teacher <- post_teacher %>%
 ```
 
 
+```{r grades_q1, echo=FALSE}
+
+q1 <- dbReadTable(getReal_db, "Q1_attendance_1617")
+
+q1 <- q1 %>%
+    select(council) %>%
+    mutate("dataSource" = "Q1")
+
+
+
+```
+
+
+
 ```{r counts, echo=FALSE}
 ##### Geyset counts of Pre and Post Surveys
 girl <- nrow(pre_girl) + nrow(post_girl)
@@ -147,9 +160,10 @@ total_survey_count <- data.frame(Data_Source, Data_Entry)
 girl_parent <- rbind(pre_girl,pre_parent)
 
 
-survey_status <- rbind(girl_parent, pre_teacher)
 
+survey_status <- rbind(girl_parent, pre_teacher) #add teacher survey
 
+survey_status <- rbind(survey_status, q1) #add q1
 
 
 ```
