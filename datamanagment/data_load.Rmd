@@ -65,3 +65,12 @@ rmarkdown::render("q1_dm.Rmd") #run q1_dm file
 
 
 
+```{r render_status_report}
+setwd("~/GitHub/getReal20162017/Report Scripts")
+
+rmarkdown::render("status_report.Rmd")
+
+
+
+```
+
