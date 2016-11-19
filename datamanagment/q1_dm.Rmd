@@ -16,9 +16,8 @@ library(pander)
 ```
 .
 ```{r q1_read_data}
-setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/November 2016") #set directory to find data
+q1_data <- readRDS("q1_data.Rds")
 
-q1_data <-read_csv("q1_data_11132016.csv", skip = 1) #read csv file
 
 names(q1_data)
 
