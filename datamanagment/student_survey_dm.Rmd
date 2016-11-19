@@ -368,12 +368,3 @@ pre_student_dupe_file("West Central Council")
 =======
 
 
-```{r render_status_report}
-setwd("~/GitHub/getReal20162017/Report Scripts")
-
-rmarkdown::render("status_report.Rmd")
-
-
-
-```
-
