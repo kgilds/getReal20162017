@@ -107,6 +107,24 @@ q1_data <- q1_data %>%
 ```
 
 
+```{r clean_council_names}
+
+q1_data$council <-sub("Girl Scouts of the Gateway Council", "Gateway Council", fixed=TRUE, q1_data$council)
+
+q1_data$council <-sub("Girl Scouts of Citrus Council", "Citrus Council", fixed=TRUE, q1_data$council)
+
+q1_data$council <-sub("Girl Scouts of Southeast Florida", "Southeast Council", fixed=TRUE, q1_data$council)
+
+q1_data$council <-sub("Girl Scout Council of Tropical Florida", "Tropical Council", fixed = TRUE, q1_data$council)
+
+q1_data$council <-sub("Girl Scouts of West Central Florida", "West Central Council", fixed = TRUE, q1_data$council)
+
+q1_data$council <-sub("Girl Scout Council of the Panhandle", "Panhandle Council", fixed = TRUE, q1_data$council)
+
+
+```
+
+
 ```{r q1_data_unique}
 
 q1_data <- q1_data[!(duplicated(q1_data$girl_code) | duplicated(q1_data$girl_code, fromLast = TRUE)), ]  #find and extract unique cases
