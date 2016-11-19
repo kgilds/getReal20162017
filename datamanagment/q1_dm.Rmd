@@ -330,7 +330,7 @@ dbWriteTable(conn =getReal_db, name= "Q1_reading_1617", value= q1_reading, row.n
 
 dbWriteTable(conn =getReal_db, name= "Q1_langarts_1617", value= q1_langarts, row.names=FALSE, overwrite=TRUE)
 
-
+dbWriteTable(conn =getReal_db, name= "Q1_duplicates_1617", value= q1Dupes, row.names=FALSE, overwrite=TRUE)
 
 
 ```
