@@ -256,7 +256,7 @@ q1_freereading
 ```
 
 
-```{r}
+```{r q1_free, }
 
 q1_freereading <- q1_freereading[grep("READ", q1_freereading$reading_course, ignore.case=TRUE, fixed=TRUE),]
 
@@ -312,6 +312,60 @@ q1_freelang
 
 ```
 
+```{r}
+q1_behavior_data <- full_join(q1_behavior, q1_attendance, by="girl_code")
+
+dim(q1_behavior_data)
+head(q1_behavior_data)
+names(q1_behavior_data)
+
+q1_behavior_data <- q1_behavior_data %>%
+    select(1,2,3,4, 5, 7, 13) %>%
+    rename(council = council.x) %>%
+    rename(school = school.x) %>%
+    rename(enrolled = enrolled.x) %>%
+    rename(suspension_total = total.x)%>%
+    rename(absences_total = total.y)
+
+head(q1_behavior_data)
+
+```
+
+
+
+```{r combine_expelled}
+
+q1_behavior_data <- full_join(q1_behavior_data, q1_expelled, by="girl_code")
+
+names(q1_behavior_data)
+
+q1_behavior_data <- q1_behavior_data %>%
+    select(1, 2, 3, 4, 6,7,11) %>%
+    rename(council = council.x) %>%
+    rename(school = school.x)%>%
+    rename(enrolled = enrolled.x)
+    #rename(expelled = expelled.x)
+
+
+head(q1_behavior_data)
+    
+
+```
+
+
+
+#Combine Grades
+
+```{r combine_grades}
+q1_grades_c <- full_join(q1_reading, q1_langarts, by="girl_code")
+
+dim(q1_grades_c)
+
+head(q1_grades_c)
+
+
+```
+
 
 ```{r "sq1_sqlite", root.dir= "C:/Users/kevin/Dropbox/GetReal/Data/sqlite" }
 
@@ -331,6 +385,9 @@ dbWriteTable(conn =getReal_db, name= "Q1_reading_1617", value= q1_reading, row.n
 dbWriteTable(conn =getReal_db, name= "Q1_langarts_1617", value= q1_langarts, row.names=FALSE, overwrite=TRUE)
 
 dbWriteTable(conn =getReal_db, name= "Q1_duplicates_1617", value= q1Dupes, row.names=FALSE, overwrite=TRUE)
+
+dbWriteTable(conn =getReal_db, name= "Q1_behavior_data_1617", value= q1_behavior_data, row.names=FALSE, overwrite=TRUE)
+
 
 
 ```
