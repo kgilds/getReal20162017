@@ -19,7 +19,7 @@ library(pander)
 q1_data <- readRDS("q1_data.Rds")
 
 
-names(q1_data)
+#names(q1_data)
 
 
 
@@ -274,7 +274,23 @@ dim(q1_reading)
 
 q1_reading
 
+
+
 ```
+
+
+```{r clean_up_reading}
+
+q1_reading <- q1_reading %>%
+    filter(Grade != "Did not mean to select this course")
+
+
+
+```
+
+
+
+
 
 # Language Arts
 
