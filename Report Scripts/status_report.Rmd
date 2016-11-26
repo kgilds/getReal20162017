@@ -233,11 +233,28 @@ teacher_dupes <- teacher_dupes %>%
 ```
 
 
+```{r q1_dupes}
+
+q1_dupes <- dbReadTable(getReal_db, "Q1_duplicates_1617")
+
+q1_dupes <- q1_dupes %>%
+    select(council) %>%
+    mutate("data_Source" = "Q1_dupes")
+
+
+```
+
+
 ```{r bind_dupes, echo=FALSE}
 
 student_d_parent_d <- rbind(student_dupes, parent_dupes)
 
+
+
 dupe_status <- rbind(student_d_parent_d, teacher_dupes)
+
+
+dupe_status <-rbind(dupe_status, q1_dupes)
 
 ```
 
@@ -254,7 +271,7 @@ pander(dupe_status_r)
 
 
 
-```{r dupe_status_counci, echo=FALSE}
+```{r dupe_status_council, echo=FALSE}
 
 dupe_status_c <-with(dupe_status,table(council,data_Source))
 
