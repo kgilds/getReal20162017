@@ -3,10 +3,9 @@ title: "Status Report"
 author: "Kevin Gilds, MPA"
 date: '`r Sys.Date()`'
 output:
+  
   pdf_document:
     toc: no
-  html_document:
-    toc: yes
 ---
 Run time:
 ```{r status_library, echo=FALSE}
@@ -120,6 +119,20 @@ post_teacher <- post_teacher %>%
 ```
 
 
+```{r grades_q1, echo=FALSE}
+
+q1 <- dbReadTable(getReal_db, "Q1_attendance_1617")
+
+q1 <- q1 %>%
+    select(council) %>%
+    mutate("dataSource" = "Q1")
+
+
+
+```
+
+
+
 ```{r counts, echo=FALSE}
 ##### Geyset counts of Pre and Post Surveys
 girl <- nrow(pre_girl) + nrow(post_girl)
@@ -147,9 +160,10 @@ total_survey_count <- data.frame(Data_Source, Data_Entry)
 girl_parent <- rbind(pre_girl,pre_parent)
 
 
-survey_status <- rbind(girl_parent, pre_teacher)
 
+survey_status <- rbind(girl_parent, pre_teacher) #add teacher survey
 
+survey_status <- rbind(survey_status, q1) #add q1
 
 
 ```
@@ -219,11 +233,28 @@ teacher_dupes <- teacher_dupes %>%
 ```
 
 
+```{r q1_dupes}
+
+q1_dupes <- dbReadTable(getReal_db, "Q1_duplicates_1617")
+
+q1_dupes <- q1_dupes %>%
+    select(council) %>%
+    mutate("data_Source" = "Q1_dupes")
+
+
+```
+
+
 ```{r bind_dupes, echo=FALSE}
 
 student_d_parent_d <- rbind(student_dupes, parent_dupes)
 
+
+
 dupe_status <- rbind(student_d_parent_d, teacher_dupes)
+
+
+dupe_status <-rbind(dupe_status, q1_dupes)
 
 ```
 
@@ -240,7 +271,7 @@ pander(dupe_status_r)
 
 
 
-```{r dupe_status_counci, echo=FALSE}
+```{r dupe_status_council, echo=FALSE}
 
 dupe_status_c <-with(dupe_status,table(council,data_Source))
 
