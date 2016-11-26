@@ -359,10 +359,13 @@ head(q1_behavior_data)
 ```{r combine_grades}
 q1_grades_c <- full_join(q1_reading, q1_langarts, by="girl_code")
 
-dim(q1_grades_c)
+names(q1_grades_c)
+
+q1_grades_c <- q1_grades_c %>%
+    select(2,6,7,12,13) %>%
+    rename(council = council.x)
 
 head(q1_grades_c)
-
 
 ```
 
@@ -391,4 +394,136 @@ dbWriteTable(conn =getReal_db, name= "Q1_behavior_data_1617", value= q1_behavior
 
 
 ```
+
+
+# Functions
+```{r grade_file_function}
+
+
+grades_file <- function(x) {
+    grade_file <- filter(q1_grades_c, council == x)
+    write.csv (grade_file, file="grade_file_q1.csv", row.names=FALSE)
+    
+    
+}
+
+
+```
+
+```{r behavior_function}
+
+behavior_file <- function(x){
+    behavior_file <- filter(q1_behavior_data, council== x)
+    write.csv(behavior_file, file="behavior.file_q1.csv", row.names=FALSE)
+
+    }
+
+```
+
+```{r q1_duplicate_function}
+
+grade_dupes_file <-function(x){
+    grade_dupes <-filter(q1Dupes, council== x)
+    write.csv(grade_dupes, file="grade_dupes_q1.csv", row.names=FALSE)
+    
+}
+
+```
+
+
+
+### Citrus Council
+```{r make_student}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/citrus_council")
+
+
+grades_file("Citrus Council")
+
+behavior_file("Citrus Council")
+
+grade_dupes_file("Citrus Council")
+
+```
+
+
+### Gateway Council
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/gateway_council")
+
+grades_file("Gateway Council")
+
+behavior_file("Gateway Council")
+
+grade_dupes_file("Gateway Council")
+
+
+
+```
+
+
+### Southeast Council
+```{r}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/southeast")
+
+
+grades_file("Southeast Council")
+
+behavior_file("Southeast Council")
+
+grade_dupes_file("Southeast Council")
+
+
+```
+
+
+### Tropical Council
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/tropical_council")
+
+grades_file("Tropical Council")
+
+behavior_file("Tropical Council")
+
+grade_dupes_file("Tropical Council")
+
+```
+
+
+### Panhandle Council
+
+```{r}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/panhandle_council")
+
+grades_file("Panhandle Council")
+
+behavior_file("Panhandle Council")
+
+grade_dupes_file("Panhandle Council")
+
+
+
+```
+
+### West Central Council
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/west_central_council")
+
+grades_file("West Central Council")
+
+behavior_file("West Central Council")
+
+grade_dupes_file("West Central Council")
+
+
+
+```
+=======
+
+
 
