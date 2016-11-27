@@ -233,7 +233,7 @@ teacher_dupes <- teacher_dupes %>%
 ```
 
 
-```{r q1_dupes}
+```{r q1_dupes, echo=FALSE}
 
 q1_dupes <- dbReadTable(getReal_db, "Q1_duplicates_1617")
 
