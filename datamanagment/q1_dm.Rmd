@@ -288,6 +288,16 @@ q1_reading <- q1_reading %>%
 
 ```
 
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/west_central_council")
+
+
+q1_reading_test <- q1_reading %>%
+    filter(girl_code == "320ZB062105")
+
+
+write.csv(q1_reading_test, file="reading_course_question.csv", row.names=FALSE)
+```
 
 
 
