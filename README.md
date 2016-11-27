@@ -4,29 +4,17 @@ Get-REAL-
 =========
 
 # Purpose 
+The purpose of this repository is to house R Scripts and documentation for the Get REAL! program. The intent is not share the data nor the results but the how the program was evaluated. A motivation for using Github and Rmarkdown is to increase the quality of the evaluation and reproducability. 
 
-The purpose of this repository is to house R Scripts and documentation for the  Get REAL! program. 
-
-Data sources include girl surveys, parent surveys, teacher surveys and quarterly academic data. 
-
-Girl surveys measure the Girl Scout Outcomes of Healthy Relationships, Academic Mastery, Academic Engagement. 
-
-# Objectives of the Get REAL! Program 
-
-## Reading Improvement:
-
-* 50% of participating students will improve their reading skills as demonstrated by their Language Arts grade increasing or maintaining a "C" grade from the baseline grading period to the final grading period as evidenced by report cards/school reports.
+Data sources include girl surveys, parent surveys, teacher surveys and quarterly academic data. Data from surveys and school reports are entered into Qualtrics. The data needs to be manually downloaded from Qualtrics with proper log in credenitals. The data is downloaded to a csv file that sits locally on this writer's machine. Request for API access to Qualtrics has not been requested at this time. 
 
 
-## Improved Attendance:
+The data_load.Rmd file reads the csv file and subsequenly creates RDS files and triggers the data management scripts and stats reports to render. The attempt will be to create and utilize a makefile to implement this automation. 
 
-* 60% of participating students will either maintain or improve their attendance rates as demonstrated by their decreased absences from the baseline grading period to the final grading period as evidenced by report cards/school reports.
+R markdown files have been utilzied to process the downloaded data from Qualtrics, the processed data is sent to a sqllite database that sits locally on this writer's machine. Rmarkdown files read the data from the database and generate reports that evaluate the progress of the students in the program. 
 
-## Improvement In School Behavior
 
-* 70% of participating students will show improvement in behavior by decreasing their number of suspensions from the baseline grading period to final grading period or not having a suspension during the school year as evidenced from the student's report card/school reports.
 
-## Improved Life Skills
 
-* 70% of participating girls will demonstrate an increased understanding of pertinent life skills as demonstrated by a pre and post assessment
+
 
