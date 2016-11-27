@@ -44,7 +44,7 @@ pre_hr_1516 <- dbReadTable(getRealdb, "girl_pre_1516")
 
 
 
-```{r pre_hr_1516}
+```{r pre_hr_1516, echo=FALSE}
 
 pre_hr_1516 <- pre_hr_1516 %>%
     select(council, girlCode, hr.avg) %>% #select columns of interest
@@ -55,11 +55,11 @@ high_1516 <- pre_hr_1516 %>%
     filter(hr.avg >=4.45)  #find cases above 4.45
 
 
-mean(pre_hr_1516$hr.avg)
+#mean(pre_hr_1516$hr.avg)
 
-nrow(high_1516)
+#nrow(high_1516)
 
-nrow(pre_hr_1516)
+#nrow(pre_hr_1516)
 
 achieved_1516 <- nrow(high_1516) / nrow(pre_hr_1516)  #find percent
 
@@ -67,7 +67,7 @@ achieved_1516 <- round(achieved_1516*100,2) #clean up percent
 
 achieved_1516 <- paste0(achieved_1516,"%", sep="")  # add percent sign
 
-achieved_1516
+#achieved_1516
 
 
 
@@ -76,7 +76,7 @@ achieved_1516
 
 
 
-```{r pre_hr_1314}
+```{r pre_hr_1314, echo=FALSE}
 
 
 pre_hr_1314 <- pre_hr_1314 %>% #start cleaning up df
@@ -95,7 +95,7 @@ achieved_1314 <- round(achieved_1314*100,2) #clean up percent
 
 achieved_1314 <- paste0(achieved_1314,"%", sep="")  # add percent sign
 
-pander(achieved_1314)  #make nice with pander
+#pander(achieved_1314)  #make nice with pander
 
 ```
 
@@ -124,16 +124,20 @@ The Healthy Relationship questions measures the behaviors and attitudes of the r
 
 ```{r pre_num, echo=FALSE}
 pre_num <- pre_hr %>%
-    filter(hr.avg >=4.45)
+    filter(hr.avg >=4.45) #select records with outcome score who achieved outcome at high level
 
 
+pre_hr_m <- mean(pre_hr$hr.avg)
 
+pre_hr_m <-round(pre_hr_m,2)
+
+#pre_hr_m
 
 ```
 
 
 The number of valid surveys entered is  **`r nrow(pre_hr)`**, and the number of students achieving at a high level is **`r nrow(pre_num)`**
-and that equates to **`r hr_achieved_pre()`**. The average score from students is **`r mean(pre_hr$hr.avg)`**
+and that equates to **`r hr_achieved_pre()`**. The average score from students is **`r pre_hr_m`**
 
 
 
@@ -150,11 +154,11 @@ pre_hr_histq
 # Pre Survey Healthy Relationship History
 
 
-```{r}
+```{r hr_histor_1, echo=FALSE}
 hr_history_1 <- hr_history %>%
-    select(Year, population, achieved, outcome.1, percent_achieved, mean) %>%
-    filter(outcome.1 =="Healthy Relationships") %>%
-    select(Year, population, percent_achieved, mean )
+    select(Year, population, achieved, outcome.1, percent_achieved, mean) %>% #select variables of interest
+    filter(outcome.1 =="Healthy Relationships") %>% #select variable of interest
+    select(Year, population, percent_achieved, mean ) # reselect variables of interest
     
     
 
@@ -174,7 +178,7 @@ Survey results from teachers and parents also  Below are tables that provide a b
 
 
 
-```{r}
+```{r parent_df, echo=FALSE}
 
 pre_parent  <- dbReadTable(getRealdb, "pre_parent_1617")
 
@@ -185,24 +189,25 @@ pre_parent  <- dbReadTable(getRealdb, "pre_parent_1617")
 
 
 
-Question 1:She develops positive relationships with her classmates.
-Results based on 466 responses.
+Question 5: She develops positive relationships with her classmates.
 
-```{r}
+Results based on  responses.
 
-pre_parent_hr1 <- pre_parent %>%
+```{r pre_parent, echo=FALSE}
+
+pre_parent_hr1 <- pre_parent %>% #select this question
     select(14)
 
-colnames(pre_parent_hr1) [1] <- "Q5"
+colnames(pre_parent_hr1) [1] <- "Q5" #change name to Question 5
 
 
 ```
 
 
 
-```{r}
+```{r pre_parent_factor, echo=FALSE}
 
-pre_parent_hr1$Q5 <- factor(pre_parent_hr1$Q5, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree/Disagree", "Slightly Agree", "Agree", "Strongly Agree"),ordered = TRUE)
+pre_parent_hr1$Q5 <- factor(pre_parent_hr1$Q5, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree/Disagree", "Slightly Agree", "Agree", "Strongly Agree"),ordered = TRUE) #make factor names consistent
 
 
 ```
@@ -210,7 +215,7 @@ pre_parent_hr1$Q5 <- factor(pre_parent_hr1$Q5, levels=c("Strongly Disagree", "Di
 
 
 
-```{r}
+```{r pre_parent_tbl, echo=FALSE}
 
 pre_parent_tbl <- table(pre_parent_hr1) #test q5 
 
@@ -224,25 +229,25 @@ pre_parent_tbl <- table(pre_parent_hr1) #test q5
 ```
 
 
-```{r}
+```{r pre_parent_likert, echo=FALSE, fig.width=12}
 
-pre_parent_hr1 <- likert(pre_parent_hr1)
+pre_parent_hr1 <- likert(pre_parent_hr1) #change to likert
 
 summary(pre_parent_hr1) #test
 
-plot(pre_parent_hr1, type="heat") + ggtitle("Pre Parent Survey Question 5") + theme_dark()
+plot(pre_parent_hr1, type="heat") + ggtitle("Pre Parent Survey Question 5") + theme_dark() #plot heat map
 
 
 ```
 
 
-Teacher Survey
+### Teacher Survey
 
-```{r read_database}
+```{r read_database, echo=FALSE}
 
-pre_teacher <- dbReadTable(getRealdb, "pre_teacher_1617")
+pre_teacher <- dbReadTable(getRealdb, "pre_teacher_1617") #read database
 
-post_teacher <- dbReadTable(getRealdb, "post_teacher_1617")
+post_teacher <- dbReadTable(getRealdb, "post_teacher_1617") #read database
 
 ```
 
@@ -254,17 +259,17 @@ Question 7: She has developed positive relationships with her classmates (N=)
 
 
 
-```{r}
+```{r makeq7, echo=FALSE}
 
-colnames(pre_teacher) [16] <- "Q7"
+colnames(pre_teacher) [16] <- "Q7" #change name to q7 for graph
 
-pre_teacher_tbl <- pre_teacher %>%
+pre_teacher_tbl <- pre_teacher %>% # select variable 16 which is q7.
     select(16)
 
 
-pre_teacher_tbl_q7 <- table(pre_teacher_tbl$Q7)
+pre_teacher_tbl_q7 <- table(pre_teacher_tbl$Q7) #test 
 
-pander(pre_teacher_tbl_q7)  #test teacher post q7
+#pander(pre_teacher_tbl_q7)  #test teacher post q7
 
 ```
 
@@ -276,7 +281,7 @@ pander(pre_teacher_tbl_q7)  #test teacher post q7
 
 
 
-```{r}
+```{r factor_q7, echo=FALSE}
 pre_teacher_tbl$Q7 <- factor(pre_teacher$Q7, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree nor Disagree", "Slightly  Agree", "Agree", "Strongly Agree"),ordered = TRUE)
 
 
@@ -285,14 +290,14 @@ pre_teacher_tbl$Q7 <- factor(pre_teacher$Q7, levels=c("Strongly Disagree", "Disa
 
 
 
-```{r}
+```{r likert_q7, echo=FALSE}
 #nrow(post_teacher_tbl) #check to determine number of rows; what to divide to get %
 
-pre_teacher_tbl <- likert(pre_teacher_tbl)
+pre_teacher_tbl <- likert(pre_teacher_tbl) #likert table
 
-summary(pre_teacher_tbl)
+summary(pre_teacher_tbl) #likert summary
 
-plot(pre_teacher_tbl, type="heat") + ggtitle("Pre Teacher Survey Question 7") + theme_dark()
+plot(pre_teacher_tbl, type="heat") + ggtitle("Pre Teacher Survey Question 7") + theme_dark() #heat map
 
 ```
 
