@@ -127,13 +127,13 @@ pre_num <- pre_hr %>%
     filter(hr.avg >=4.45)
 
 
-nrow(pre_num)
+
 
 ```
 
 
-The number of valid surveys entered is  `r nrow(pre_hr)`, and the number of students achieving at a high level is `r nrow(pre_num)`
-and that equates to `r hr_achieved_pre()`
+The number of valid surveys entered is  **`r nrow(pre_hr)`**, and the number of students achieving at a high level is **`r nrow(pre_num)`**
+and that equates to **`r hr_achieved_pre()`**. The average score from students is **`r mean(pre_hr$hr.avg)`**
 
 
 
@@ -162,13 +162,16 @@ pander(hr_history_1)
 ```
 
 
+Cross Validation of Healthy Relationship Skills
+
+Survey results from teachers and parents also  Below are tables that provide a breakdown of questions on the pre survey from the parent and teacher surveys. 
+
+
+
 # Pre Parent Survey
 
 
 
-Cross Validation of Healthy Relationship Skills
-
-Survey results from teachers and parents also provide evidence that the Get REAL! program helps students increase their relationship skills. Below are tables that provide a breakdown of questions on the post survey from the parent and teacher surveys. The pattern again shows improvement in moderate agreement with the question being both with the parent survey and teacher survey.
 
 
 ```{r}
