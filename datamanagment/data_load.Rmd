@@ -17,18 +17,18 @@ library(tidyverse)
 
 ```{r read_data, echo=FALSE}
 
-setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/November 2016")
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/December 2016")
 
-rawdata <- read_csv("student_survey_11262016.csv", skip=1) #reads student survey
-
-
-parent <- read_csv("parent_survey_11262016.csv", skip=1) #reads parent survey
+rawdata <- read_csv("student_survey_12022016.csv", skip=1) #reads student survey
 
 
-teacher <- read_csv("teacher_survey_11262016.csv", skip=1) # reads teacher survey
+parent <- read_csv("parent_survey_12022016.csv", skip=1) #reads parent survey
 
 
-q1_dm <- read_csv("q1_data_11262016.csv", skip = 1) #read  q1_dmcsv file
+teacher <- read_csv("teacher_survey_12022016.csv", skip=1) # reads teacher survey
+
+
+q1_dm <- read_csv("q1_data_12022016.csv", skip = 1) #read  q1_dmcsv file
 
 
 ```
