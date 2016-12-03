@@ -19,7 +19,7 @@ library(pander)
 q1_data <- readRDS("q1_data.Rds")
 
 
-names(q1_data)
+#names(q1_data)
 
 
 
@@ -330,7 +330,7 @@ table(q1_freelang$free_lang1, q1_freelang$free_lang2) #check for data
 
 q1_freelang <- q1_freelang %>%
     rename("langarts_course" = free_lang2) %>% #rename columns to match reg lang courses
-    rename("Grade" = free_lang1)
+    rename("grade" = free_lang1)
 
 
 
@@ -345,6 +345,29 @@ names(q1_freelang)
 q1_freelang_english <- q1_freelang[grep("ENGLISH", q1_freelang$langarts_course, ignore.case=TRUE, fixed=TRUE),]
 
 q1_freelang_english
+
+names(q1_freelang_english)
+
+```
+
+```{r bind_q1_free}
+
+q1_langarts <- rbind(q1_langarts, q1_freelang_english)
+
+
+
+
+
+```
+
+
+```{r filter_mistake}
+
+q1_langarts <- q1_langarts %>%
+    filter(grade != "Did not mean to select this course")
+
+
+dim(q1_langarts)
 
 ```
 
