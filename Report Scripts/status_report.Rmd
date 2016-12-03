@@ -276,7 +276,7 @@ pander(dupe_status_r)
 ```
 
 
-
+### Duplicate Status by Council
 ```{r dupe_status_council, echo=FALSE}
 
 dupe_status_c <-with(dupe_status,table(council,data_Source))
