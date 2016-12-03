@@ -7,6 +7,12 @@ output:
   pdf_document:
     toc: no
 ---
+
+
+Data was downloaded from Qualtrics on 12/022016
+
+
+
 Run time:
 ```{r status_library, echo=FALSE}
 library(pander)
