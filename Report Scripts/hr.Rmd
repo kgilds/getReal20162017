@@ -1,0 +1,304 @@
+---
+title: "Healthy Relationship Notebook"
+params:
+  council: West Central Council
+output:
+  html_document: default
+  html_notebook: default
+---
+
+```{r hr_import_libaries, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(pander)
+library(ggplot2)
+library(sqldf)
+library(psych)
+library(knitr)
+library(gridExtra)
+library(effsize)
+library(likert)
+library(getREAL)
+
+```
+
+
+
+
+```{r pre_hr&setup, echo=FALSE, warnings=FALSE, message=FALSE}
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+### Make connection with database
+getRealdb<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+pre_hr <- dbReadTable(getRealdb,"girl_pre_1617")
+
+hr_history <-dbReadTable(getRealdb, "basic_view")
+
+pre_hr_1415 <-dbReadTable(getRealdb, "girl_pre_1415")
+
+pre_hr_1314 <-dbReadTable(getRealdb, "girl_pre2013")
+
+pre_hr_1516 <- dbReadTable(getRealdb, "girl_pre_1516")
+
+```
+
+
+
+```{r pre_hr_1516, echo=FALSE}
+
+pre_hr_1516 <- pre_hr_1516 %>%
+    select(council, girlCode, hr.avg) %>% #select columns of interest
+    mutate("Year" = "MY-15-16") # add time frame
+
+
+high_1516 <- pre_hr_1516 %>%
+    filter(hr.avg >=4.45)  #find cases above 4.45
+
+
+#mean(pre_hr_1516$hr.avg)
+
+#nrow(high_1516)
+
+#nrow(pre_hr_1516)
+
+achieved_1516 <- nrow(high_1516) / nrow(pre_hr_1516)  #find percent
+
+achieved_1516 <- round(achieved_1516*100,2) #clean up percent
+
+achieved_1516 <- paste0(achieved_1516,"%", sep="")  # add percent sign
+
+#achieved_1516
+
+
+
+
+```
+
+
+
+```{r pre_hr_1314, echo=FALSE}
+
+
+pre_hr_1314 <- pre_hr_1314 %>% #start cleaning up df
+    rename( council = girlScoutCouncil) %>% #rename council
+    select(council, girlCode, hr_avg) %>% #select columns of interest
+    mutate("Year" = "MY-13-14") # add time frame
+
+
+high_1314 <- pre_hr_1314 %>%
+    filter(hr_avg >=4.45)  #find cases above 4.45
+
+
+achieved_1314 <- nrow(high_1314) / nrow(pre_hr_1314)  #find percent
+
+achieved_1314 <- round(achieved_1314*100,2) #clean up percent
+
+achieved_1314 <- paste0(achieved_1314,"%", sep="")  # add percent sign
+
+#pander(achieved_1314)  #make nice with pander
+
+```
+
+
+
+```{r pre_hr, echo=FALSE}
+pre_hr <- pre_hr %>%
+    select(council,grade, hr.avg,inProgramLastYear)
+
+```
+
+# Healthy Relationship Outcome 
+
+Relationship skills are a critical component of success in all realms of life. 
+The Healthy Relationship questions measures the behaviors and attitudes of the respondent regarding their relationship skills. Questions that measure healthy relationships skills include the following:
+
+
+*Healthy Relationship Questions*
+
+1. If I have a serious problem, I have people to talk with.
+2. I let people know if they have hurt my feelings.
+3. I let my friends know when I think they are good at something.
+4. In any relationship - romantic or not - I make it clear when I don't feel comfortable.
+
+## Pre Survey Analysis
+
+```{r pre_num, echo=FALSE}
+pre_num <- pre_hr %>%
+    filter(hr.avg >=4.45) #select records with outcome score who achieved outcome at high level
+
+
+pre_hr_m <- mean(pre_hr$hr.avg)
+
+pre_hr_m <-round(pre_hr_m,2)
+
+#pre_hr_m
+
+```
+
+
+The number of valid surveys entered is  **`r nrow(pre_hr)`**, and the number of students achieving at a high level is **`r nrow(pre_num)`**
+and that equates to **`r hr_achieved_pre()`**. The average score from students is **`r pre_hr_m`**
+
+
+
+
+```{r pre_hr_hist, echo=FALSE}
+
+pre_hr_histq <- qplot(pre_hr$hr.avg, geom="histogram", main= "Pre Survey",ylim=c(0,60), bins=40, xlab="Outcome Scores") + geom_vline(xintercept = 4.45, col="red") 
+
+pre_hr_histq
+
+```
+
+
+# Pre Survey Healthy Relationship History
+
+
+```{r hr_histor_1, echo=FALSE}
+hr_history_1 <- hr_history %>%
+    select(Year, population, achieved, outcome.1, percent_achieved, mean) %>% #select variables of interest
+    filter(outcome.1 =="Healthy Relationships") %>% #select variable of interest
+    select(Year, population, percent_achieved, mean ) # reselect variables of interest
+    
+    
+
+pander(hr_history_1)
+```
+
+
+Cross Validation of Healthy Relationship Skills
+
+Survey results from teachers and parents also  Below are tables that provide a breakdown of questions on the pre survey from the parent and teacher surveys. 
+
+
+
+# Pre Parent Survey
+
+
+
+
+
+```{r parent_df, echo=FALSE}
+
+pre_parent  <- dbReadTable(getRealdb, "pre_parent_1617")
+
+#post_parent <- dbReadTable(getReal_2016db, "post_parent_1617")
+
+
+```
+
+
+
+Question 5: She develops positive relationships with her classmates.
+
+Results based on  responses.
+
+```{r pre_parent, echo=FALSE}
+
+pre_parent_hr1 <- pre_parent %>% #select this question
+    select(14)
+
+colnames(pre_parent_hr1) [1] <- "Q5" #change name to Question 5
+
+
+```
+
+
+
+```{r pre_parent_factor, echo=FALSE}
+
+pre_parent_hr1$Q5 <- factor(pre_parent_hr1$Q5, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree/Disagree", "Slightly Agree", "Agree", "Strongly Agree"),ordered = TRUE) #make factor names consistent
+
+
+```
+
+
+
+
+```{r pre_parent_tbl, echo=FALSE}
+
+pre_parent_tbl <- table(pre_parent_hr1) #test q5 
+
+#nrow(pre_parent_hr1) #test to figure how total with testing %s
+
+
+#pander(pre_parent_tbl) 
+
+
+
+```
+
+
+```{r pre_parent_likert, echo=FALSE, fig.width=12}
+
+pre_parent_hr1 <- likert(pre_parent_hr1) #change to likert
+
+summary(pre_parent_hr1) #test
+
+plot(pre_parent_hr1, type="heat") + ggtitle("Pre Parent Survey Question 5") + theme_dark() #plot heat map
+
+
+```
+
+
+### Teacher Survey
+
+```{r read_database, echo=FALSE}
+
+pre_teacher <- dbReadTable(getRealdb, "pre_teacher_1617") #read database
+
+post_teacher <- dbReadTable(getRealdb, "post_teacher_1617") #read database
+
+```
+
+
+
+
+
+Question 7: She has developed positive relationships with her classmates (N=)
+
+
+
+```{r makeq7, echo=FALSE}
+
+colnames(pre_teacher) [16] <- "Q7" #change name to q7 for graph
+
+pre_teacher_tbl <- pre_teacher %>% # select variable 16 which is q7.
+    select(16)
+
+
+pre_teacher_tbl_q7 <- table(pre_teacher_tbl$Q7) #test 
+
+#pander(pre_teacher_tbl_q7)  #test teacher post q7
+
+```
+
+
+
+
+
+
+
+
+
+```{r factor_q7, echo=FALSE}
+pre_teacher_tbl$Q7 <- factor(pre_teacher$Q7, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree nor Disagree", "Slightly  Agree", "Agree", "Strongly Agree"),ordered = TRUE)
+
+
+
+```
+
+
+
+```{r likert_q7, echo=FALSE}
+#nrow(post_teacher_tbl) #check to determine number of rows; what to divide to get %
+
+pre_teacher_tbl <- likert(pre_teacher_tbl) #likert table
+
+summary(pre_teacher_tbl) #likert summary
+
+plot(pre_teacher_tbl, type="heat") + ggtitle("Pre Teacher Survey Question 7") + theme_dark() #heat map
+
+```
+
+
