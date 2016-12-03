@@ -19,7 +19,7 @@ library(pander)
 q1_data <- readRDS("q1_data.Rds")
 
 
-#names(q1_data)
+names(q1_data)
 
 
 
@@ -306,7 +306,7 @@ write.csv(q1_reading_test, file="reading_course_question.csv", row.names=FALSE)
 
 ```{r q1_langarts}
 q1_langarts <- q1_data %>% 
-    gather("langarts_course", "grade", 37:53,56:57)%>% #put lang arts classes in rows
+    gather("langarts_course", "grade", 36:52,55:56)%>% #put lang arts classes in rows
     select(10, 13:16, 39:40) #select lang arts courses and grades
 
 names(q1_langarts)
@@ -324,19 +324,32 @@ names(q1_freelang)
 
 q1_freelang <- q1_freelang[,c(1,2,3,4,5,7,6)] #rearrange columns to match regular lang courses 
 
-table(q1_freelang$free_lang1) #check for data
+
+
+table(q1_freelang$free_lang1, q1_freelang$free_lang2) #check for data
 
 q1_freelang <- q1_freelang %>%
     rename("langarts_course" = free_lang2) %>% #rename columns to match reg lang courses
     rename("Grade" = free_lang1)
 
 
-q1_freelang
 
-
+names(q1_freelang)
 
 
 ```
+
+```{r grep_lang, echo=FALSE}
+
+
+q1_freelang_english <- q1_freelang[grep("ENGLISH", q1_freelang$langarts_course, ignore.case=TRUE, fixed=TRUE),]
+
+q1_freelang_english
+
+```
+
+
+
 
 ```{r}
 q1_behavior_data <- full_join(q1_behavior, q1_attendance, by="girl_code")
