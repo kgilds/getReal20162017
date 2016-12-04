@@ -180,6 +180,8 @@ Survey results from teachers and parents also  Below are tables that provide a b
 
 pre_parent  <- dbReadTable(getRealdb, "pre_parent_1617")
 
+names(pre_parent)
+
 #post_parent <- dbReadTable(getReal_2016db, "post_parent_1617")
 
 
@@ -190,11 +192,11 @@ pre_parent  <- dbReadTable(getRealdb, "pre_parent_1617")
 
 ```{r ae_pre_parent, echo=FALSE}
 
-colnames(pre_parent)[15] <- "Q6"
+colnames(pre_parent)[16] <- "Q6"
 
 
 pre_parent_tbl <- pre_parent %>%
-    select(15)
+    select(16)
 
 #table(pre_parent_tbl)
 
@@ -219,7 +221,7 @@ pre_parent_tbl <- likert(pre_parent_tbl)
 
 summary(pre_parent_tbl)
 
-plot(pre_parent_tbl, type="heat") +ggtitle("Parent Pre Survey Question 5") + theme_dark ()
+plot(pre_parent_tbl, type="heat") +ggtitle("Parent Pre Survey Question 6") + theme_dark ()
 
 ```
 
@@ -229,6 +231,8 @@ plot(pre_parent_tbl, type="heat") +ggtitle("Parent Pre Survey Question 5") + the
 ```{r read_database, echo=FALSE}
 
 pre_teacher <- dbReadTable(getRealdb, "pre_teacher_1617") #read database
+
+names(pre_teacher)
 
 post_teacher <- dbReadTable(getRealdb, "post_teacher_1617") #read database
 
@@ -244,16 +248,16 @@ post_teacher <- dbReadTable(getRealdb, "post_teacher_1617") #read database
 
 #names(post_teacher) checked 
 
-colnames(pre_teacher)[15] <- "Q6"
 colnames(pre_teacher)[14] <- "Q5"
+colnames(pre_teacher)[15] <- "Q6"
 
 #nrow(post_teacher)
 
 pre_teacher_tbl <- pre_teacher %>%
     select(14,15)
 
-#table(post_teacher_tbl$Q5)
-#table(post_teacher_tbl$Q6)
+table(pre_teacher_tbl$Q5)
+table(pre_teacher_tbl$Q6)
 
 
 
