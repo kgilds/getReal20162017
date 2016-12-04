@@ -273,9 +273,9 @@ post_teacher <- dbReadTable(getRealdb, "post_teacher_1617") #read database
 
 * Question 3: She has a Good Attitude About School
 
-The number of responses to the post teacher survey is 397. 
+The number of responses to the post teacher survey is . 
 
-```{r am_load_post_teacher, echo=FALSE}
+```{r am_load_pre_teacher, echo=FALSE}
 
 colnames(pre_teacher) [11] <- "Q1"
 colnames(pre_teacher) [13] <- "Q3"
@@ -284,11 +284,11 @@ pre_teacher_tbl <- pre_teacher %>%
     select(11, 13)
 
 
-#nrow(pre_teacher_tbl) #total obse
+nrow(pre_teacher_tbl) #total obse
 
-#pre_teacher_q1 <- table(pre_teacher_tbl$Q1) #make table to test results
+pre_teacher_q1 <- table(pre_teacher_tbl$Q1) #make table to test results
 
-#pander(pre_teacher_q1) #prints results of test
+pander(pre_teacher_q1) #prints results of test
 
 
 
