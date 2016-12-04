@@ -9,11 +9,11 @@ output:
 ---
 
 
-Data was downloaded from Qualtrics on 12/022016
+### Data downloaded on: 12/02/2016
 
 
 
-Run time:
+### Report Run time:
 ```{r status_library, echo=FALSE}
 library(pander)
 ```
@@ -24,7 +24,7 @@ pander(Sys.time())
 ```
 
 
-# Survey Data Entry Status
+### Survey Data Entry Status
 ```{r echo=FALSE, message=FALSE, warning= FALSE}
 library(sqldf)
 library(dplyr)
@@ -189,7 +189,7 @@ pander(survey_status3)
 
 ```
 
-# Data Entry Status by Council
+### Data Entry Status by Council
 ```{r council, survey_status, echo=FALSE}
 
 survey_status2 <-with(survey_status,table(council, dataSource))
@@ -203,7 +203,7 @@ pander(survey_status2)
 
 
 
-# Duplicate Entries
+### Duplicate Entries
 
 ```{r student_dupes, echo=FALSE}
 
@@ -276,7 +276,7 @@ pander(dupe_status_r)
 ```
 
 
-### Duplicate Status by Council
+### Duplicate Entries by Council
 ```{r dupe_status_council, echo=FALSE}
 
 dupe_status_c <-with(dupe_status,table(council,data_Source))
