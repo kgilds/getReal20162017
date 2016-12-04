@@ -1,0 +1,335 @@
+---
+title: "Academic Mastery Notebook"
+params:
+  council: West Central Council
+output:
+  html_document: default
+  html_notebook: default
+---
+
+```{r am_import_libaries, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(pander)
+library(ggplot2)
+library(sqldf)
+library(psych)
+library(knitr)
+library(gridExtra)
+library(effsize)
+library(likert)
+library(getREAL)
+
+```
+
+
+
+
+```{r pre_am&setup, echo=FALSE, warnings=FALSE, message=FALSE}
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+### Make connection with database
+getRealdb<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+pre_am <- dbReadTable(getRealdb,"girl_pre_1617")
+
+am_history <-dbReadTable(getRealdb, "basic_view")
+
+pre_am_1415 <-dbReadTable(getRealdb, "girl_pre_1415")
+
+pre_am_1314 <-dbReadTable(getRealdb, "girl_pre2013")
+
+pre_am_1516 <- dbReadTable(getRealdb, "girl_pre_1516")
+
+```
+
+
+
+```{r pre_am_1516, echo=FALSE}
+
+pre_am_1516 <- pre_am_1516 %>%
+    select(council, girlCode, am.avg) %>% #select columns of interest
+    mutate("Year" = "MY-15-16") # add time frame
+
+
+high_1516 <- pre_am_1516 %>%
+    filter(am.avg >=4.8)  #find cases above 4.8
+
+
+#mean(pre_am_1516$am.avg)
+
+#nrow(high_1516)
+
+#nrow(pre_am_1516)
+
+achieved_1516 <- nrow(high_1516) / nrow(pre_am_1516)  #find percent
+
+achieved_1516 <- round(achieved_1516*100,2) #clean up percent
+
+achieved_1516 <- paste0(achieved_1516,"%", sep="")  # add percent sign
+
+#achieved_1516
+
+
+
+
+```
+
+
+
+```{r pre_am_1314, echo=FALSE}
+
+
+pre_am_1314 <- pre_am_1314 %>% #start cleaning up df
+    rename( council = girlScoutCouncil) %>% #rename council
+    select(council, girlCode, am_avg) %>% #select columns of interest
+    mutate("Year" = "MY-13-14") # add time frame
+
+
+high_1314 <- pre_am_1314 %>%
+    filter(am_avg >=4.8)  #find cases above 4.8
+
+
+achieved_1314 <- nrow(high_1314) / nrow(pre_am_1314)  #find percent
+
+achieved_1314 <- round(achieved_1314*100,2) #clean up percent
+
+achieved_1314 <- paste0(achieved_1314,"%", sep="")  # add percent sign
+
+#pander(achieved_1314)  #make nice with pander
+
+```
+
+
+
+```{r pre_am, echo=FALSE}
+pre_am <- pre_am %>%
+    select(council,grade, am.avg,inProgramLastYear)
+
+```
+
+# Academic Mastery Outcome 
+
+
+
+The Academic Mastery questions gauge a student's attitude towards school and education. Questions that measure Academic Mastery include the following.
+
+* It's important to me that I improve my skills this year in school
+* It's important to me that I really understand my class work
+* Learning at school is important to me
+* One of my goals in school is to learn as much as I can
+* The things I am learning in school will help me later in life
+
+## Pre Survey Analysis
+
+```{r pre_num, echo=FALSE}
+pre_num <- pre_am %>%
+    filter(am.avg >=4.8) #select records with outcome score who achieved outcome at high level
+
+
+pre_am_m <- mean(pre_am$am.avg)
+
+pre_am_m <-round(pre_am_m,2)
+
+#pre_am_m
+
+```
+
+
+The number of valid surveys entered is  **`r nrow(pre_am)`**, and the number of students achieving at a high level is **`r nrow(pre_num)`**
+and that equates to **`r am_achieved_pre()`**. The average score from students is **`r pre_am_m`**
+
+
+
+
+```{r pre_am_hist, echo=FALSE}
+
+pre_am_histq <- qplot(pre_am$am.avg, geom="histogram", main= "Pre Survey",ylim=c(0,60), bins=40, xlab="Outcome Scores") + geom_vline(xintercept = 4.8, col="red") 
+
+pre_am_histq
+
+```
+
+
+# Pre Survey Healthy Relationship History
+
+
+```{r am_histor_1, echo=FALSE}
+am_history_1 <- am_history %>%
+    select(Year, population, achieved, outcome.1, percent_achieved, mean) %>% #select variables of interest
+    filter(outcome.1 =="Academic Mastery") %>% #select variable of interest
+    select(Year, population, percent_achieved, mean ) # reselect variables of interest
+    
+    
+
+pander(am_history_1)
+```
+
+
+Cross Validation of Academic Mastery
+
+Survey results from teachers and parents also  Below are tables that provide a breakdown of questions on the pre survey from the parent and teacher surveys. 
+
+
+
+# Pre Parent Survey
+
+
+
+
+
+```{r parent_df, echo=FALSE}
+
+pre_parent  <- dbReadTable(getRealdb, "pre_parent_1617")
+
+names(pre_parent)
+
+#post_parent <- dbReadTable(getReal_2016db, "post_parent_1617")
+
+
+```
+
+
+
+* Question 1: She is motivated to graduate high school
+
+* Question 3: She has a Good Attitude About School
+
+
+
+Results based on responses.
+
+
+
+```{r am_pre_survey, fig.height=5, fig.width=10, echo=FALSE}
+
+colnames(pre_parent) [11] <- "Q1"
+
+colnames(pre_parent) [13] <- "Q3"
+
+
+pre_parent_tbl <- pre_parent %>%
+    select( 11,13 )
+
+
+
+pre_parent_q1 <-table(pre_parent_tbl$Q1) #make table to test
+
+#pander(pre_parent_q1) #print results of test nicely
+
+
+
+#pre_parent_q3 <-table(pre_parent_tbl$Q3) #make tabl to test result
+
+
+#pander(pre_parent_q3) #print result of test nicely
+
+
+#nrow(pre_parent_tbl) #determine total number of observations to verify percents in likert tables 
+
+
+
+#names(pre_parent_tbl)
+
+pre_parent_tbl$Q1 <- factor(pre_parent_tbl$Q1, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree/Disagree", "Slightly Agree", "Agree", "Strongly Agree"),ordered = TRUE)
+
+pre_parent_tbl$Q3 <- factor(pre_parent_tbl$Q3, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree/Disagree", "Slightly Agree", "Agree", "Strongly Agree"),ordered = TRUE)
+
+
+
+
+
+pre_parent_tbl <- likert(pre_parent_tbl)
+
+summary(pre_parent_tbl)
+
+
+
+```
+
+
+```{r am_pre_parent_heat, fig.height=5, fig.width=14, fig.path='Figs/', dev.args='cario-png', echo=FALSE }
+likert.heat.plot(pre_parent_tbl) + ggtitle("Pre Parent Survey Question 1 & Question 3") + theme_dark ()
+
+```
+
+### Teacher Survey
+
+```{r read_database, echo=FALSE}
+
+pre_teacher <- dbReadTable(getRealdb, "pre_teacher_1617") #read database
+
+names(pre_teacher)
+
+post_teacher <- dbReadTable(getRealdb, "post_teacher_1617") #read database
+
+```
+
+
+
+
+### Teacher Pre Survey
+
+* Question 1: She is motivated to graduate high school
+
+* Question 3: She has a Good Attitude About School
+
+The number of responses to the post teacher survey is 397. 
+
+```{r am_load_post_teacher, echo=FALSE}
+
+colnames(pre_teacher) [11] <- "Q1"
+colnames(pre_teacher) [13] <- "Q3"
+
+pre_teacher_tbl <- pre_teacher %>%
+    select(11, 13)
+
+
+#nrow(pre_teacher_tbl) #total obse
+
+#pre_teacher_q1 <- table(pre_teacher_tbl$Q1) #make table to test results
+
+#pander(pre_teacher_q1) #prints results of test
+
+
+
+#pre_teacher_q3 <- table(pre_teacher_tbl$Q3) #make table to test 
+
+#pander(pre_teacher_q3) #prints tests nicely
+
+
+
+pre_teacher_tbl$Q1 <- factor(pre_teacher_tbl$Q1, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree nor Disagree", "Slightly  Agree", "Agree", "Strongly Agree"),ordered = TRUE)
+
+
+pre_teacher_tbl$Q3 <- factor(pre_teacher_tbl$Q3, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree nor Disagree", "Slightly  Agree", "Agree", "Strongly Agree"),ordered = TRUE)
+
+
+
+
+
+
+
+
+
+pre_teacher_tbl <- likert(pre_teacher_tbl)
+
+summary(pre_teacher_tbl)
+
+
+```
+
+```{r am_heat_pre_teacher, fig.height=5, fig.width=14, fig.path='Figs/', dev.args='cario-png', echo=FALSE}
+
+plot(pre_teacher_tbl, type="heat") +ggtitle("pre Teacher Survey Question 1 & Question 3") + theme_dark()
+
+
+
+```
+
+
+
+
+
+
+
+
