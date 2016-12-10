@@ -31,6 +31,11 @@ q1_attendance <- dbReadTable(getRealdb,"Q1_attendance_1617")
 
 ```
 
+# Attendance
+
+## Objective
+
+
 ```{r}
 
 q1_attendance$total <- as.numeric(q1_attendance$total)
@@ -59,3 +64,11 @@ total_absPlot + geom_count()
 ```
 
 
+# Unexcused
+```{r}
+
+
+
+```
+
+# Excused Absences
