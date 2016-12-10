@@ -1,0 +1,61 @@
+---
+title: "attendance"
+author: "Kevin Gilds, MPA"
+date: "December 8, 2016"
+output: html_document
+---
+```{r attendance_libaries, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(pander)
+library(ggplot2)
+library(sqldf)
+library(psych)
+library(knitr)
+library(gridExtra)
+library(effsize)
+library(likert)
+library(getREAL)
+
+```
+
+
+```{r attendance_db}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+### Make connection with database
+getRealdb <- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+
+q1_attendance <- dbReadTable(getRealdb,"Q1_attendance_1617")
+
+```
+
+```{r}
+
+q1_attendance$total <- as.numeric(q1_attendance$total)
+
+str(q1_attendance)
+
+summary(q1_attendance$total)
+
+```
+
+
+```{r}
+q1_absences <-with(q1_attendance,table(council,total))
+
+q1_absences
+```
+
+
+```{r}
+names(attendance)
+
+total_absPlot <- ggplot(attendance,(aes(x =total, y = council)))
+
+total_absPlot + geom_count()
+
+```
+
+
