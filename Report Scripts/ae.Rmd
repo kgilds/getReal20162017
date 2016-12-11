@@ -41,7 +41,35 @@ pre_ae_1314 <-dbReadTable(getRealdb, "girl_pre2013")
 pre_ae_1516 <- dbReadTable(getRealdb, "girl_pre_1516")
 
 ```
+```{r pre_ae_1415, echo=FALSE}
 
+pre_ae_1415 <- pre_ae_1415 %>%
+    select(council, girlCode, ae.avg) %>% #select columns of interest
+    mutate("Year" = "MY-14-15") # add time frame
+
+
+high_1415 <- pre_ae_1415 %>%
+    filter(ae.avg >=4.5)  #find cases above 4.5
+
+
+mean(pre_ae_1415$ae.avg)
+
+nrow(high_1415)
+
+nrow(pre_ae_1415)
+
+achieved_1415 <- nrow(high_1415) / nrow(pre_ae_1415)  #find percent
+
+achieved_1415 <- round(achieved_1415*100,2) #clean up percent
+
+achieved_1415 <- paste0(achieved_1415,"%", sep="")  # add percent sign
+
+achieved_1415
+
+
+
+
+```
 
 
 ```{r pre_ae_1516, echo=FALSE}
