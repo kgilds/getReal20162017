@@ -1,0 +1,71 @@
+---
+title: "Language Arts"
+author: "Kevin Gilds, MPA"
+date: "December 11, 2016"
+output: html_document
+---
+
+```{r langarts_libaries, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(pander)
+library(ggplot2)
+library(sqldf)
+library(psych)
+library(knitr)
+library(gridExtra)
+library(effsize)
+library(likert)
+library(getREAL)
+
+```
+
+
+```{r langarts_db, echo=FALSE}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+### Make connection with database
+getRealdb <- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+
+q1_langarts <- dbReadTable(getRealdb,"Q1_langarts_1617")
+
+q1_langarts1516 <-dbReadTable(getRealdb,"Q1_lang_1516")
+
+
+
+```
+
+
+```{r}
+
+grade_tbl <- with(q1_langarts,table(q1_langarts$grade))
+
+pander(grade_tbl)
+
+mean(q1_langarts$lang_avg)
+```
+
+```{r}
+
+grades_q1 <- ggplot(q1_langarts, aes(x=lang_avg)) 
+    grades_q1 + geom_histogram(fill="blue")
+
+grades_q1_c <- ggplot(q1_langarts, aes(x=lang_avg))
+        grades_q1 + geom_histogram(fill="blue") +facet_grid(~council) + labs(x="  Scores", title = "Pre: Healthy Relationships")
+
+
+
+```
+
+
+
+```{r}
+
+grade_tbl_15 <- with(q1_langarts1516,table(langGrade))
+
+pander(grade_tbl_15)
+
+mean(q1_langarts1516$lang_pts)
+```
+
