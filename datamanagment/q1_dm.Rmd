@@ -201,8 +201,8 @@ q1_behavior <- q1_data %>%
     select(13:16, 20:21)  #take columns of interest
     
     
-q1_behavior$in_school[which(is.na(q1_behavior$in_school))] <- 0
-q1_behavior$out_school[which(is.na(q1_behavior$out_school))] <-0
+q1_behavior$in_school[which(is.na(q1_behavior$in_school))] <- 0  #find na and replace with 0
+q1_behavior$out_school[which(is.na(q1_behavior$out_school))] <-0  #find na values and replace with 0
 
 q1_behavior <- q1_behavior %>%   
     mutate("total"= in_school + out_school) #calculate total 
@@ -297,7 +297,7 @@ dim(q1_reading)
 
 q1_reading
 
-
+which(is.na(q1_reading$Grade))
 
 ```
 
@@ -391,6 +391,8 @@ q1_langarts <- q1_langarts %>%
 
 
 dim(q1_langarts)
+
+which(is.na(q1_langarts$grade))
 
 ```
 
