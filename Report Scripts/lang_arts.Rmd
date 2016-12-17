@@ -38,6 +38,45 @@ q1_langarts1516 <-dbReadTable(getRealdb,"Q1_lang_1516")
 
 
 ```{r}
+head(q1_langarts)
+
+q1_16 <- q1_langarts %>%
+    select(girl_code, langarts_course, grade, lang_avg)%>%
+    mutate("Year" = "16-17")
+
+head(q1_langarts1516)
+
+q1_15 <- q1_langarts1516 %>%
+    select(girlCode, langCourses, langGrade, lang_pts) %>%
+    rename(girl_code =girlCode) %>%
+    rename(langarts_course = langCourses)%>%
+    rename(lang_avg =lang_pts)%>%
+    rename(grade = langGrade) %>%
+    mutate("Year" = "15-16")
+
+
+lang_history <- rbind(q1_16, q1_15)
+
+grade_table <- with(lang_history,table(Year, grade))
+
+grade_table
+
+
+grade_point <- lang_history %>%
+    group_by(Year) %>%
+    summarise(lang_avg = mean(lang_avg))
+
+
+grade_point
+
+
+
+
+```
+
+
+
+```{r}
 
 grade_tbl <- with(q1_langarts,table(q1_langarts$grade))
 
@@ -46,14 +85,10 @@ pander(grade_tbl)
 mean(q1_langarts$lang_avg)
 ```
 
-```{r}
+```{r grades_q1_hist}
 
 grades_q1 <- ggplot(q1_langarts, aes(x=lang_avg)) 
     grades_q1 + geom_histogram(fill="blue")
-
-grades_q1_c <- ggplot(q1_langarts, aes(x=lang_avg))
-        grades_q1 + geom_histogram(fill="blue") +facet_grid(~council) + labs(x="  Scores", title = "Pre: Healthy Relationships")
-
 
 
 ```
