@@ -2,8 +2,15 @@
 title: "Language Arts"
 author: "Kevin Gilds, MPA"
 date: "December 11, 2016"
-output: html_document
+output: github_document
+params: 
+    council: West Central Council
+    data: q1_langarts
 ---
+
+# Reading Improvement
+*Objective: 50% of participating students will improve their reading skills as demonstrated by their Language Arts grade increasing or maintaining a “C” grade from the baseline grading period to the final grading period as evidenced by report cards/school reports.*
+
 
 ```{r langarts_libaries, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -37,14 +44,14 @@ q1_langarts1516 <-dbReadTable(getRealdb,"Q1_lang_1516")
 ```
 
 
-```{r}
-head(q1_langarts)
+```{r setup_data, echo=FALSE}
+
 
 q1_16 <- q1_langarts %>%
     select(girl_code, langarts_course, grade, lang_avg)%>%
     mutate("Year" = "16-17")
 
-head(q1_langarts1516)
+
 
 q1_15 <- q1_langarts1516 %>%
     select(girlCode, langCourses, langGrade, lang_pts) %>%
@@ -57,18 +64,48 @@ q1_15 <- q1_langarts1516 %>%
 
 lang_history <- rbind(q1_16, q1_15)
 
+
+```
+
+
+```{r courses, echo=FALSE}
+
+q1_courses <- with(q1_langarts,table(langarts_course, grade))
+
+pander(q1_courses, caption=" Q1:Language Arts Courses and Grades")
+
+```
+
+
+```{r grades_q1_plot, echo=FALSE}
+
+
+
+
+ggplot(q1_langarts, aes(x=grade, y=langarts_course))+ geom_count()
+
+
+
+```
+
+```{r grade_table, echo=FALSE}
+
 grade_table <- with(lang_history,table(Year, grade))
 
-grade_table
+pander(grade_table, caption="Grade Table History--Quarter 1")
 
+
+```
+
+
+```{r grade_point_tbl, echo=FALSE}
 
 grade_point <- lang_history %>%
     group_by(Year) %>%
     summarise(lang_avg = mean(lang_avg))
 
 
-grade_point
-
+pander(grade_point, caption="Quarter 1 GPA History")
 
 
 
@@ -76,31 +113,8 @@ grade_point
 
 
 
-```{r}
-
-grade_tbl <- with(q1_langarts,table(q1_langarts$grade))
-
-pander(grade_tbl)
-
-mean(q1_langarts$lang_avg)
-```
-
-```{r grades_q1_hist}
-
-grades_q1 <- ggplot(q1_langarts, aes(x=lang_avg)) 
-    grades_q1 + geom_histogram(fill="blue")
-
-
-```
 
 
 
-```{r}
 
-grade_tbl_15 <- with(q1_langarts1516,table(langGrade))
-
-pander(grade_tbl_15)
-
-mean(q1_langarts1516$lang_pts)
-```
 
