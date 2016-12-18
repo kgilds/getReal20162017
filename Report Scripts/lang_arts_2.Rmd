@@ -1,0 +1,100 @@
+---
+title: "reading_supplemental"
+author: "Kevin Gilds, MPA"
+date: '`r Sys.Date()`'
+output: github_document
+---
+
+```{r}
+library(tidyverse)
+library(pander)
+library(ggplot2)
+library(sqldf)
+library(psych)
+library(knitr)
+library(gridExtra)
+library(effsize)
+library(likert)
+library(getREAL)
+
+
+```
+
+
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+### Make connection with database
+getRealdb <- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+
+q1_reading <- dbReadTable(getRealdb,"Q1_reading_1617")
+
+q1_reading1516 <-dbReadTable(getRealdb,"Q1_reading_1516")
+
+```
+
+
+```{r}
+q1_16 <- q1_reading %>%
+    select(girl_code, reading_course, Grade, reading_avg)%>%
+    mutate("Year" = "16-17")
+
+
+
+q1_15 <- q1_reading1516 %>%
+    select(girlCode, readingCourses, readingGrade, reading_pts) %>%
+    rename(girl_code =girlCode) %>%
+    rename(reading_course = readingCourses)%>%
+    rename(reading_avg =reading_pts)%>%
+    rename(Grade = readingGrade) %>%
+    mutate("Year" = "15-16")
+
+
+read_history <- rbind(q1_16, q1_15)
+
+
+
+```
+
+
+```{r}
+q1_courses <- with(q1_reading,table(reading_course, Grade))
+
+pander(q1_courses, caption=" Q1:Reading Arts Courses and Grades")
+
+```
+
+
+
+```{r}
+ggplot(q1_reading, aes(x=Grade, y=reading_course))+ geom_count()
+
+```
+
+```{r}
+grade_table <- with(read_history,table(Year, Grade))
+
+pander(grade_table, caption="Grade Table History--Quarter 1")
+
+```
+
+```{r}
+grade_point <- read_history %>%
+    group_by(Year) %>%
+    summarise(reading_avg = mean(reading_avg))
+
+
+pander(grade_point, caption="Quarter 1 GPA History")
+
+
+```
+
+
+
+
+
+
+
+
