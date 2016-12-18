@@ -1,0 +1,100 @@
+---
+title: "reading_supplemental"
+author: "Kevin Gilds, MPA"
+date: '`r Sys.Date()`'
+output: github_document
+---
+
+```{r read_libraries, echo=FALSE}
+library(tidyverse)
+library(pander)
+library(ggplot2)
+library(sqldf)
+library(psych)
+library(knitr)
+library(gridExtra)
+library(effsize)
+library(likert)
+library(getREAL)
+
+
+```
+
+
+
+```{r read_db, echo=FALSE}
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+### Make connection with database
+getRealdb <- dbConnect(SQLite(), dbname="outcome_history.sqlite") #make connection with database
+
+
+q1_reading <- dbReadTable(getRealdb,"Q1_reading_1617") #read 1617 q1 reading
+
+q1_reading1516 <-dbReadTable(getRealdb,"Q1_reading_1516") #read 1516 q1 reading
+
+```
+
+
+```{r setup_readhistory, echo=FALSE}
+q1_16 <- q1_reading %>%
+    select(girl_code, reading_course, Grade, reading_avg)%>%  #select matching columns from previous year
+    mutate("Year" = "16-17")  #add new column to distinguish years for when we combine 15-16
+
+
+
+q1_15 <- q1_reading1516 %>%
+    select(girlCode, readingCourses, readingGrade, reading_pts) %>% #select matching columns 
+    rename(girl_code =girlCode) %>%  #rename to match q1_16
+    rename(reading_course = readingCourses)%>%  #rename to match q1_16
+    rename(reading_avg =reading_pts)%>% #rename to match q1_16
+    rename(Grade = readingGrade) %>% #rename to match q1_16
+    mutate("Year" = "15-16")  #add column to dstinguish after binding
+
+
+read_history <- rbind(q1_16, q1_15) #combind data sets to compare
+
+
+
+```
+
+
+```{r q1_coures_tbl, echo=FALSE}
+q1_courses <- with(q1_reading,table(reading_course, Grade))  #table with courses and grades
+
+pander(q1_courses, caption=" Q1:Reading Arts Courses and Grades") #make table pretty
+
+```
+
+
+
+```{r plot, echo=FALSE}
+ggplot(q1_reading, aes(x=Grade, y=reading_course))+ geom_count()  #plot grades by courses
+
+```
+
+```{r grade_tbl, echo=FALSE}
+grade_table <- with(read_history,table(Year, Grade)) #table to compare grades from previous Q1
+
+pander(grade_table, caption="Grade Table History--Quarter 1") #make table pretty 
+
+```
+
+```{r grade_point_summary, echo=FALSE}
+grade_point <- read_history %>%
+    group_by(Year) %>% #group by Year
+    summarise(reading_avg = mean(reading_avg)) #provide mean gpa that is grouped by the year
+
+
+pander(grade_point, caption="Quarter 1 GPA History") #make table pretty. 
+
+
+```
+
+
+
+
+
+
+
+
