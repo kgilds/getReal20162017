@@ -1,0 +1,41 @@
+---
+title: "results"
+author: "Kevin Gilds, MPA"
+date: "December 21, 2016"
+output: html_document
+---
+
+```{r child="hr.Rmd"}
+
+```
+
+```{r child="ae.Rmd"}
+
+```
+
+
+```{r child="am.Rmd"}
+
+```
+
+
+```{r child="lang_arts.Rmd"}
+
+```
+
+
+```{r child="reading_supplement.Rmd"}
+
+```
+
+
+```{r child="attendance.Rmd"}
+
+```
+
+```{r child="behavior.Rmd"}
+
+```
+
+
+
