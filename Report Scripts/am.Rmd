@@ -121,7 +121,7 @@ The Academic Mastery questions gauge a student's attitude towards school and edu
 
 ## Pre Survey Analysis
 
-```{r pre_num, echo=FALSE}
+```{r pre_num_am, echo=FALSE}
 pre_num <- pre_am %>%
     filter(am.avg >=4.8) #select records with outcome score who achieved outcome at high level
 
@@ -177,7 +177,7 @@ Survey results from teachers and parents also  Below are tables that provide a b
 
 
 
-```{r parent_df, echo=FALSE}
+```{r parent_df_am, echo=FALSE}
 
 pre_parent  <- dbReadTable(getRealdb, "pre_parent_1617")
 
@@ -254,7 +254,7 @@ likert.heat.plot(pre_parent_tbl) + ggtitle("Pre Parent Survey Question 1 & Quest
 
 ### Teacher Survey
 
-```{r read_database, echo=FALSE}
+```{r read_database_am, echo=FALSE}
 
 pre_teacher <- dbReadTable(getRealdb, "pre_teacher_1617") #read database
 

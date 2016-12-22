@@ -204,7 +204,7 @@ Survey results from teachers and parents also  Below are tables that provide a b
 
 
 
-```{r parent_df, echo=FALSE}
+```{r parent_df_ae, echo=FALSE}
 
 pre_parent  <- dbReadTable(getRealdb, "pre_parent_1617")
 
@@ -256,7 +256,7 @@ plot(pre_parent_tbl, type="heat") +ggtitle("Parent Pre Survey Question 6") + the
 
 ### Teacher Survey
 
-```{r read_database, echo=FALSE}
+```{r read_database_ae, echo=FALSE}
 
 pre_teacher <- dbReadTable(getRealdb, "pre_teacher_1617") #read database
 

@@ -39,7 +39,7 @@ q1_behavior <- dbReadTable(getRealdb,"Q1_behavior_1617")
 
 
 
-```{r q1_attendance_mean, echo=FALSE}
+```{r q1_attendance_mean_behavior, echo=FALSE}
 
 q1_behavior$total <- as.numeric(q1_behavior$total)
 
@@ -84,7 +84,7 @@ pander(q1_suspensions_c) #pretty table
 ```
 
 
-```{r total_plot, echo=FALSE}
+```{r total_plot_behaivor, echo=FALSE}
 
 
 total_behavior_p <- ggplot(q1_behavior,(aes(x =total, y = council)))
@@ -97,7 +97,7 @@ total_behavior_p + geom_count()
 
 
 # Out of Scool Suspensions
-```{r q1_unexcused_tbl, echo=FALSE}
+```{r q1_out_tbl, echo=FALSE}
 
 q1_out <-with(q1_behavior,table(out_school)) #unexcused table
 
@@ -113,7 +113,7 @@ pander(q1_out_c) #pretty table
 
 
 # In School Suspensions
-```{r excused_tbls}
+```{r in_school_tbls}
 q1_in <-with(q1_behavior,table(in_school)) #q1_unexucsed table
 
 pander(q1_in) #make pretty
