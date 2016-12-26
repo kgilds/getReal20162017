@@ -67,7 +67,38 @@ achieved_1516 <- round(achieved_1516*100,2) #clean up percent
 
 achieved_1516 <- paste0(achieved_1516,"%", sep="")  # add percent sign
 
-#achieved_1516
+achieved_1516
+
+
+
+
+```
+
+
+```{r pre_14_15, echo=FALSE}
+
+pre_am_1415 <- pre_am_1415 %>%
+    select(council, girlCode, am.avg) %>% #select columns of interest
+    mutate("Year" = "MY-14-15") # add time frame
+
+
+high_1415 <- pre_am_1415 %>%
+    filter(am.avg >=4.8)  #find cases above 4.8
+
+
+#mean(pre_am_1415$am.avg)
+
+#nrow(high_1415)
+
+#nrow(pre_am_1415)
+
+achieved_1415 <- nrow(high_1415) / nrow(pre_am_1415)  #find percent
+
+achieved_1415 <- round(achieved_1415*100,2) #clean up percent
+
+achieved_1415 <- paste0(achieved_1415,"%", sep="")  # add percent sign
+
+achieved_1415
 
 
 
@@ -95,7 +126,7 @@ achieved_1314 <- round(achieved_1314*100,2) #clean up percent
 
 achieved_1314 <- paste0(achieved_1314,"%", sep="")  # add percent sign
 
-#pander(achieved_1314)  #make nice with pander
+pander(achieved_1314)  #make nice with pander
 
 ```
 
@@ -143,14 +174,14 @@ and that equates to **`r am_achieved_pre()`**. The average score from students i
 
 ```{r pre_am_hist, echo=FALSE}
 
-pre_am_histq <- qplot(pre_am$am.avg, geom="histogram", main= "Pre Survey",ylim=c(0,60), bins=40, xlab="Outcome Scores") + geom_vline(xintercept = 4.8, col="red") 
+pre_am_histq <- qplot(pre_am$am.avg, geom="histogram", main= "Pre Survey",ylim=c(0,125), bins=40, xlab="Outcome Scores") + geom_vline(xintercept = 4.8, col="red") 
 
 pre_am_histq
 
 ```
 
 
-# Pre Survey Healthy Relationship History
+# Pre Survey Academic Mastery History
 
 
 ```{r am_histor_1, echo=FALSE}

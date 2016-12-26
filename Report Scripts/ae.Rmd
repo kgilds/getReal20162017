@@ -130,8 +130,11 @@ pander(achieved_1314)  #make nice with pander
 
 
 ```{r pre_ae, echo=FALSE}
-pre_ae <- pre_ae %>%
+pre_ae_inprogram <- pre_ae %>%
     select(council,grade, ae.avg,inProgramLastYear)
+
+
+
 
 ```
 
@@ -170,7 +173,7 @@ and that equates to **`r ae_achieved_pre()`**. The average score from students i
 
 ```{r pre_ae_hist, echo=FALSE}
 
-pre_ae_histq <- qplot(pre_ae$ae.avg, geom="histogram", main= "Pre Survey",ylim=c(0,60), bins=40, xlab="Outcome Scores") + geom_vline(xintercept = 4.5, col="red") 
+pre_ae_histq <- qplot(pre_ae$ae.avg, geom="histogram", main= "Pre Survey",ylim=c(0,125), bins=40, xlab="Outcome Scores") + geom_vline(xintercept = 4.5, col="red") 
 
 pre_ae_histq
 
@@ -192,13 +195,13 @@ pander(ae_history_1)
 ```
 
 
-Cross Validation of Academic Engagment Skills
+## Cross Validation of Academic Engagment Skills
 
 Survey results from teachers and parents also  Below are tables that provide a breakdown of questions on the pre survey from the parent and teacher surveys. 
 
 
 
-# Pre Parent Survey
+### Pre Parent Survey
 
 
 
