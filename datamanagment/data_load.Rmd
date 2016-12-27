@@ -19,16 +19,16 @@ library(tidyverse)
 
 setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/December 2016")
 
-rawdata <- read_csv("student_survey_12022016.csv", skip=1) #reads student survey
+rawdata <- read_csv("student_survey_12262016.csv", skip=1) #reads student survey
 
 
-parent <- read_csv("parent_survey_12022016.csv", skip=1) #reads parent survey
+parent <- read_csv("parent_survey_12262016.csv", skip=1) #reads parent survey
 
 
-teacher <- read_csv("teacher_survey_12022016.csv", skip=1) # reads teacher survey
+teacher <- read_csv("teacher_survey_12262016.csv", skip=1) # reads teacher survey
 
 
-q1_dm <- read_csv("q1_data_12022016.csv", skip = 1) #read  q1_dmcsv file
+q1_dm <- read_csv("q1_data_12262016.csv", skip = 1) #read  q1_dmcsv file
 
 
 ```
@@ -61,6 +61,7 @@ rmarkdown::render("q1_dm.Rmd") #run q1_dm file
 
 
 
+
 ```
 
 
@@ -70,6 +71,7 @@ setwd("~/GitHub/getReal20162017/Report Scripts")
 
 rmarkdown::render("status_report.Rmd")
 
+rmarkdown::render("results.Rmd")# run results file
 
 
 ```
