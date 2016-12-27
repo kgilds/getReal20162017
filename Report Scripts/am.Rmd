@@ -67,7 +67,7 @@ achieved_1516 <- round(achieved_1516*100,2) #clean up percent
 
 achieved_1516 <- paste0(achieved_1516,"%", sep="")  # add percent sign
 
-achieved_1516
+#achieved_1516
 
 
 
@@ -98,7 +98,7 @@ achieved_1415 <- round(achieved_1415*100,2) #clean up percent
 
 achieved_1415 <- paste0(achieved_1415,"%", sep="")  # add percent sign
 
-achieved_1415
+#achieved_1415
 
 
 
@@ -126,7 +126,7 @@ achieved_1314 <- round(achieved_1314*100,2) #clean up percent
 
 achieved_1314 <- paste0(achieved_1314,"%", sep="")  # add percent sign
 
-pander(achieved_1314)  #make nice with pander
+#pander(achieved_1314)  #make nice with pander
 
 ```
 
@@ -174,7 +174,7 @@ and that equates to **`r am_achieved_pre()`**. The average score from students i
 
 ```{r pre_am_hist, echo=FALSE}
 
-pre_am_histq <- qplot(pre_am$am.avg, geom="histogram", main= "Pre Survey",ylim=c(0,125), bins=40, xlab="Outcome Scores") + geom_vline(xintercept = 4.8, col="red") 
+pre_am_histq <- qplot(pre_am$am.avg, geom="histogram", main= "Pre Survey: Academic Mastery",ylim=c(0,125), bins=40, xlab="Outcome Scores") + geom_vline(xintercept = 4.8, col="red") 
 
 pre_am_histq
 
@@ -196,15 +196,18 @@ pander(am_history_1)
 ```
 
 
-Cross Validation of Academic Mastery
+## Cross Validation of Academic Mastery
 
 Survey results from teachers and parents also  Below are tables that provide a breakdown of questions on the pre survey from the parent and teacher surveys. 
 
 
 
-# Pre Parent Survey
+## Pre Parent Survey
 
 
+* Question 1: She is motivated to graduate high school.* N=
+
+* Question 3: She has a Good Attitude About School.*  N=
 
 
 
@@ -212,7 +215,7 @@ Survey results from teachers and parents also  Below are tables that provide a b
 
 pre_parent  <- dbReadTable(getRealdb, "pre_parent_1617")
 
-names(pre_parent)
+#names(pre_parent)
 
 #post_parent <- dbReadTable(getReal_2016db, "post_parent_1617")
 
@@ -221,13 +224,9 @@ names(pre_parent)
 
 
 
-* Question 1: She is motivated to graduate high school
-
-* Question 3: She has a Good Attitude About School
 
 
 
-Results based on responses.
 
 
 
@@ -241,7 +240,7 @@ colnames(pre_parent) [13] <- "Q3"
 pre_parent_tbl <- pre_parent %>%
     select( 11,13 )
 
-
+str(pre_parent_tbl)
 
 pre_parent_q1 <-table(pre_parent_tbl$Q1) #make table to test
 
@@ -283,13 +282,12 @@ likert.heat.plot(pre_parent_tbl) + ggtitle("Pre Parent Survey Question 1 & Quest
 
 ```
 
-### Teacher Survey
 
 ```{r read_database_am, echo=FALSE}
 
 pre_teacher <- dbReadTable(getRealdb, "pre_teacher_1617") #read database
 
-names(pre_teacher)
+#names(pre_teacher)
 
 post_teacher <- dbReadTable(getRealdb, "post_teacher_1617") #read database
 
@@ -300,11 +298,10 @@ post_teacher <- dbReadTable(getRealdb, "post_teacher_1617") #read database
 
 ### Teacher Pre Survey
 
-* Question 1: She is motivated to graduate high school
+* Question 1: She is motivated to graduate high school.* N=
 
-* Question 3: She has a Good Attitude About School
+* Question 3: She has a Good Attitude About School. * N=
 
-The number of responses to the post teacher survey is . 
 
 ```{r am_load_pre_teacher, echo=FALSE}
 

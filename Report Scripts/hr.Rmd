@@ -144,7 +144,7 @@ and that equates to **`r hr_achieved_pre()`**. The average score from students i
 
 ```{r pre_hr_hist, echo=FALSE}
 
-pre_hr_histq <- qplot(pre_hr$hr.avg, geom="histogram", main= "Pre Survey",ylim=c(0,60), bins=40, xlab="Outcome Scores") + geom_vline(xintercept = 4.45, col="red") 
+pre_hr_histq <- qplot(pre_hr$hr.avg, geom="histogram", main= "Pre Survey: Health Relationships",ylim=c(0,60), bins=40, xlab="Outcome Scores") + geom_vline(xintercept = 4.45, col="red") 
 
 pre_hr_histq
 
@@ -166,13 +166,13 @@ pander(hr_history_1)
 ```
 
 
-Cross Validation of Healthy Relationship Skills
+## Cross Validation of Healthy Relationship Skills
 
 Survey results from teachers and parents also  Below are tables that provide a breakdown of questions on the pre survey from the parent and teacher surveys. 
 
 
 
-# Pre Parent Survey
+### Pre Parent Survey
 
 
 
@@ -189,9 +189,9 @@ pre_parent  <- dbReadTable(getRealdb, "pre_parent_1617")
 
 
 
-Question 5: She develops positive relationships with her classmates.
+**Question 5: She develops positive relationships with her classmates.**
 
-Results based on  responses.
+Results based on responses.
 
 ```{r pre_parent, echo=FALSE}
 
@@ -235,6 +235,10 @@ pre_parent_hr1 <- likert(pre_parent_hr1) #change to likert
 
 summary(pre_parent_hr1) #test
 
+
+
+
+
 plot(pre_parent_hr1, type="heat") + ggtitle("Pre Parent Survey Question 5") + theme_dark() #plot heat map
 
 
@@ -255,9 +259,9 @@ post_teacher <- dbReadTable(getRealdb, "post_teacher_1617") #read database
 
 
 
-Question 7: She has developed positive relationships with her classmates (N=)
+**Question 7: She has developed positive relationships with her classmates.** 
 
-
+Results based on number of responses. 
 
 ```{r makeq7, echo=FALSE}
 
@@ -290,7 +294,7 @@ pre_teacher_tbl$Q7 <- factor(pre_teacher$Q7, levels=c("Strongly Disagree", "Disa
 
 
 
-```{r likert_q7, echo=FALSE}
+```{r likert_q7, echo=FALSE, fig.width=12 }
 #nrow(post_teacher_tbl) #check to determine number of rows; what to divide to get %
 
 pre_teacher_tbl <- likert(pre_teacher_tbl) #likert table

@@ -52,11 +52,11 @@ high_1415 <- pre_ae_1415 %>%
     filter(ae.avg >=4.5)  #find cases above 4.5
 
 
-mean(pre_ae_1415$ae.avg)
+#mean(pre_ae_1415$ae.avg)
 
-nrow(high_1415)
+#nrow(high_1415)
 
-nrow(pre_ae_1415)
+#nrow(pre_ae_1415)
 
 achieved_1415 <- nrow(high_1415) / nrow(pre_ae_1415)  #find percent
 
@@ -64,7 +64,7 @@ achieved_1415 <- round(achieved_1415*100,2) #clean up percent
 
 achieved_1415 <- paste0(achieved_1415,"%", sep="")  # add percent sign
 
-achieved_1415
+#achieved_1415
 
 
 
@@ -83,11 +83,11 @@ high_1516 <- pre_ae_1516 %>%
     filter(ae.avg >=4.5)  #find cases above 4.5
 
 
-mean(pre_ae_1516$ae.avg)
+#mean(pre_ae_1516$ae.avg)
 
-nrow(high_1516)
+#nrow(high_1516)
 
-nrow(pre_ae_1516)
+#nrow(pre_ae_1516)
 
 achieved_1516 <- nrow(high_1516) / nrow(pre_ae_1516)  #find percent
 
@@ -95,7 +95,7 @@ achieved_1516 <- round(achieved_1516*100,2) #clean up percent
 
 achieved_1516 <- paste0(achieved_1516,"%", sep="")  # add percent sign
 
-achieved_1516
+#achieved_1516
 
 
 
@@ -123,7 +123,7 @@ achieved_1314 <- round(achieved_1314*100,2) #clean up percent
 
 achieved_1314 <- paste0(achieved_1314,"%", sep="")  # add percent sign
 
-pander(achieved_1314)  #make nice with pander
+#pander(achieved_1314)  #make nice with pander
 
 ```
 
@@ -160,7 +160,7 @@ pre_ae_m <- mean(pre_ae$ae.avg)
 
 pre_ae_m <-round(pre_ae_m,2)
 
-pre_ae_m
+#pre_ae_m
 
 ```
 
@@ -173,7 +173,7 @@ and that equates to **`r ae_achieved_pre()`**. The average score from students i
 
 ```{r pre_ae_hist, echo=FALSE}
 
-pre_ae_histq <- qplot(pre_ae$ae.avg, geom="histogram", main= "Pre Survey",ylim=c(0,125), bins=40, xlab="Outcome Scores") + geom_vline(xintercept = 4.5, col="red") 
+pre_ae_histq <- qplot(pre_ae$ae.avg, geom="histogram", main= "Pre Survey: Academic Engagment",ylim=c(0,125), bins=40, xlab="Outcome Scores") + geom_vline(xintercept = 4.5, col="red") 
 
 pre_ae_histq
 
@@ -204,6 +204,8 @@ Survey results from teachers and parents also  Below are tables that provide a b
 ### Pre Parent Survey
 
 
+**Question 6: She works on her homework at home without supervision.** N=
+
 
 
 
@@ -211,7 +213,7 @@ Survey results from teachers and parents also  Below are tables that provide a b
 
 pre_parent  <- dbReadTable(getRealdb, "pre_parent_1617")
 
-names(pre_parent)
+#names(pre_parent)
 
 #post_parent <- dbReadTable(getReal_2016db, "post_parent_1617")
 
@@ -229,6 +231,8 @@ colnames(pre_parent)[16] <- "Q6"
 pre_parent_tbl <- pre_parent %>%
     select(16)
 
+
+#str(pre_parent_tbl)
 #table(pre_parent_tbl)
 
 #names(pre_parent_tbl)
@@ -240,7 +244,7 @@ pre_parent_tbl$Q6 <- factor(pre_parent_tbl$Q6, levels=c("Strongly Disagree", "Di
 ```
 
 
-```{r "ae_q5_parent", fig.height=5, fig.width=14, fig.path='Figs/', dev.args='cario-png', echo=FALSE}
+```{r "ae_q5_parent", fig.height=5, fig.width=12, fig.path='Figs/', dev.args='cario-png', echo=FALSE}
 
 pre_parent_test <- table(pre_parent_tbl) #make tbl for testing
 
@@ -259,11 +263,16 @@ plot(pre_parent_tbl, type="heat") +ggtitle("Parent Pre Survey Question 6") + the
 
 ### Teacher Survey
 
+**Question 5: She positively participates in class.**  N= 
+
+**Question 6: She works on her homework at home without supervision.** N=
+
+
 ```{r read_database_ae, echo=FALSE}
 
 pre_teacher <- dbReadTable(getRealdb, "pre_teacher_1617") #read database
 
-names(pre_teacher)
+#names(pre_teacher)
 
 post_teacher <- dbReadTable(getRealdb, "post_teacher_1617") #read database
 
@@ -287,6 +296,7 @@ colnames(pre_teacher)[15] <- "Q6"
 pre_teacher_tbl <- pre_teacher %>%
     select(14,15)
 
+str(pre_teacher_tbl)
 table(pre_teacher_tbl$Q5)
 table(pre_teacher_tbl$Q6)
 
