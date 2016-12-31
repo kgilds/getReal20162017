@@ -4,6 +4,22 @@ author: "Kevin Gilds, MPA"
 date: "December 21, 2016"
 output: html_document
 ---
+# Objective Assessment: Data analysis and indication of progress towards achieving each objective 
+
+## Life Skills
+
+ *Objective --70% of participating girls will demonstrate an increased understanding of pertinent life skills as demonstrated by a pre and post assessment.*
+
+The surveys administered to the students measures the following life skills, healthy relationships, academic engagement, and academic mastery.
+•	Healthy Relationships--Measures relationship skills with peers and adults.
+
+•	Academic Engagement--Measures specific behaviors related to school success.
+
+•	Academic Mastery--Measures attitude toward education.
+
+The questions and the scoring methodology of the girl survey were developed and tested by the Girl Scout Research Institute. Girls answer multiple questions to obtain an outcome score for each life skill domain. Responses to survey questions are assigned numbers/points and outcome scores are calculated by averaging responses to survey questions for each category. The points for each outcome set are averaged to obtain an outcome score. Outcome cutpoints are determined by the number of questions in the outcome set and response options. Outcomes scores range from 0-6. Below is a breakdown of the cut-points by the outcomes measured. Outcome cut-points are used to determine high achievement. Below is a breakdown of the cutpoints by the outcomes measured.
+
+
 
 ```{r child="hr.Rmd"}
 
