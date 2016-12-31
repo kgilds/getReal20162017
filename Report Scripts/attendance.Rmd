@@ -35,19 +35,61 @@ q1_attendance <- dbReadTable(getRealdb,"Q1_attendance_1617")
 
 ## Objective
 
-* Objective: 60% of participating students will either maintain or improve their attendance 
-rates as demonstrated by their decreased absences from the baseline grading period to the final grading period as evidenced by report cards/school reports.*
+*Objective: 60% of participating students will either maintain or improve their attendance 
+rates as demonstrated by their decreased absences from the baseline grading period to the final grading period as evidenced by report cards/school report*
 
 
 ```{r q1_attendance_mean, echo=FALSE}
 
 q1_attendance$total <- as.numeric(q1_attendance$total)
 
+pander(summary(q1_attendance$total))
 
+
+quantile(q1_attendance$total)
+
+```
+
+```{r no_abs}
+none_abs <- q1_attendance %>%
+    filter(total ==0)
+
+none_abs <- nrow(none_abs)/nrow(q1_attendance)
+
+none_abs <-round(none_abs*100,2)
+
+none_abs_p <-paste0(none_abs,"%", sep="")
+
+none_abs_p
 
 
 ```
 
+
+
+
+```{r more_5}
+
+
+
+more_5 <- q1_attendance %>%
+    filter(total >=5)
+
+more_5 <- nrow(more_5)/nrow(q1_attendance)
+
+more_5 <-round(more_5*100,2)
+
+more_5_p <-paste0(more_5,"%", sep="")
+
+less_5 <-100-more_5
+
+more_5_p
+
+less_5
+
+```
+
+The number of valid data entry records is **`r nrow(q1_attendance)`**. The percent of students without an absence is **`r (none_abs_p)`**. The percent of students with 5 or less absences is **`r (less_5)`** and the percent of students with more than 5 absences is **`r (more_5_p)`**
 
 ```{r q1_absences_tbl, echo=FALSE}
 
@@ -56,10 +98,15 @@ q1_absences <-with(q1_attendance,table(total))  #table of absences
 
 pander(q1_absences) #pretty table
 
-q1_absences_c <-with(q1_attendance,table(council,total)) #table of absences by council
+#q1_absences_c <-with(q1_attendance,table(council,total)) #table of absences by council
 
-pander(q1_absences_c) #pretty table
+#pander(q1_absences_c) #pretty table
 ```
+
+
+
+
+
 
 
 ```{r total_plot, echo=FALSE}
@@ -82,9 +129,9 @@ q1_unexcused <-with(q1_attendance,table(unexcused)) #unexcused table
 pander(q1_unexcused) #pretty table
 
 
-q1_unexcused_c <-with(q1_attendance,table(council, unexcused)) #unexcused table by council
+#q1_unexcused_c <-with(q1_attendance,table(council, unexcused)) #unexcused table by council
 
-pander(q1_unexcused_c) #pretty table
+#pander(q1_unexcused_c) #pretty table
 
 ```
 
@@ -97,9 +144,9 @@ q1_unexcused <-with(q1_attendance,table(excused)) #q1_unexucsed table
 pander(q1_unexcused) #make pretty
 
 
-q1_unexcused_c <-with(q1_attendance,table(council, excused)) #q1_unexcused by council
+#q1_unexcused_c <-with(q1_attendance,table(council, excused)) #q1_unexcused by council
 
-pander(q1_unexcused_c) #pretty tables
+#pander(q1_unexcused_c) #pretty tables
 
 ```
 
