@@ -322,6 +322,25 @@ q1_reading_test <- q1_reading %>%
 write.csv(q1_reading_test, file="reading_course_question.csv", row.names=FALSE)
 ```
 
+### Reading Points
+
+```{r reading_pts, echo=FALSE}
+
+reading_pts <- numeric(0)
+
+for(i in q1_reading$Grade){
+
+     reading_pts<- c(reading_pts,switch(i, "A" =4, "B"=3, "C"=2, "D"=1, "F"=0))
+
+     reading_pts
+     
+}
+
+q1_reading <-cbind(q1_reading, reading_pts)
+
+q1_reading
+
+```
 
 
 
@@ -397,7 +416,27 @@ which(is.na(q1_langarts$grade))
 ```
 
 
+## Languge Points
 
+```{r lang_pts}
+lang_pts <- numeric(0)
+
+for(i in q1_langarts$grade){
+
+     lang_pts<- c(lang_pts,switch(i, "A" =4, "B"=3, "C"=2, "D"=1, "F"=0))
+
+     lang_pts
+}
+
+q1_langarts <-cbind(q1_langarts, lang_pts)
+
+q1_langarts
+
+```
+
+
+
+# Join All Behavior Data
 
 ```{r}
 q1_behavior_data <- full_join(q1_behavior, q1_attendance, by="girl_code")
