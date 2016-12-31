@@ -71,6 +71,8 @@ success <- paste0(success, "%", sep="")
 Baseline data indicates number of valid data entries is **`r nrow(q1_behavior)`** and the percent of students who have not experienced a suspension as of Quarter 1 is **`r pander(success)`**
 
 
+
+
 ```{r q1_behavior_tbl, echo=FALSE}
 
 q1_suspensions <-with(q1_behavior,table(total))  #table of absences
@@ -78,9 +80,9 @@ q1_suspensions <-with(q1_behavior,table(total))  #table of absences
 
 pander(q1_suspensions   ) #pretty table
 
-q1_suspensions_c <- with(q1_behavior,table(council,total)) #table of absences by council
+#q1_suspensions_c <- with(q1_behavior,table(council,total)) #table of absences by council
 
-pander(q1_suspensions_c) #pretty table
+#pander(q1_suspensions_c) #pretty table
 ```
 
 
@@ -104,9 +106,9 @@ q1_out <-with(q1_behavior,table(out_school)) #unexcused table
 pander(q1_out) #pretty table
 
 
-q1_out_c <-with(q1_behavior,table(council, out_school)) #unexcused table by council
+#q1_out_c <-with(q1_behavior,table(council, out_school)) #unexcused table by council
 
-pander(q1_out_c) #pretty table
+#pander(q1_out_c) #pretty table
 
 ```
 
@@ -119,9 +121,9 @@ q1_in <-with(q1_behavior,table(in_school)) #q1_unexucsed table
 pander(q1_in) #make pretty
 
 
-q1_in_c <-with(q1_behavior,table(council, in_school)) #q1_unexcused by council
+#q1_in_c <-with(q1_behavior,table(council, in_school)) #q1_unexcused by council
 
-pander(q1_in_c) #pretty tables
+#pander(q1_in_c) #pretty tables
 
 ```
 
