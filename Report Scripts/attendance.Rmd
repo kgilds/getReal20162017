@@ -1,8 +1,10 @@
 ---
 title: "attendance"
 author: "Kevin Gilds, MPA"
-date: "December 8, 2016"
-output: html_document
+date: '`r Sys.Date()`'
+output:
+  html_document: default
+  github_document: default
 ---
 ```{r attendance_libaries, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -33,7 +35,6 @@ q1_attendance <- dbReadTable(getRealdb,"Q1_attendance_1617")
 
 # Decrease in Absenteeism
 
-## Objective
 
 *Objective: 60% of participating students will either maintain or improve their attendance 
 rates as demonstrated by their decreased absences from the baseline grading period to the final grading period as evidenced by report cards/school report*
@@ -43,14 +44,10 @@ rates as demonstrated by their decreased absences from the baseline grading peri
 
 q1_attendance$total <- as.numeric(q1_attendance$total)
 
-pander(summary(q1_attendance$total))
-
-
-quantile(q1_attendance$total)
 
 ```
 
-```{r no_abs}
+```{r no_abs, echo=FALSE}
 none_abs <- q1_attendance %>%
     filter(total ==0)
 
@@ -60,7 +57,7 @@ none_abs <-round(none_abs*100,2)
 
 none_abs_p <-paste0(none_abs,"%", sep="")
 
-none_abs_p
+#none_abs_p
 
 
 ```
@@ -68,28 +65,26 @@ none_abs_p
 
 
 
-```{r more_5}
+```{r more_4, echo=FALSE}
 
+more_4 <- q1_attendance %>% 
+    filter(total >=4) #filter those with 4 or more absences into dataset
 
+more_4 <- nrow(more_4)/nrow(q1_attendance) #obtain percent of those with more than 4 absences
 
-more_5 <- q1_attendance %>%
-    filter(total >=5)
+more_4 <-round(more_4*100,2) #make a pretty percent
 
-more_5 <- nrow(more_5)/nrow(q1_attendance)
+more_4_p <-paste0(more_4,"%", sep="") #make a % sign 
 
-more_5 <-round(more_5*100,2)
+less_4 <-100-more_4  #obtain who has less than 4 absences 
 
-more_5_p <-paste0(more_5,"%", sep="")
+#more_4_p
 
-less_5 <-100-more_5
-
-more_5_p
-
-less_5
+less_4_p <- paste0(less_4, "%", sep="") #provide a percent sign. 
 
 ```
 
-The number of valid data entry records is **`r nrow(q1_attendance)`**. The percent of students without an absence is **`r (none_abs_p)`**. The percent of students with 5 or less absences is **`r (less_5)`** and the percent of students with more than 5 absences is **`r (more_5_p)`**
+The number of valid data entry records is **`r nrow(q1_attendance)`**. The percent of students without an absence is **`r (none_abs_p)`**. The percent of students with 4 or less absences is **`r (less_4_p)`** and the percent of students with more than 4 absences is **`r (more_4_p)`**. Students with more than 4 absences are at risk for chronic absenteeism if they maintain their rate of absences. 
 
 ```{r q1_absences_tbl, echo=FALSE}
 
@@ -106,9 +101,6 @@ pander(q1_absences) #pretty table
 
 
 
-
-
-
 ```{r total_plot, echo=FALSE}
 
 
@@ -121,7 +113,7 @@ total_absPlot + geom_count()
 ```
 
 
-# Unexcused
+### Unexcused Absences:
 ```{r q1_unexcused_tbl, echo=FALSE}
 
 q1_unexcused <-with(q1_attendance,table(unexcused)) #unexcused table
@@ -137,8 +129,8 @@ pander(q1_unexcused) #pretty table
 
 
 
-# Excused Absences
-```{r excused_tbls}
+### Excused Absences:
+```{r excused_tbls, echo=FALSE}
 q1_unexcused <-with(q1_attendance,table(excused)) #q1_unexucsed table
 
 pander(q1_unexcused) #make pretty
@@ -151,5 +143,5 @@ pander(q1_unexcused) #make pretty
 ```
 
 
-
+### Narrative
 
