@@ -4,6 +4,7 @@ params:
   council: West Central Council
 output:
   html_document: default
+  github_document: default
   
 ---
 
@@ -140,7 +141,7 @@ pre_ae_inprogram <- pre_ae %>%
 
 # Academic Engagement Outcome 
 
-Academic Engagement questions gauge tangible behaviors that help students succeed in school. Questions that measure Academic Engagement include the following.
+Academic engagement questions gauge tangible behaviors that help students succeed in school. Questions that measure academic engagement include the following.
 
 **Acadeimc Engagement Questions**
 
@@ -168,7 +169,7 @@ pre_ae_m <-round(pre_ae_m,2)
 The number of valid surveys entered is  **`r nrow(pre_ae)`**, and the number of students achieving at a high level is **`r nrow(pre_num)`**
 and that equates to **`r ae_achieved_pre()`**. The average score from students is **`r pre_ae_m`**
 
-### Academic Engagement Pre Outcome Score Summary
+### Academic Engagement: Pre Outcome Score Summary
 
 ```{r pre_ae_summary, echo=FALSE}
 pander(summary(pre_ae$ae.avg))
@@ -185,7 +186,7 @@ pre_ae_histq
 ```
 
 
-# Pre Survey Academic Engagement
+# Pre Survey: Academic Engagement History
 
 
 ```{r ae_histor_1, echo=FALSE}
