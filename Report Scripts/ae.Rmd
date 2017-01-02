@@ -4,7 +4,7 @@ params:
   council: West Central Council
 output:
   html_document: default
-  html_notebook: default
+  
 ---
 
 ```{r ae_import_libaries, echo=FALSE, message=FALSE, warning=FALSE}
