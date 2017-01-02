@@ -4,7 +4,7 @@ params:
   council: West Central Council
 output:
   html_document: default
-  html_notebook: default
+  github_document: default
 ---
 
 ```{r hr_import_libaries, echo=FALSE, message=FALSE, warning=FALSE}
@@ -110,7 +110,7 @@ pre_hr <- pre_hr %>%
 # Healthy Relationship Outcome 
 
 Relationship skills are a critical component of success in all realms of life. 
-The Healthy Relationship questions measures the behaviors and attitudes of the respondent regarding their relationship skills. Questions that measure healthy relationships skills include the following:
+The healthy relationship questions measures the behaviors and attitudes of the respondent regarding their relationship skills. Questions that measure healthy relationships skills include the following:
 
 
 *Healthy Relationship Questions*
@@ -139,7 +139,7 @@ pre_hr_m <-round(pre_hr_m,2)
 The number of valid surveys entered is  **`r nrow(pre_hr)`**, and the number of students achieving at a high level is **`r nrow(pre_num)`**
 and that equates to **`r hr_achieved_pre()`**. The average score from students is **`r pre_hr_m`**
 
-### Healthy Releationship Pre Outcome Score Summary
+### Healthy Releationship: Pre Outcome Score Summary
 
 ```{r pre_hr_avg, echo=FALSE}
 pander(summary(pre_hr$hr.avg))
@@ -156,7 +156,7 @@ pre_hr_histq
 ```
 
 
-# Pre Survey Healthy Relationship History
+# Pre Survey: Healthy Relationship History
 
 
 ```{r hr_histor_1, echo=FALSE}
