@@ -4,7 +4,7 @@ params:
   council: West Central Council
 output:
   html_document: default
-  html_notebook: default
+  github_documet: default
 ---
 
 ```{r am_import_libaries, echo=FALSE, message=FALSE, warning=FALSE}
@@ -142,7 +142,7 @@ pre_am <- pre_am %>%
 
 
 
-The Academic Mastery questions gauge a student's attitude towards school and education. Questions that measure Academic Mastery include the following.
+Academic mastery questions gauge a student's attitude towards school and education. Questions that measure Academic Mastery include the following.
 
 * It's important to me that I improve my skills this year in school
 * It's important to me that I really understand my class work
@@ -169,7 +169,7 @@ pre_am_m <-round(pre_am_m,2)
 The number of valid surveys entered is  **`r nrow(pre_am)`**, and the number of students achieving at a high level is **`r nrow(pre_num)`**
 and that equates to **`r am_achieved_pre()`**. The average score from students is **`r pre_am_m`**
 
-### Academic Mastery Pre Outcome Summary
+### Academic Mastery: Pre Outcome Summary
 
 ```{r pre_am_summary, echo=FALSE}
 
@@ -188,7 +188,7 @@ pre_am_histq
 ```
 
 
-# Pre Survey Academic Mastery History
+# Pre Survey: Academic Mastery History
 
 
 ```{r am_histor_1, echo=FALSE}
