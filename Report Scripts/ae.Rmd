@@ -168,6 +168,11 @@ pre_ae_m <-round(pre_ae_m,2)
 The number of valid surveys entered is  **`r nrow(pre_ae)`**, and the number of students achieving at a high level is **`r nrow(pre_num)`**
 and that equates to **`r ae_achieved_pre()`**. The average score from students is **`r pre_ae_m`**
 
+### Academic Engagement Outcome Score Summary
+
+```{r ae_summary, echo=FALSE}
+pander(summary(pre_ae$ae.avg))
+```
 
 
 
@@ -330,3 +335,5 @@ plot(pre_teacher_tbl, type="heat") + ggtitle("Teacher Post Survey Question 5 & 6
 
 ```
 
+
+### Narrative
