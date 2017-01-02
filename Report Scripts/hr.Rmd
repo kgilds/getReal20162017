@@ -139,6 +139,11 @@ pre_hr_m <-round(pre_hr_m,2)
 The number of valid surveys entered is  **`r nrow(pre_hr)`**, and the number of students achieving at a high level is **`r nrow(pre_num)`**
 and that equates to **`r hr_achieved_pre()`**. The average score from students is **`r pre_hr_m`**
 
+### Healthy Releationship Outcome Score Summary
+
+```{r hr_avg, echo=FALSE}
+pander(summary(pre_hr$hr.avg))
+```
 
 
 
@@ -305,4 +310,4 @@ plot(pre_teacher_tbl, type="heat") + ggtitle("Pre Teacher Survey Question 7") + 
 
 ```
 
-
+### Narrative
