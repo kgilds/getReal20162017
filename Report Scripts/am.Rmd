@@ -169,6 +169,13 @@ pre_am_m <-round(pre_am_m,2)
 The number of valid surveys entered is  **`r nrow(pre_am)`**, and the number of students achieving at a high level is **`r nrow(pre_num)`**
 and that equates to **`r am_achieved_pre()`**. The average score from students is **`r pre_am_m`**
 
+### Academic Mastery Pre Outcome Summary
+
+```{r pre_am_summary, echo=FALSE}
+
+pander(summary(pre_am$am.avg))
+
+```
 
 
 
@@ -355,7 +362,7 @@ plot(pre_teacher_tbl, type="heat") +ggtitle("pre Teacher Survey Question 1 & Que
 ```
 
 
-
+### Narrative
 
 
 
