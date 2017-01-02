@@ -270,7 +270,7 @@ plot(pre_parent_tbl, type="heat") +ggtitle("Parent Pre Survey Question 6") + the
 
 **Question 5: She positively participates in class.**  N= 
 
-**Question 6: She works on her homework at home without supervision.** N=
+**Question 6: She completes the homework given to her.** N=
 
 
 ```{r read_database_ae, echo=FALSE}
