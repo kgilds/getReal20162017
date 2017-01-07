@@ -67,6 +67,17 @@ lang_history <- rbind(q1_16, q1_15)
 
 ```
 
+```{r q1_grade_table, echo=FALSE}
+
+grade_table <- lang_history %>%
+    filter(Year == "16-17")
+
+grade_table <- with(grade_table,table(Year, grade))
+
+pander(grade_table, caption="Q1 Grades")
+
+
+```
 
 ```{r courses, echo=FALSE}
 

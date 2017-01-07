@@ -5,7 +5,7 @@ date: '`r Sys.Date()`'
 output: github_document
 ---
 
-```{r read_libraries, echo=FALSE}
+```{r read_libraries, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(pander)
 library(ggplot2)
@@ -55,6 +55,18 @@ q1_15 <- q1_reading1516 %>%
 read_history <- rbind(q1_16, q1_15) #combind data sets to compare
 
 
+
+```
+
+
+
+```{r q1grade_tbl, echo=FALSE}
+grade_table <- read_history %>%
+    filter(Year=="16-17")
+
+grade_table <- with(grade_table,table(Year, Grade)) #table to compare grades from previous Q1
+
+pander(grade_table, caption="Grade Table History--Quarter 1") #make table pretty 
 
 ```
 
