@@ -249,6 +249,9 @@ pre_parent_tbl <- pre_parent %>%
 
 str(pre_parent_tbl)
 
+levels(pre_parent_tbl)[levels(pre_parent_tbl)=="Neither Agree/Disagree"] <- "Neutral"
+
+
 pre_parent_q1 <-table(pre_parent_tbl$Q1) #make table to test
 
 #pander(pre_parent_q1) #print results of test nicely
