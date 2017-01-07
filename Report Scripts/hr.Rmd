@@ -5,6 +5,7 @@ params:
 output:
   html_document: default
   github_document: default
+  word_document: default
 ---
 
 ```{r hr_import_libaries, echo=FALSE, message=FALSE, warning=FALSE}
@@ -299,12 +300,14 @@ pre_teacher_tbl$Q7 <- factor(pre_teacher$Q7, levels=c("Strongly Disagree", "Disa
 
 
 
-```{r likert_q7, echo=FALSE, fig.width=12 }
+```{r likert_q7, fig.width=15, echo=FALSE, fig.width=12 }
 #nrow(post_teacher_tbl) #check to determine number of rows; what to divide to get %
 
 pre_teacher_tbl <- likert(pre_teacher_tbl) #likert table
 
 summary(pre_teacher_tbl) #likert summary
+
+plot(pre_teacher_tbl)
 
 plot(pre_teacher_tbl, type="heat") + ggtitle("Pre Teacher Survey Question 7") + theme_dark() #heat map
 
