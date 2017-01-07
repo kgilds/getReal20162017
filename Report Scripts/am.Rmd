@@ -3,6 +3,7 @@ title: "Academic Mastery Notebook"
 params:
   council: West Central Council
 output:
+  word_document: default
   html_document: default
   github_documet: default
 ---
