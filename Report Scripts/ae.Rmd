@@ -3,9 +3,9 @@ title: "Academic Engagement Notebook"
 params:
   council: West Central Council
 output:
+  word_document: default
   html_document: default
   github_document: default
-  
 ---
 
 ```{r ae_import_libaries, echo=FALSE, message=FALSE, warning=FALSE}
@@ -289,7 +289,7 @@ post_teacher <- dbReadTable(getRealdb, "post_teacher_1617") #read database
 
 
 
-```{r  "ae_load_teacher", fig.height=2, fig.width=15, echo=FALSE}
+```{r  "ae_load_teacher", fig.height=15, echo=FALSE}
 
 
 #names(post_teacher) checked 
@@ -322,12 +322,13 @@ pre_teacher_tbl$Q6 <- factor(pre_teacher_tbl$Q6, levels=c("Strongly Disagree", "
 
 
 
-```{r "ae_teacher_plots",fig.height=5, fig.width=14, fig.path='Figs/', dev.args='cario-png', echo=FALSE}
+```{r "ae_teacher_plots", fig.width=10, fig.path='Figs/', dev.args='cario-png', echo=FALSE}
 
 pre_teacher_tbl <- likert(pre_teacher_tbl)
 
 summary(pre_teacher_tbl)
 
+plot(pre_teacher_tbl)
 
 plot(pre_teacher_tbl, type="heat") + ggtitle("Teacher Post Survey Question 5 & 6") + theme_dark ()
 
