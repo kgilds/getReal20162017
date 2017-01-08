@@ -3,10 +3,33 @@ title: "results"
 author: "Kevin Gilds, MPA"
 date: "December 21, 2016"
 output:
-  word_document: default
-  pdf_document: default
   html_document: default
+  pdf_document: default
+  word_document: default
 ---
+
+```{r global_options_results, include=FALSE, }
+knitr::opts_chunk$set(fig.path='Figs/',
+                      echo=FALSE, warning=FALSE, message=FALSE, comment=FALSE)
+```
+
+
+```{r pre_ae&setup, echo=FALSE, warnings=FALSE, message=FALSE}
+library(sqldf)
+library(tidyverse)
+library(pander)
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+### Make connection with database
+getRealdb<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+outcomes <- dbReadTable(getRealdb,"Outcomes")
+
+outcomes <- outcomes %>%
+    select(2,3)
+
+```
 # Objective Assessment: Data analysis and indication of progress towards achieving each objective 
 
 ## Life Skills
@@ -25,8 +48,23 @@ The questions and the scoring methodology of the girl survey were developed and 
 
 ### Cutpoints
 
+```{r}
+pander(outcomes)
+```
 
-### Narrative
+
+### Pre Survey and Quarter 1 Grade Results
+
+Survey baseline data for students in the Get REAL! program is not following the typical pattern of the past three years. The typical pattern is the pre surveys indicated that the students wanted to do well in school but had not yet applied the behaviors or developed the relationships skills to be successful in school. The average scores and the number of students at a high level is very consistent across the past three years except this year. 
+
+
+
+
+
+
+
+
+
 
 
 
