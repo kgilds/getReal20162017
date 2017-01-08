@@ -3,10 +3,16 @@ title: "Academic Mastery Notebook"
 params:
   council: West Central Council
 output:
-  word_document: default
   html_document: default
   github_documet: default
+  word_document: default
 ---
+
+```{r global_options_am, include=FALSE}
+knitr::opts_chunk$set(fig.path='Figs/',
+                      echo=FALSE, warning=FALSE, message=FALSE, comment=FALSE)
+```
+
 
 ```{r am_import_libaries, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)

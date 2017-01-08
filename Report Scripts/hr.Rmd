@@ -8,6 +8,19 @@ output:
   word_document: default
 ---
 
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.path='Figs/',
+                      echo=FALSE, warning=FALSE, message=FALSE, comment=FALSE)
+```
+
+
+```{r opts_chunk$set(comment=NA)}
+
+```
+
+
+
+
 ```{r hr_import_libaries, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(pander)
@@ -223,7 +236,7 @@ pre_parent_hr1$Q5 <- factor(pre_parent_hr1$Q5, levels=c("Strongly Disagree", "Di
 
 ```{r pre_parent_tbl, echo=FALSE}
 
-pre_parent_tbl <- table(pre_parent_hr1) #test q5 
+pre_parent_tbl_hr2 <- table(pre_parent_hr1) #test q5 
 
 #nrow(pre_parent_hr1) #test to figure how total with testing %s
 
@@ -231,21 +244,23 @@ pre_parent_tbl <- table(pre_parent_hr1) #test q5
 #pander(pre_parent_tbl) 
 
 
-
+class(pre_parent_hr1)
 ```
 
 
 ```{r pre_parent_likert, echo=FALSE, fig.width=12}
 
-pre_parent_hr1 <- likert(pre_parent_hr1) #change to likert
-
-summary(pre_parent_hr1) #test
 
 
+pre_parent_hr2 <- likert(pre_parent_hr1) #change to likert
+
+summary(pre_parent_hr2) #test
 
 
 
-plot(pre_parent_hr1, type="heat") + ggtitle("Pre Parent Survey Question 5") + theme_dark() #plot heat map
+
+
+plot(pre_parent_hr2, type="heat") + ggtitle("Pre Parent Survey Question 5") + theme_dark() #plot heat map
 
 
 ```
@@ -279,6 +294,10 @@ pre_teacher_tbl <- pre_teacher %>% # select variable 16 which is q7.
 
 pre_teacher_tbl_q7 <- table(pre_teacher_tbl$Q7) #test 
 
+pre_teacher_tbl_q7P <- prop.table(pre_teacher_tbl_q7)
+
+pander(pre_teacher_tbl_q7P)
+
 #pander(pre_teacher_tbl_q7)  #test teacher post q7
 
 ```
@@ -305,7 +324,10 @@ pre_teacher_tbl$Q7 <- factor(pre_teacher$Q7, levels=c("Strongly Disagree", "Disa
 
 pre_teacher_tbl <- likert(pre_teacher_tbl) #likert table
 
+
 summary(pre_teacher_tbl) #likert summary
+
+
 
 plot(pre_teacher_tbl)
 

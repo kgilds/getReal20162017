@@ -3,10 +3,16 @@ title: "Academic Engagement Notebook"
 params:
   council: West Central Council
 output:
-  word_document: default
   html_document: default
   github_document: default
+  word_document: default
 ---
+
+```{r global_options_ae, include=FALSE}
+knitr::opts_chunk$set(fig.path='Figs/',
+                      echo=FALSE, warning=FALSE, message=FALSE, comment=FALSE)
+```
+
 
 ```{r ae_import_libaries, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -25,7 +31,7 @@ library(getREAL)
 
 
 
-```{r pre_ae&setup, echo=FALSE, warnings=FALSE, message=FALSE}
+```{r pre_ae_setup, echo=FALSE, warnings=FALSE, message=FALSE}
 setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
 
 ### Make connection with database
@@ -250,7 +256,7 @@ pre_parent_tbl$Q6 <- factor(pre_parent_tbl$Q6, levels=c("Strongly Disagree", "Di
 ```
 
 
-```{r "ae_q5_parent", fig.height=5, fig.width=12, fig.path='Figs/', dev.args='cario-png', echo=FALSE}
+```{r "ae_q5_parent", fig.width=17, fig.path='Figs/', dev.args='cario-png', echo=FALSE}
 
 pre_parent_test <- table(pre_parent_tbl) #make tbl for testing
 
@@ -262,7 +268,7 @@ pre_parent_tbl <- likert(pre_parent_tbl)
 
 summary(pre_parent_tbl)
 
-plot(pre_parent_tbl, type="heat") +ggtitle("Parent Pre Survey Question 6") + theme_dark ()
+plot(pre_parent_tbl, type="heat") +ggtitle("Parent Pre Survey Question 6") 
 
 ```
 
@@ -322,7 +328,7 @@ pre_teacher_tbl$Q6 <- factor(pre_teacher_tbl$Q6, levels=c("Strongly Disagree", "
 
 
 
-```{r "ae_teacher_plots", fig.width=10, fig.path='Figs/', dev.args='cario-png', echo=FALSE}
+```{r "ae_teacher_plots", fig.height=5,  fig.width=15, fig.path='Figs/', dev.args='cario-png', echo=FALSE}
 
 pre_teacher_tbl <- likert(pre_teacher_tbl)
 
@@ -330,8 +336,7 @@ summary(pre_teacher_tbl)
 
 plot(pre_teacher_tbl)
 
-plot(pre_teacher_tbl, type="heat") + ggtitle("Teacher Post Survey Question 5 & 6") + theme_dark ()
-
+plot(pre_teacher_tbl, type="heat") + ggtitle("Teacher Post Survey Question 5 & 6")  + theme(axis.text = element_text(size = 12, colour="black"))
 
 
 
