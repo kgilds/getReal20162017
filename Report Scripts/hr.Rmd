@@ -162,7 +162,7 @@ pander(summary(pre_hr$hr.avg))
 
 ```{r pre_hr_hist, echo=FALSE}
 
-pre_hr_histq <- qplot(pre_hr$hr.avg, geom="histogram", main= "Pre Survey: Health Relationships",ylim=c(0,60), bins=40, xlab="Outcome Scores") + geom_vline(xintercept = 4.45, col="red") 
+pre_hr_histq <- qplot(pre_hr$hr.avg, geom="histogram", main= "Pre Survey: Healthy Relationships",ylim=c(0,60), bins=40, xlab="Outcome Scores") + geom_vline(xintercept = 4.45, col="red") 
 
 pre_hr_histq
 
@@ -186,7 +186,7 @@ pander(hr_history_1)
 
 ## Cross Validation of Healthy Relationship Skills
 
-Survey results from teachers and parents also  Below are tables that provide a breakdown of questions on the pre survey from the parent and teacher surveys. 
+Survey results from teachers and parents also provide useful baseline data to gauge life skills. Below are tables and graphs that provide a breakdown of questions on the pre survey from the parent and teacher surveys. 
 
 
 
@@ -207,9 +207,9 @@ pre_parent  <- dbReadTable(getRealdb, "pre_parent_1617")
 
 
 
-**Question 5: She develops positive relationships with her classmates.**
+**Question 5: She develops positive relationships with her classmates.** N=520
 
-Results based on responses.
+
 
 ```{r pre_parent, echo=FALSE}
 
@@ -227,6 +227,7 @@ colnames(pre_parent_hr1) [1] <- "Q5" #change name to Question 5
 
 pre_parent_hr1$Q5 <- factor(pre_parent_hr1$Q5, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree/Disagree", "Slightly Agree", "Agree", "Strongly Agree"),ordered = TRUE) #make factor names consistent
 
+#str(pre_parent_hr1)
 
 ```
 
@@ -243,7 +244,7 @@ pre_parent_tbl_hr2 <- table(pre_parent_hr1) #test q5
 #pander(pre_parent_tbl) 
 
 
-class(pre_parent_hr1)
+#class(pre_parent_hr1)
 ```
 
 
@@ -279,9 +280,8 @@ post_teacher <- dbReadTable(getRealdb, "post_teacher_1617") #read database
 
 
 
-**Question 7: She has developed positive relationships with her classmates.** 
+**Question 7: She has developed positive relationships with her classmates.** N=360
 
-Results based on number of responses. 
 
 ```{r makeq7, echo=FALSE}
 
@@ -291,13 +291,15 @@ pre_teacher_tbl <- pre_teacher %>% # select variable 16 which is q7.
     select(16)
 
 
-pre_teacher_tbl_q7 <- table(pre_teacher_tbl$Q7) #test 
+#pre_teacher_tbl_q7 <- table(pre_teacher_tbl$Q7) #test 
 
-pre_teacher_tbl_q7P <- prop.table(pre_teacher_tbl_q7)
+#pre_teacher_tbl_q7P <- prop.table(pre_teacher_tbl_q7)
 
-pander(pre_teacher_tbl_q7P)
+#pander(pre_teacher_tbl_q7P)
 
 #pander(pre_teacher_tbl_q7)  #test teacher post q7
+
+#str(pre_teacher_tbl)
 
 ```
 
@@ -328,7 +330,7 @@ summary(pre_teacher_tbl) #likert summary
 
 
 
-plot(pre_teacher_tbl)
+#plot(pre_teacher_tbl)
 
 plot(pre_teacher_tbl, type="heat") + ggtitle("Pre Teacher Survey Question 7") + theme_dark() #heat map
 
@@ -336,11 +338,11 @@ plot(pre_teacher_tbl, type="heat") + ggtitle("Pre Teacher Survey Question 7") + 
 
 ### Healthy Relationship Analysis
 
-The pre survey result indicates that the students in the program do not have strong relationship skills as compared to past years and this is a potential growth area for the students. Typically around 60 percent of the students come into this program with strong healthy relationship skills whereas this year it was under 40 percent. Parent and teacher survey support the evidence from the pre surveys. Nearly a quarter of parents either indicated neutral or low agreement that their child had positive releationship skills compared to 10% last years pre survey. Nearly 40 percent of teachers have a low or neutral agreement that the students have developed positive relationships. 
+The pre survey result indicates that the students in the program do not have strong relationship skills as compared to past years and this is a potential growth area for the students. Typically around 60 percent of the students come into this program with strong healthy relationship skills whereas this year it was under 40 percent. Parent and teacher survey support the evidence from the pre surveys. Nearly a quarter of parents either indicated neutral or low agreement that their child had positive relationship skills compared to 10% last years pre survey. Nearly 40 percent of teachers have a low or neutral agreement that the students have developed positive relationships. 
 
-Reviewing the distribution of pre surveys scores indicates that 172 students are between 3.45 and the 4.45. The healthy relatioship  outcome skill is a strong point for the Get REAL! program as evidenced by previous years. Last year 26 percent of students improved from a low skill level to a high skill level and over 85 percent had success with this outcome.  
+Reviewing the distribution of pre surveys scores indicates that 172 students are between 3.45 and the 4.45. The healthy relationship  outcome skill is a strong point for the Get REAL! program as evidenced by previous years. Last year 26 percent of students improved from a low skill level to a high skill level and over 85 percent had success with this outcome.  
 
-```{r close_hr, echo=FALSE}
+```{r close_hr, echo=FALSE, eval=FALSE}
 close_hr <- pre_hr%>%
     filter(hr.avg >=3.45 & hr.avg < 4.45)
 
