@@ -5,6 +5,8 @@ date: '`r Sys.Date()`'
 output:
   html_document: default
   github_document: default
+bibliography: get_real.json
+---
 ---
 ```{r attendance_libaries, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -143,5 +145,9 @@ pander(q1_unexcused) #make pretty
 ```
 
 
-### Narrative
+### Attendance Analysis 
+
+Attendance is vital for academic success and data has shown that being absent 10 percent of school days excused or unexcused places students in danger of negative outcomes such as dropping out of school[@10]. This analysis shows that a little over 20% of the students in the program are in danger of chronic abseentism. Students with 4 or more absences in the first quarter could be labeled at risk for chronic absenteesim. 
+
+The Get REAL! program is designed to engage at risk students and provide incentives for attendance and positive behavior. Attendance rates of students should be monioroted closely to intervene as quick as possible. Last year 54% of the students improved their attendance from baseline to final grading period. 
 
