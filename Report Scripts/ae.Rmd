@@ -209,7 +209,7 @@ pander(ae_history_1)
 
 ## Cross Validation of Academic Engagment Skills
 
-Survey results from teachers and parents also  Below are tables that provide a breakdown of questions on the pre survey from the parent and teacher surveys. 
+Survey results from teachers and parents also provide useful baseline data to gauge life skills. Below are tables and graphs that provide a breakdown of questions on the pre survey from the parent and teacher surveys. 
 
 
 
@@ -243,7 +243,7 @@ colnames(pre_parent)[16] <- "Q6"
 pre_parent_tbl <- pre_parent %>%
     select(16)
 
-str(pre_parent_tbl)
+#str(pre_parent_tbl)
 #str(pre_parent_tbl)
 #table(pre_parent_tbl)
 
@@ -308,7 +308,7 @@ colnames(pre_teacher)[15] <- "Q6"
 pre_teacher_tbl <- pre_teacher %>%
     select(14,15)
 
-str(pre_teacher_tbl)
+#str(pre_teacher_tbl)
 #table(pre_teacher_tbl$Q5)
 #table(pre_teacher_tbl$Q6)
 

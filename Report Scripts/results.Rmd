@@ -3,9 +3,10 @@ title: "results"
 author: "Kevin Gilds, MPA"
 date: "December 21, 2016"
 output:
-  html_document: default
-  pdf_document: default
   word_document: default
+  pdf_document: default
+  html_document: default
+bibliography: get_real.json
 ---
 
 ```{r global_options_results, include=FALSE, }
@@ -48,14 +49,18 @@ The questions and the scoring methodology of the girl survey were developed and 
 
 ### Cutpoints
 
-```{r}
+```{r outcome_cutpoints, echo=FALSE}
 pander(outcomes)
+
+
 ```
 
 
 ### Pre Survey and Quarter 1 Grade Results
 
-Survey baseline data for students in the Get REAL! program is not following the typical pattern of the past three years. The typical pattern is the pre surveys indicated that the students wanted to do well in school but had not yet applied the behaviors or developed the relationships skills to be successful in school. The average scores and the number of students at a high level is very consistent across the past three years except this year. 
+The analysis below breaks down the pre survey results by life skills outcome including cross validation of parent and teacher pre surveys. The analysis below also provides baseline data of Quarter 1 Academic and school behavior data. The parent and teacher survey support evidence from the student surveys.
+
+The pre survey data over the past three has told a very consistent story about students valuing education but not neccessarily having developed the tools to be successful in school. The survey results for this year are not consistent with results from the past three year. Despite the student survey results, the students are doing slighty better than last year with their school grades.   
 
 
 
