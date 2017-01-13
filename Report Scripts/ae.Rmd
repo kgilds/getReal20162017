@@ -216,7 +216,7 @@ Survey results from teachers and parents also  Below are tables that provide a b
 ### Pre Parent Survey
 
 
-**Question 6: She works on her homework at home without supervision.** N=
+**Question 6: She works on her homework at home without supervision.** N=520
 
 
 
@@ -243,7 +243,7 @@ colnames(pre_parent)[16] <- "Q6"
 pre_parent_tbl <- pre_parent %>%
     select(16)
 
-
+str(pre_parent_tbl)
 #str(pre_parent_tbl)
 #table(pre_parent_tbl)
 
@@ -275,9 +275,9 @@ plot(pre_parent_tbl, type="heat") +ggtitle("Parent Pre Survey Question 6")
 
 ### Teacher Survey
 
-**Question 5: She positively participates in class.**  N= 
+**Question 5: She positively participates in class.**  N= 360
 
-**Question 6: She completes the homework given to her.** N=
+**Question 6: She completes the homework given to her.** N= 360
 
 
 ```{r read_database_ae, echo=FALSE}
@@ -309,8 +309,8 @@ pre_teacher_tbl <- pre_teacher %>%
     select(14,15)
 
 str(pre_teacher_tbl)
-table(pre_teacher_tbl$Q5)
-table(pre_teacher_tbl$Q6)
+#table(pre_teacher_tbl$Q5)
+#table(pre_teacher_tbl$Q6)
 
 
 
@@ -334,7 +334,7 @@ pre_teacher_tbl <- likert(pre_teacher_tbl)
 
 summary(pre_teacher_tbl)
 
-plot(pre_teacher_tbl)
+#plot(pre_teacher_tbl)
 
 plot(pre_teacher_tbl, type="heat") + ggtitle("Teacher Post Survey Question 5 & 6")  + theme(axis.text = element_text(size = 12, colour="black"))
 
@@ -347,7 +347,7 @@ plot(pre_teacher_tbl, type="heat") + ggtitle("Teacher Post Survey Question 5 & 6
 
 Students in the Get REAL! program typically do not come into the program with a high academic engagement scores. This year is no different but it the outcomes scores are not consistent with past year. Typically around 40 percent of students come to the program with solid academic behaviors but this year it was 20 percent. 
 
-Parent and teacher pre surveys support evidence from the student survey. Pre teacher surveys indicate about 60 percent believe the student positively particies in class and a little more than half completes home work given to her. 
+Parent and teacher pre surveys support evidence from the student survey. Pre teacher surveys indicate about 60 percent believe the student positively participates in class and a little more than half completes home work given to her. 
 
 This life skill outcome presents another growth opportunity for the students. Reviewing the outcome distribution 137 students are between 3.45 and the cutpoint for achieving this outcome at a high level. Last year 80 percent of students had a positive outcome, and a quarter of the students went from low achievement to high achievement. 
 
@@ -356,8 +356,8 @@ This life skill outcome presents another growth opportunity for the students. Re
 close_ae <- pre_ae %>%
     filter(ae.avg >=3.5 & ae.avg <4.5)
 
-close_ae$ae.avg
+#close_ae$ae.avg
 
-nrow(close_ae)
+#nrow(close_ae)
 ```
 

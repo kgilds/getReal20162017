@@ -27,10 +27,7 @@ library(knitr)
 library(sqldf)
 setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
 
-getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
-
-#books <- dbReadTable(getReal_2016db, "girl_post")
-
+getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite") 
 #books <- books %>%
     #select(46)
 
@@ -100,7 +97,7 @@ The Girl Scout Councils recruited and trained a total of  individuals to be ment
 
 ## Program Components:
 
-The education literature has shown that students who are engaged in school achieve better educational outcomes such as higher grades and greater achievement on standardized tests. In contrast, students who are disengaged are at a higher risk for dropping out of school. Student engagement is multiple dimensional including behavioral engagement, emotional engagement, and cognitive engagement. Behavioral engagement consists a student's participation in school activities. Emotional engagement refers to the connections and interactions a student has with peers and teachers. Cognitive engagement refers to resilience and the hard work required to be successful at school [@5).
+The education literature has shown that students who are engaged in school achieve better educational outcomes such as higher grades and greater achievement on standardized tests. In contrast, students who are disengaged are at a higher risk for dropping out of school. Student engagement is multiple dimensional including behavioral engagement, emotional engagement, and cognitive engagement. Behavioral engagement consists a student's participation in school activities. Emotional engagement refers to the connections and interactions a student has with peers and teachers. Cognitive engagement refers to resilience and the hard work required to be successful at school [fredricks_measuring_2011book{pirsig_lilla:_1991,).
 
 The program components of the Get REAL! program address the multiple facets of student engagement through a literacy program, character building, educational enhancements and community service opportunities. Facilitators and mentors work together to establish relationships with at-risk students and provide opportunities for educational enhancement trips and community services. The program components and activities of the Councils will be discussed in this section.
 
@@ -170,7 +167,7 @@ Girl Quote
 
 
 
-Relationships and connections with peers and teachers plays a critical role in academic engagement for students [@5]. All Girl Scout councils utilize the modules "Being a Girl", "Friendship" and "Body Image" from the Girls Circle curriculum. The modules focus on self-esteem, social development and interpersonal relationships to help the students solidify relationships with themselves, peers, and teachers.
+Relationships and connections with peers and teachers plays a critical role in academic engagement for students [@1]. All Girl Scout councils utilize the modules "Being a Girl", "Friendship" and "Body Image" from the Girls Circle curriculum. The modules focus on self-esteem, social development and interpersonal relationships to help the students solidify relationships with themselves, peers, and teachers.
 
 
 Educational Enhancements:
