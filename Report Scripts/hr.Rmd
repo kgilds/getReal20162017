@@ -248,7 +248,7 @@ pre_parent_tbl_hr2 <- table(pre_parent_hr1) #test q5
 ```
 
 
-```{r pre_parent_likert, echo=FALSE, fig.width=12}
+```{r pre_parent_likert, echo=FALSE, fig.width=17}
 
 
 
@@ -260,7 +260,7 @@ summary(pre_parent_hr2) #test
 
 
 
-plot(pre_parent_hr2, type="heat") + ggtitle("Pre Parent Survey Question 5") + theme_dark() #plot heat map
+plot(pre_parent_hr2, type="heat") + ggtitle("Pre Parent Survey Question 5") +  theme(axis.text = element_text(size = 12, colour="black"))
 
 
 ```
@@ -320,7 +320,7 @@ pre_teacher_tbl$Q7 <- factor(pre_teacher$Q7, levels=c("Strongly Disagree", "Disa
 
 
 
-```{r likert_q7, fig.width=15, echo=FALSE, fig.width=12 }
+```{r likert_q7, fig.width=17, echo=FALSE, fig.width=17 }
 #nrow(post_teacher_tbl) #check to determine number of rows; what to divide to get %
 
 pre_teacher_tbl <- likert(pre_teacher_tbl) #likert table
@@ -332,7 +332,7 @@ summary(pre_teacher_tbl) #likert summary
 
 #plot(pre_teacher_tbl)
 
-plot(pre_teacher_tbl, type="heat") + ggtitle("Pre Teacher Survey Question 7") + theme_dark() #heat map
+plot(pre_teacher_tbl, type="heat") + ggtitle("Pre Teacher Survey Question 7") +  theme(axis.text = element_text(size = 12, colour="black"))
 
 ```
 
