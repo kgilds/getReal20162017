@@ -294,8 +294,8 @@ summary(pre_parent_tbl)
 ```
 
 
-```{r am_pre_parent_heat, fig.height=5, fig.width=14, fig.path='Figs/', dev.args='cario-png', echo=FALSE }
-likert.heat.plot(pre_parent_tbl) + ggtitle("Pre Parent Survey Question 1 & Question 3") + theme_dark ()
+```{r am_pre_parent_heat,fig.width=17, echo=FALSE }
+likert.heat.plot(pre_parent_tbl) + ggtitle("Pre Parent Survey Question 1 & Question 3") + theme(axis.text = element_text(size = 12, colour="black"))
 
 ```
 
@@ -363,9 +363,9 @@ summary(pre_teacher_tbl)
 
 ```
 
-```{r am_heat_pre_teacher, fig.height=5, fig.width=14, fig.path='Figs/', dev.args='cario-png', echo=FALSE}
+```{r am_heat_pre_teacher, fig.width=17, echo=FALSE}
 
-plot(pre_teacher_tbl, type="heat") +ggtitle("pre Teacher Survey Question 1 & Question 3") + theme_dark()
+plot(pre_teacher_tbl, type="heat") +ggtitle("pre Teacher Survey Question 1 & Question 3") + theme(axis.text = element_text(size = 12, colour="black"))
 
 
 
