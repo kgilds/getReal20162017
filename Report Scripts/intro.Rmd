@@ -232,7 +232,14 @@ An important part of Girl Scouting is community care projects to help girls iden
 * Donation Drive for the Victims of Hurricane Matthew. Students developed flyers and engaged with school and community to assist as well
 
 
+```{r child="results.Rmd"}
 
+```
+
+
+# Conclusion/Recommendations
+
+# References
 
 
 

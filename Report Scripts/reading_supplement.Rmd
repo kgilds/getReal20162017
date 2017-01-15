@@ -38,8 +38,9 @@ q1_reading1516 <-dbReadTable(getRealdb,"Q1_reading_1516") #read 1516 q1 reading
 
 ```{r setup_readhistory, echo=FALSE}
 q1_16 <- q1_reading %>%
-    select(girl_code, reading_course, Grade, reading_avg)%>%  #select matching columns from previous year
-    mutate("Year" = "16-17")  #add new column to distinguish years for when we combine 15-16
+    select(girl_code, reading_course, Grade, reading_pts)%>%  #select matching columns from previous year
+    mutate("Year" = "16-17") %>%
+    rename(reading_avg = reading_pts)#add new column to distinguish years for when we combine 15-16
 
 
 
@@ -58,7 +59,7 @@ read_history <- rbind(q1_16, q1_15) #combind data sets to compare
 
 ```
 
-
+The number of valid entries is **`r nrow(q1_16)`** and 87 percent of the students have a C grade or higher in reading focused courses. 
 
 ```{r q1grade_tbl, echo=FALSE}
 grade_table <- read_history %>%
