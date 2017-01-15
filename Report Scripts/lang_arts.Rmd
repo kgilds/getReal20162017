@@ -48,8 +48,9 @@ q1_langarts1516 <-dbReadTable(getRealdb,"Q1_lang_1516")
 
 
 q1_16 <- q1_langarts %>%
-    select(girl_code, langarts_course, grade, lang_avg)%>%
-    mutate("Year" = "16-17")
+    select(girl_code, langarts_course, grade, lang_pts)%>%
+    mutate("Year" = "16-17")%>%
+    rename(lang_avg = lang_pts)
 
 
 
@@ -66,6 +67,10 @@ lang_history <- rbind(q1_16, q1_15)
 
 
 ```
+
+
+The number of valid data entries is **`r nrow(q1_16)`**. Students in the Get REAL! program  are off to a good to start as 98% of the students have a C or higher in Language Arts course and are doing better than last year. However, it would be advisable to monitor grades closely as students are likely to regress over the 2nd quarter. 
+
 
 ```{r q1_grade_table, echo=FALSE}
 
@@ -123,6 +128,10 @@ pander(grade_point, caption="Quarter 1 GPA History")
 
 
 ```
+
+
+### Language Arts Analysis
+
 
 
 
