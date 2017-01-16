@@ -374,9 +374,11 @@ plot(pre_teacher_tbl, type="heat") +ggtitle("pre Teacher Survey Question 1 & Que
 
 ### Analysis Academic Mastery
 
-The pre survey results indicate that the students have a moderately positive attitude towards education. However, students typically come into the program with a much better attitude towards education and school. Currently just over half of the students have a posiive attitude toward school whereas in the past it in mid 70's. 
+The pre survey results indicate that the students have a moderately positive attitude towards education. However, students typically come into the program with a much better attitude towards education and school. Currently just over half of the students have a positive attitude toward school whereas in the past it in mid 70's. 
 
-This will be an interesting data point to determine if attitudes toward education changes if other life skill outcomes will improve. Currently 105 students have an outcome score that ranges from 3.8 to cutpoint from achieving the outcome at a high level. The Get REAL! program typically has not been in a positon to increase this outcome. Academic Mastery is a foundation for other life skills and outcomes,  a recommondation will be to emphasize the why of education to increase motivation.
+Parent and teacher survey results are consistent with the student surveys. Teacher survey results are more cautious in their agreement that the student has a good attitude towards education with about 55% in agreement. Parent surveys indicate 80% level of agreement that the student has a positive attitude toward school but this a decrease level of agreement from last year. 
+
+The academic mastery life skill will be an interesting data point to follow. If attitudes toward education changes will other life skill outcomes will improve and will academic behavior be impacted.  Currently 105 students have an outcome score that ranges from 3.8 to cutpoint from achieving the outcome at a high level. The Get REAL! program typically has not been in a position to increase this outcome. Academic Mastery is a foundation for other life skills and outcomes,  a recommendation will be to emphasize the why of education to increase motivation.
 
 
 
