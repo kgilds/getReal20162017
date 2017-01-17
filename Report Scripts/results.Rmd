@@ -56,11 +56,9 @@ pander(outcomes)
 ```
 
 
-### Pre Survey and Quarter 1 Grade Results
+### Pre Survey and Quarter 1 Academic Data Results
 
 The analysis below breaks down the pre survey results by life skills outcome including cross validation of parent and teacher pre surveys. The analysis below also provides baseline data of Quarter 1 Academic and school behavior data. The parent and teacher survey support evidence from the student surveys.
-
-The pre survey data over the past three has told a very consistent story about students valuing education but not neccessarily having developed the tools to be successful in school. The survey results for this year are not consistent with results from the past three year. Despite the student survey results, the students are doing slighty better than last year with their school grades.   
 
 
 

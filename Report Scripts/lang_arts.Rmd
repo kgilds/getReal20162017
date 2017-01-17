@@ -130,7 +130,7 @@ pander(grade_point, caption="Quarter 1 GPA History")
 ```
 
 
-### Language Arts Analysis
+
 
 
 
