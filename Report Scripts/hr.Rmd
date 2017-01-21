@@ -5,7 +5,7 @@ params:
 output:
   html_document: default
   github_document: default
-  word_document: default
+  
 ---
 
 ```{r global_options, include=FALSE}
