@@ -149,6 +149,18 @@ pre_hr_m <-round(pre_hr_m,2)
 
 ```
 
+
+
+
+
+The number of valid surveys entered is  **`r nrow(pre_hr)`**, and the number of students achieving at a high level is **`r nrow(pre_num)`**
+and that equates to **`r hr_achieved_pre()`**. The average score from students is **`r pre_hr_m`**
+
+
+### Healthy Relationship Outcome Achievement by Council
+
+
+
 ```{r pre_council_report_hr, echo=FALSE}
 
 pre_hr_c <-with(pre_hr,table(council, hr.avg >=4.45)) 
@@ -161,13 +173,9 @@ pre_hr_c <- round(pre_hr_c*100,2)
 pander(pre_hr_c)
 
 ```
+```
 
-
-
-The number of valid surveys entered is  **`r nrow(pre_hr)`**, and the number of students achieving at a high level is **`r nrow(pre_num)`**
-and that equates to **`r hr_achieved_pre()`**. The average score from students is **`r pre_hr_m`**
-
-### Healthy Releationship: Pre Outcome Score Summary
+### Healthy Relationship: Pre Outcome Score Summary & Council Summaries
 
 ```{r pre_hr_avg, echo=FALSE}
 pander(summary(pre_hr$hr.avg))
@@ -196,7 +204,7 @@ pre_hr_histq
 
 ```{r pre_council_hist}
 hr_hist <- ggplot(pre_hr, aes(x=hr.avg)) 
-     hr_hist + geom_histogram(fill="blue") + facet_wrap(~council) + labs(x=" All Outcome Scores", title = "Pre: Healthy Relationships") + geom_vline(xintercept = 4.45, col="red") 
+     hr_hist + geom_histogram(fill="blue") + facet_wrap(~council) + labs(x=" All Outcome Scores", title = "Pre: Healthy Relationships Scores by Council") + geom_vline(xintercept = 4.45, col="red") 
 
 
 
@@ -204,8 +212,8 @@ hr_hist <- ggplot(pre_hr, aes(x=hr.avg))
 
 
 ```{r}
-last_year <- ggplot(pre_hr, aes(x=hr.avg)) 
-     hr_hist + geom_histogram(fill="blue") + facet_wrap(~grade) + labs(x=" All Outcome Scores", title = "Pre: Healthy Relationships") + geom_vline(xintercept = 4.45, col="red") 
+grade <- ggplot(pre_hr, aes(x=hr.avg)) 
+    grade + geom_histogram(fill="blue") + facet_wrap(~grade) + labs(x=" All Outcome Scores", title = "Pre: Healthy Relationships Scores by Grade Level") + geom_vline(xintercept = 4.45, col="red") 
 
 ```
 
@@ -289,7 +297,7 @@ pre_parent_tbl_hr2 <- table(pre_parent_hr1) #test q5
 ```
 
 
-```{r pre_parent_likert, echo=FALSE, fig.width=17}
+```{r pre_parent_likert, echo=FALSE}
 
 
 
@@ -298,13 +306,22 @@ pre_parent_hr2 <- likert(pre_parent_hr1) #change to likert
 kable(summary(pre_parent_hr2)) #test
 
 
-
-
-
-plot(pre_parent_hr2, type="heat") + ggtitle("Pre Parent Survey Question 5") +  theme(axis.text = element_text(size = 12, colour="black"))
+plot(pre_parent_hr2) + ggtitle("Pre Parent Survey Question 5") +  theme(axis.text = element_text(size = 12, colour="black"))
 
 
 ```
+
+
+```{r parent_groupded, echo=FALSE}
+pre_parent_g <-likert(pre_parent_hr1, grouping =pre_parent$council)
+
+pre_parent_g1 <-summary(pre_parent_g)
+
+kable(pre_parent_g1)
+
+plot(pre_parent_g)
+```
+
 
 
 ### Teacher Survey
@@ -361,21 +378,33 @@ pre_teacher_tbl$Q7 <- factor(pre_teacher$Q7, levels=c("Strongly Disagree", "Disa
 
 
 
-```{r likert_q7, fig.width=17, echo=FALSE, fig.width=17 }
+```{r likert_q7, echo=FALSE }
 #nrow(post_teacher_tbl) #check to determine number of rows; what to divide to get %
 
-pre_teacher_tbl <- likert(pre_teacher_tbl, grouping = pre_teacher$council) #likert table
+pre_teacher_tbl_lik <- likert(pre_teacher_tbl) #likert table
 
 
-pre_teacher_g<-summary(pre_teacher_tbl) #likert summary
+pre_teacher_sum <-summary(pre_teacher_tbl_lik) #likert summary
+
+kable(pre_teacher_sum)
+
+plot(pre_teacher_tbl_lik)
+
+
+```
+
+
+```{r}
+pre_teacher_g1 <- likert(pre_teacher_tbl, grouping = pre_teacher$council) #likert table
+
+pre_teacher_g <-summary(pre_teacher_g1)
 
 kable(pre_teacher_g)
 
-plot(pre_teacher_tbl)
-
-#plot(pre_teacher_tbl, type="heat") + ggtitle("Pre Teacher Survey Question 7") +  theme(axis.text = element_text(size = 12, colour="black"))
+plot(pre_teacher_g1)
 
 ```
+
 
 ### Healthy Relationship Analysis
 
