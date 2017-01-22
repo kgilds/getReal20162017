@@ -218,6 +218,27 @@ pre_am_histq
 ```
 
 
+
+
+
+```{r pre_council_hist_am}
+am_hist_c <- ggplot(pre_am, aes(x=am.avg)) 
+     am_hist_c + geom_histogram(fill="blue") + facet_wrap(~council) + labs(x=" All Outcome Scores", title = "Pre: Academic Mastery Scores by Council") + geom_vline(xintercept = 4.8, col="red") 
+
+
+
+``` 
+
+
+```{r am_grade}
+grade <- ggplot(pre_am, aes(x=am.avg)) 
+    grade + geom_histogram(fill="blue") + facet_wrap(~grade) + labs(x=" All Outcome Scores", title = "Pre: Academic Mastery Scores by Grade Level") + geom_vline(xintercept = 4.45, col="red") 
+
+```
+
+
+
+
 # Pre Survey: Academic Mastery History
 
 
@@ -308,16 +329,25 @@ pre_parent_tbl$Q3 <- factor(pre_parent_tbl$Q3, levels=c("Strongly Disagree", "Di
 
 
 
-pre_parent_tbl <- likert(pre_parent_tbl)
+pre_parent_tbl_1 <- likert(pre_parent_tbl)
 
-summary(pre_parent_tbl)
+kable(summary(pre_parent_tbl_1))
 
-
+plot(pre_parent_tbl_1)
 
 ```
 
 
-```{r am_pre_parent_heat,fig.width=17, echo=FALSE }
+```{r am_council_parent}
+pre_parent_g1 <-likert(pre_parent_tbl, grouping=pre_parent$council)
+
+kable(summary(pre_parent_g1))
+
+plot(pre_parent_g1)
+```
+
+
+```{r am_pre_parent_heat,fig.width=17, echo=FALSE, eval=FALSE}
 likert.heat.plot(pre_parent_tbl) + ggtitle("Pre Parent Survey Question 1 & Question 3") + theme(axis.text = element_text(size = 12, colour="black"))
 
 ```
@@ -379,14 +409,28 @@ pre_teacher_tbl$Q3 <- factor(pre_teacher_tbl$Q3, levels=c("Strongly Disagree", "
 
 
 
-pre_teacher_tbl <- likert(pre_teacher_tbl)
+pre_teacher_tbl_1 <- likert(pre_teacher_tbl)
 
-summary(pre_teacher_tbl)
+kable(summary(pre_teacher_tbl_1))
+
+plot(pre_teacher_tbl_1)
 
 
 ```
 
-```{r am_heat_pre_teacher, fig.width=17, echo=FALSE}
+
+```{r parent_am_council}
+
+pre_teacher_g <- likert(pre_teacher_tbl, grouping=pre_teacher$council)
+
+kable(summary(pre_teacher_g))
+
+plot(pre_teacher_g)
+
+```
+
+
+```{r am_heat_pre_teacher, fig.width=17, echo=FALSE, eval=FALSE}
 
 plot(pre_teacher_tbl, type="heat") +ggtitle("pre Teacher Survey Question 1 & Question 3") + theme(axis.text = element_text(size = 12, colour="black"))
 
