@@ -175,10 +175,31 @@ pre_ae_m <-round(pre_ae_m,2)
 The number of valid surveys entered is  **`r nrow(pre_ae)`**, and the number of students achieving at a high level is **`r nrow(pre_num)`**
 and that equates to **`r ae_achieved_pre()`**. The average score from students is **`r pre_ae_m`**
 
-### Academic Engagement: Pre Outcome Score Summary
+### Healthy Relationship Outcome Achievement by Council
+
+
+```{r pre_council_report_ae, echo=FALSE}
+
+pre_ae_c <-with(pre_ae,table(council, ae.avg >=4.5)) 
+
+pre_ae_c <- prop.table(pre_ae_c, 1)
+
+
+pre_ae_c <- round(pre_ae_c*100,2)
+    
+pander(pre_ae_c)
+
+```
+
+
+### Academic Engagement: Pre Outcome Score Summary & Council Summary
 
 ```{r pre_ae_summary, echo=FALSE}
 pander(summary(pre_ae$ae.avg))
+
+council_summary<- tapply(pre_ae$ae.avg, pre_ae$council, summary)
+
+pander(council_summary)
 ```
 
 
