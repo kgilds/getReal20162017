@@ -176,11 +176,34 @@ pre_am_m <-round(pre_am_m,2)
 The number of valid surveys entered is  **`r nrow(pre_am)`**, and the number of students achieving at a high level is **`r nrow(pre_num)`**
 and that equates to **`r am_achieved_pre()`**. The average score from students is **`r pre_am_m`**
 
-### Academic Mastery: Pre Outcome Summary
+
+### Academic Mastery Outcome Achievement by Council
+
+
+```{r pre_council_report_am, echo=FALSE}
+
+pre_am_c <-with(pre_am,table(council, am.avg >=4.8)) 
+
+pre_am_c <- prop.table(pre_am_c, 1)
+
+
+pre_am_c <- round(pre_am_c*100,2)
+    
+pander(pre_am_c)
+
+```
+
+
+### Academic Mastery: Pre Outcome Summary & Council Summary
 
 ```{r pre_am_summary, echo=FALSE}
 
 pander(summary(pre_am$am.avg))
+
+council_summary<-tapply(pre_am$am.avg, pre_am$council, summary)
+
+pander(council_summary)
+
 
 ```
 
