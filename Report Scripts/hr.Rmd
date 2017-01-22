@@ -175,7 +175,6 @@ pander(pre_hr_c)
 ```
 ```
 
-### Healthy Relationship: Pre Outcome Score Summary & Council Summaries
 
 ```{r pre_hr_avg, echo=FALSE}
 pander(summary(pre_hr$hr.avg))
