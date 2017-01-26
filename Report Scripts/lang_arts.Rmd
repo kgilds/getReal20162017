@@ -48,14 +48,14 @@ q1_langarts1516 <-dbReadTable(getRealdb,"Q1_lang_1516")
 
 
 q1_16 <- q1_langarts %>%
-    select(girl_code, langarts_course, grade, lang_pts)%>%
+    select(girl_code, council, langarts_course, grade, lang_pts)%>%
     mutate("Year" = "16-17")%>%
     rename(lang_avg = lang_pts)
 
 
 
 q1_15 <- q1_langarts1516 %>%
-    select(girlCode, langCourses, langGrade, lang_pts) %>%
+    select(girlCode, council, langCourses, langGrade, lang_pts) %>%
     rename(girl_code =girlCode) %>%
     rename(langarts_course = langCourses)%>%
     rename(lang_avg =lang_pts)%>%
@@ -77,9 +77,13 @@ The number of valid data entries is **`r nrow(q1_16)`**. Students in the Get REA
 grade_table <- lang_history %>%
     filter(Year == "16-17")
 
-grade_table <- with(grade_table,table(Year, grade))
+grade_table_1 <- with(grade_table,table(Year, grade))
 
-pander(grade_table, caption="Q1 Grades")
+pander(grade_table_1, caption="Q1 Grades")
+
+grade_table_c <-with(q1_langarts,table(council, grade))
+
+pander(grade_table_c, caption="Q1 Grades by Council")
 
 
 ```
@@ -124,7 +128,11 @@ grade_point <- lang_history %>%
 pander(grade_point, caption="Quarter 1 GPA History")
 
 
+grade_point_c <- lang_history %>%
+    group_by(council, Year)%>%
+    summarize(lang_avg = mean(lang_avg))
 
+pander(grade_point_c, caption="Quarter 1 GPA History by Council")
 
 
 ```
