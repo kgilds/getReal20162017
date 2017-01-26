@@ -3,8 +3,8 @@ title: "attendance"
 author: "Kevin Gilds, MPA"
 date: '`r Sys.Date()`'
 output:
-  html_document: default
   github_document: default
+  html_document: default
 bibliography: get_real.json
 ---
 ---
@@ -95,9 +95,9 @@ q1_absences <-with(q1_attendance,table(total))  #table of absences
 
 pander(q1_absences) #pretty table
 
-#q1_absences_c <-with(q1_attendance,table(council,total)) #table of absences by council
+q1_absences_c <-with(q1_attendance,table(council,total)) #table of absences by council
 
-#pander(q1_absences_c) #pretty table
+pander(q1_absences_c, caption= "Attendance by Council") #pretty table
 ```
 
 
@@ -122,10 +122,9 @@ q1_unexcused <-with(q1_attendance,table(unexcused)) #unexcused table
 
 pander(q1_unexcused) #pretty table
 
+q1_unexcused_c <-with(q1_attendance,table(council, unexcused)) #unexcused table by council
 
-#q1_unexcused_c <-with(q1_attendance,table(council, unexcused)) #unexcused table by council
-
-#pander(q1_unexcused_c) #pretty table
+pander(q1_unexcused_c, caption="Unexcused Absences by Council") #pretty table
 
 ```
 
@@ -133,14 +132,14 @@ pander(q1_unexcused) #pretty table
 
 ### Excused Absences:
 ```{r excused_tbls, echo=FALSE}
-q1_unexcused <-with(q1_attendance,table(excused)) #q1_unexucsed table
+q1_excused <-with(q1_attendance,table(excused)) #q1_unexucsed table
 
-pander(q1_unexcused) #make pretty
+pander(q1_excused) #make pretty
 
 
-#q1_unexcused_c <-with(q1_attendance,table(council, excused)) #q1_unexcused by council
+q1_excused_c <-with(q1_attendance,table(council, excused)) #q1_unexcused by council
 
-#pander(q1_unexcused_c) #pretty tables
+pander(q1_excused_c, caption="Excused Absences by Council") #pretty tables
 
 ```
 
