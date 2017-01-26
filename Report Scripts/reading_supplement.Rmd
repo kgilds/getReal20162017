@@ -38,14 +38,14 @@ q1_reading1516 <-dbReadTable(getRealdb,"Q1_reading_1516") #read 1516 q1 reading
 
 ```{r setup_readhistory, echo=FALSE}
 q1_16 <- q1_reading %>%
-    select(girl_code, reading_course, Grade, reading_pts)%>%  #select matching columns from previous year
+    select(girl_code, council, reading_course, Grade, reading_pts)%>%  #select matching columns from previous year
     mutate("Year" = "16-17") %>%
     rename(reading_avg = reading_pts)#add new column to distinguish years for when we combine 15-16
 
 
 
 q1_15 <- q1_reading1516 %>%
-    select(girlCode, readingCourses, readingGrade, reading_pts) %>% #select matching columns 
+    select(girlCode, council, readingCourses, readingGrade, reading_pts) %>% #select matching columns 
     rename(girl_code =girlCode) %>%  #rename to match q1_16
     rename(reading_course = readingCourses)%>%  #rename to match q1_16
     rename(reading_avg =reading_pts)%>% #rename to match q1_16
@@ -68,6 +68,13 @@ grade_table <- read_history %>%
 grade_table <- with(grade_table,table(Year, Grade)) #table to compare grades from previous Q1
 
 pander(grade_table, caption="Grade Table History--Quarter 1") #make table pretty 
+
+
+grade_table_c <-with(q1_reading,table(council, Grade))
+
+pander(grade_table_c, caption="Q1 Grades by Council")
+
+
 
 ```
 
@@ -100,6 +107,13 @@ grade_point <- read_history %>%
 
 
 pander(grade_point, caption="Quarter 1 GPA History") #make table pretty. 
+
+grade_point_c <- read_history %>%
+    group_by(council, Year)%>%
+    summarize(reading_avg = mean(reading_avg))
+
+pander(grade_point_c, caption="Quarter 1 GPA History by Council")
+
 
 
 ```
