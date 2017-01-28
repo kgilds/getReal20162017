@@ -230,7 +230,7 @@ am_hist_c <- ggplot(pre_am, aes(x=am.avg))
 ``` 
 
 
-```{r am_grade}
+```{r am_grade, eval=FALSE}
 grade <- ggplot(pre_am, aes(x=am.avg)) 
     grade + geom_histogram(fill="blue") + facet_wrap(~grade) + labs(x=" All Outcome Scores", title = "Pre: Academic Mastery Scores by Grade Level") + geom_vline(xintercept = 4.45, col="red") 
 
