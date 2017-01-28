@@ -222,7 +222,7 @@ ae_hist <- ggplot(pre_ae, aes(x=ae.avg))
 
 ```
 
-```{r ae_grade}
+```{r ae_grade, echo=FALSE, eval=FALSE}
 grade <- ggplot(pre_ae, aes(x=ae.avg)) 
     grade + geom_histogram(fill="blue") + facet_wrap(~grade) + labs(x=" All Outcome Scores", title = "Pre: Academic Engagement Scores by Grade Level") + geom_vline(xintercept = 4.8, col="red") 
 
