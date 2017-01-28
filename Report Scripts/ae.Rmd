@@ -405,13 +405,7 @@ plot(pre_teacher_g1)
 
 
 
-### Analysis Academic Engagment
 
-Students in the Get REAL! program typically do not come into the program with a high academic engagement scores. This year is no different but the outcomes scores are much lower than expected. Typically around 40 percent of students come to the program with solid academic behaviors but this year it was 20 percent. 
-
-Parent and teacher pre surveys support evidence from the student survey. Pre teacher surveys indicate about 60 percent believe the student positively participates in class. A little more than half of teachers agreed that the student completes home work given to her. More than three-quarters of parents had high agreement that their child does school work without supervision. However, this is nearly a 10 percent decrease from the pre survey results last year. 
-
-This life skill outcome presents another growth opportunity for the students. Reviewing the outcome distribution 137 students are between 3.45 and the cutpoint for achieving this outcome at a high level. Last year 80 percent of students had a positive outcome, and a quarter of the students went from low achievement to high achievement. 
 
 
 ```{r close_ae, echo=FALSE, eval=FALSE}
