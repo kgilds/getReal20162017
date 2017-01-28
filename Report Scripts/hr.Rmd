@@ -405,13 +405,7 @@ plot(pre_teacher_g1)
 ```
 
 
-### Healthy Relationship Analysis
 
-The pre survey result indicates that the students in the program do not have strong relationship skills as compared to past years and this is a potential growth area for the students. Typically 61 percent of the students come into this program with strong healthy relationship skills whereas this year it was under 40 percent. 
-
-Parent and teacher survey support the evidence from the students surveys. Nearly three-quarters of parents either indicated high agreement that their child had positive relationship at school. Following the student survey pattern, this is a 10 percent decrease from the pre survey last year. Nearly two-thirds of teachers havea a high  agreement that the students have developed positive relationships. 
-
-Reviewing the distribution of pre surveys scores indicates that 172 students are between 3.45 and the 4.45 cutpoint. The healthy relationship outcome skill is a strong point for the Get REAL! program as evidenced by previous years. Last year 26 percent of students improved from a low skill level to a high skill level and over 85 percent had success with this outcome.  
 
 ```{r close_hr, echo=FALSE, eval=FALSE}
 close_hr <- pre_hr%>%
