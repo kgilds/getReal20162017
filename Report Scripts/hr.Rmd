@@ -216,6 +216,23 @@ grade <- ggplot(pre_hr, aes(x=hr.avg))
 
 ```
 
+```{r hr_bar}
+
+hr_bar_pre <-qplot(pre_hr$hr.avg >=4.45, ylim=c(0, 600), main="Pre survey Results", xlab="Achievement at High Level")
+
+hr_bar_pre
+
+hr_bar_pre_c <-ggplot(pre_hr, aes(hr.avg >=4.45))+ geom_bar() + facet_wrap(~council) + labs(x="Achieving at High Level", title= "Pre: Healthy Relationships by Council")
+
+hr_bar_pre_c
+
+
+
+
+
+```
+
+
 
 # Pre Survey: Healthy Relationship History
 
@@ -311,7 +328,7 @@ plot(pre_parent_hr2) + ggtitle("Pre Parent Survey Question 5") +  theme(axis.tex
 ```
 
 
-```{r parent_groupded, echo=FALSE}
+```{r parent_groupded, echo=FALSE, fig.width=8}
 pre_parent_g <-likert(pre_parent_hr1, grouping =pre_parent$council)
 
 pre_parent_g1 <-summary(pre_parent_g)
@@ -393,7 +410,7 @@ plot(pre_teacher_tbl_lik)
 ```
 
 
-```{r}
+```{r q7_teacher, fig.width=8}
 pre_teacher_g1 <- likert(pre_teacher_tbl, grouping = pre_teacher$council) #likert table
 
 pre_teacher_g <-summary(pre_teacher_g1)
