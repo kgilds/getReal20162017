@@ -228,6 +228,12 @@ grade <- ggplot(pre_ae, aes(x=ae.avg))
 
 ```
 
+```{r ae_bar, echo=FALSE}
+ae_bar_pre_c <-ggplot(pre_ae, aes(hr.avg >=4.5))+ geom_bar() + facet_wrap(~council) + labs(x="Achieving at High Level", title= "Pre: Academic Engagement by Council")
+
+ae_bar_pre_c
+
+```
 
 
 # Pre Survey: Academic Engagement History
@@ -312,7 +318,7 @@ plot(pre_parent_tbl_1)
 
 ```
 
-```{r}
+```{r pre_parent_g, fig.width=8}
 pre_parent_g1 <- likert(pre_parent_tbl, grouping = pre_parent$council)
 
 kable(summary(pre_parent_g1))
@@ -393,7 +399,7 @@ plot(pre_teacher_tbl_1)
 
 ```
 
-```{r}
+```{r pre_teacher_q1_g, fig.width=8}
 pre_teacher_g1 <- likert(pre_teacher_tbl, grouping = pre_teacher$council)
 
 kable(summary(pre_teacher_g1))

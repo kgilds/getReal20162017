@@ -8,6 +8,12 @@ output:
 bibliography: get_real.json
 ---
 ---
+```{r global_options_attendance, include=FALSE}
+knitr::opts_chunk$set(fig.path='Figs/',
+                      echo=FALSE, warning=FALSE, message=FALSE, comment=FALSE)
+```
+
+
 ```{r attendance_libaries, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(pander)
@@ -103,7 +109,7 @@ pander(q1_absences_c, caption= "Attendance by Council") #pretty table
 
 
 
-```{r total_plot, echo=FALSE}
+```{r attendance_council, echo=FALSE}
 
 
 total_absPlot <- ggplot(q1_attendance,(aes(x =total, y = council)))
