@@ -1,11 +1,11 @@
 ---
-title: "results"
+title: "Pre Survey and Quarter 1 Results by Council"
 author: "Kevin Gilds, MPA"
-date: "December 21, 2016"
+date: "January 29, 2016"
 output:
-  html_document: default
   pdf_document: default
-  word_document: default
+  html_document: default
+  github_document: default
 bibliography: get_real.json
 ---
 
