@@ -93,6 +93,13 @@ ggplot(q1_reading, aes(x=Grade, y=reading_course))+ geom_count()  #plot grades b
 
 ```
 
+
+```{r reading_council, echo=FALSE}
+ggplot(q1_reading, aes(x=Grade, y=council))+ geom_count()  #plot grades by courses
+
+```
+
+
 ```{r grade_tbl, echo=FALSE}
 grade_table <- with(read_history,table(Year, Grade)) #table to compare grades from previous Q1
 

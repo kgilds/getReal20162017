@@ -8,6 +8,14 @@ params:
     data: q1_langarts
 ---
 
+
+```{r global_options_langarts, include=FALSE}
+knitr::opts_chunk$set(fig.path='Figs/',
+                      echo=FALSE, warning=FALSE, message=FALSE)
+```
+
+
+
 # Reading Improvement
 *Objective: 50% of participating students will improve their reading skills as demonstrated by their Language Arts grade increasing or maintaining a “C” grade from the baseline grading period to the final grading period as evidenced by report cards/school reports.*
 
@@ -97,7 +105,7 @@ pander(q1_courses, caption=" Q1:Language Arts Courses and Grades")
 ```
 
 
-```{r grades_q1_plot, echo=FALSE}
+```{r lang_grades_q1_plot, echo=FALSE}
 
 
 
@@ -107,6 +115,13 @@ ggplot(q1_langarts, aes(x=grade, y=langarts_course))+ geom_count()
 
 
 ```
+
+
+```{r council_lang, echo=FALSE}
+ggplot(q1_langarts, aes(x=grade, y=council))+ geom_count()
+
+```
+
 
 ```{r grade_table, echo=FALSE}
 
