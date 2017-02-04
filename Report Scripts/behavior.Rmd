@@ -5,6 +5,13 @@ date: "December 11, 2016"
 output:
   github_document: default
 ---
+
+
+```{r global_options_behvaior, include=FALSE}
+knitr::opts_chunk$set(fig.path='Figs/',
+                      echo=FALSE, warning=FALSE, message=FALSE, comment=FALSE)
+```
+
 ```{r behavior_libaries, echo=FALSE, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(pander)
