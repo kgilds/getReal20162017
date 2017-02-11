@@ -76,103 +76,6 @@ pander(council_status)
 
 ```
 
-
-
-# Life Skills Outcome
-
-## Healthy Relationships Life Skills
-
-### Post Surveys
-
-```{r}
-
-council_hr <- hr %>%
-    group_by(council)
-
-achieved_hr_post <- with(council_hr, table(council, Post >= 4.45))
-
-achieved_hr_post <-prop.table(achieved_hr_post,1)
-
-achieved_hr_post<-round(achieved_hr_post*100,2)
-
-
-
-pander(achieved_hr_post)
-
-```
-
-
-
-#### Post survey by Year (by Counts)
-```{r}
-
-
-council_hr_test <-council_hr %>%
-    group_by(council,Year_Id) %>%
-    count(Post >=4.45)
-
-datatable(council_hr_test)
-
-```
-
-
-
-### Post Survey HR Average Score
-
-```{r}
-hr_avg <- hr %>%
-    group_by(Year_Id) %>%
-    summarise(Post =mean(Post))
-
-pander(hr_avg)
-
-```
-
-```{r}
-ggplot(hr_avg, aes(y=Post, x=Year_Id, group=2)) + geom_line() + geom_point()
-
-
-```
-
-
-### Post Survey Average Score by Council
-
-```{r council_hr_post_tbl}
-
-
-head(council_hr)
-
-council_hr_post <-summarise(council_hr, Post =mean(Post))
-
-pander (council_hr_post)
-
-```
-
-
-### Pre Surveys
-```{r}
-achieved_hr <- with(council_hr, table(council, Pre >= 4.45))
-
-achieved_hr
-
-achieved_hr_p <-prop.table(achieved_hr,1)
-
-achieved_hr_p<-round(achieved_hr_p*100,2)
-
-pander(achieved_hr_p)
-```
-
-
-```{r}
-council_hr_pre <-summarise(council_hr, Pre =mean(Pre))
-
-
-datatable(council_hr_pre, rownames = FALSE)
-
-
-```
-
-
 ### General Information 
 
 The mean difference between pre and post survey is `r pander(mean(hr$hr.diff))`
@@ -281,6 +184,103 @@ cohen.d(hr$Pre, hr$Post)
 
 
 
+
+
+
+
+# Life Skills Outcome
+
+## Healthy Relationships Life Skills
+
+### Post Surveys
+
+```{r}
+
+council_hr <- hr %>%
+    group_by(council)
+
+achieved_hr_post <- with(council_hr, table(council, Post >= 4.45))
+
+achieved_hr_post <-prop.table(achieved_hr_post,1)
+
+achieved_hr_post<-round(achieved_hr_post*100,2)
+
+
+
+pander(achieved_hr_post)
+
+```
+
+
+
+#### Post survey by Year (by Counts)
+```{r}
+
+
+council_hr_test <-council_hr %>%
+    group_by(council,Year_Id) %>%
+    count(Post >=4.45)
+
+datatable(council_hr_test)
+
+```
+
+
+
+### Post Survey HR Average Score
+
+```{r}
+hr_avg <- hr %>%
+    group_by(Year_Id) %>%
+    summarise(Post =mean(Post))
+
+pander(hr_avg)
+
+```
+
+```{r}
+ggplot(hr_avg, aes(y=Post, x=Year_Id, group=2)) + geom_line() + geom_point()
+
+
+```
+
+
+### Post Survey Average Score by Council
+
+```{r council_hr_post_tbl}
+
+
+head(council_hr)
+
+council_hr_post <-summarise(council_hr, Post =mean(Post))
+
+pander (council_hr_post)
+
+```
+
+
+### Pre Surveys
+```{r}
+achieved_hr <- with(council_hr, table(council, Pre >= 4.45))
+
+achieved_hr
+
+achieved_hr_p <-prop.table(achieved_hr,1)
+
+achieved_hr_p<-round(achieved_hr_p*100,2)
+
+pander(achieved_hr_p)
+```
+
+
+```{r}
+council_hr_pre <-summarise(council_hr, Pre =mean(Pre))
+
+
+datatable(council_hr_pre, rownames = FALSE)
+
+
+```
 
 
 
