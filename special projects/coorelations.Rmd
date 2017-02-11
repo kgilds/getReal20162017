@@ -103,7 +103,7 @@ pairs(~hr+ae+am, data=post_2)
 
 
 
-```{r eval=FALSE}
+```{r }
 cor(hr_post, ae_post)
 
 
