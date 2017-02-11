@@ -81,97 +81,6 @@ pander(council_status)
 
 # Academic Mastery
 
-##Post Survey History
-
-```{r}
-
-council_am <- am %>%
-    group_by(council)
-
-achieved_am_post <- with(council_am, table(council, Post >= 4.8))
-
-achieved_am_post <-prop.table(achieved_am_post,1)
-
-achieved_am_post<-round(achieved_am_post*100,2)
-
-
-
-pander(achieved_am_post)
-
-```
-
-
-
-#### Post survey by Year (by Counts)
-```{r}
-
-
-council_am_test <-council_am %>%
-    group_by(council,Year_Id) %>%
-    count(Post >=4.8)
-
-datatable(council_am_test)
-
-```
-
-
-
-### Post Survey AM Average Score
-
-```{r}
-am_avg <- am %>%
-    group_by(Year_Id) %>%
-    summarise(Post =mean(Post))
-
-pander(am_avg)
-
-```
-
-```{r}
-ggplot(am_avg, aes(y=Post, x=Year_Id, group=2)) + geom_line() + geom_point()
-
-
-```
-
-
-### Post Survey Average Score by Council
-
-```{r council_am_post_tbl}
-
-
-head(council_am)
-
-council_am_post <-summarise(council_am, Post =mean(Post))
-
-pander (council_am_post)
-
-```
-
-
-### Pre Surveys
-```{r}
-achieved_am <- with(council_am, table(council, Pre >= 4.8))
-
-achieved_am
-
-achieved_am_p <-prop.table(achieved_am,1)
-
-achieved_am_p<-round(achieved_am_p*100,2)
-
-pander(achieved_am_p)
-```
-
-
-```{r}
-council_am_pre <-summarise(council_am, Pre =mean(Pre))
-
-
-datatable(council_am_pre, rownames = FALSE)
-
-
-```
-
-
 ### General Information 
 
 The mean difference between pre and post survey is `r pander(mean(am$am.diff))`
@@ -282,5 +191,98 @@ cohen.d(am$Pre, am$Post)
 
 
 
+
+
+
+
+##Post Survey History
+
+```{r}
+
+council_am <- am %>%
+    group_by(council)
+
+achieved_am_post <- with(council_am, table(council, Post >= 4.8))
+
+achieved_am_post <-prop.table(achieved_am_post,1)
+
+achieved_am_post<-round(achieved_am_post*100,2)
+
+
+
+pander(achieved_am_post)
+
+```
+
+
+
+#### Post survey by Year (by Counts)
+```{r}
+
+
+council_am_test <-council_am %>%
+    group_by(council,Year_Id) %>%
+    count(Post >=4.8)
+
+datatable(council_am_test)
+
+```
+
+
+
+### Post Survey AM Average Score
+
+```{r}
+am_avg <- am %>%
+    group_by(Year_Id) %>%
+    summarise(Post =mean(Post))
+
+pander(am_avg)
+
+```
+
+```{r}
+ggplot(am_avg, aes(y=Post, x=Year_Id, group=2)) + geom_line() + geom_point()
+
+
+```
+
+
+### Post Survey Average Score by Council
+
+```{r council_am_post_tbl}
+
+
+head(council_am)
+
+council_am_post <-summarise(council_am, Post =mean(Post))
+
+pander (council_am_post)
+
+```
+
+
+### Pre Surveys
+```{r}
+achieved_am <- with(council_am, table(council, Pre >= 4.8))
+
+achieved_am
+
+achieved_am_p <-prop.table(achieved_am,1)
+
+achieved_am_p<-round(achieved_am_p*100,2)
+
+pander(achieved_am_p)
+```
+
+
+```{r}
+council_am_pre <-summarise(council_am, Pre =mean(Pre))
+
+
+datatable(council_am_pre, rownames = FALSE)
+
+
+```
 
 
