@@ -94,7 +94,8 @@ enrollment_2 <- enrollment
 
 #enroll
 
-enroll_p <- plot_ly(enrollment_total, x=~council, y = ~Total, type = 'bar')
+enroll_p <- plot_ly(enrollment_total, x=~council, y = ~Total, type = 'bar') %>%
+    layout(title="Enrollment by Council")
 
 
 enroll_p
@@ -112,8 +113,10 @@ kable(enrollment_2)
 
 Monthly Attendance{data-orientation=columns}
 =====================================  
-Row {data-height=600}
-------------------------------
+
+Row {.tabset .tabset-fade}
+-------------------------------
+### Monthly Attendance
 
 ```{r}
 students_served <- dbReadTable(getReal_2016db, "students_served2")
@@ -130,7 +133,8 @@ students_s <- students_served %>%
 
 #students_served <- ggplotly(students_served)
 
-ss <- plot_ly(students_s, x= ~date, y = ~students_served)
+ss <- plot_ly(students_s, x= ~date, y = ~students_served) %>%
+    layout(title="Students Served by Month")
 
 
 ss
@@ -140,20 +144,46 @@ ss
 
 ```
 
-column {data-height=600}
-------------------------------
+
+-----------------------------
+### Monthly Attendance by Council
+```{r}
+students_served_tbl <- students_served %>%
+    select(2,4,6)
+    
+students_served_tbl <- students_served_tbl[,c(3,2,1)]
+
+
+kable(students_served_tbl)
+```
+
+
+Row {.tabset .tabset-fade}
+-----------------------------
+
+### Sessions Held 
 
 ```{r}
 sh <- students_served %>%
     group_by(date)%>%
     summarise(sessions_held =sum(sessions_held))
 
-sh_p <- plot_ly(sh, x =~date, y = ~sessions_held)
+sh_p <- plot_ly(sh, x =~date, y = ~sessions_held) %>%
+    layout(title="Sessions Held by Month")
 
 sh_p
 ```
 
+-----------------------------------
+### Sessions Held by Council
 
+```{r}
+sh_tbl <- students_served %>%
+    select(6,4,3)
+    
+
+kable(sh_tbl)
+```
 
 
     
