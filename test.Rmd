@@ -185,5 +185,66 @@ sh_tbl <- students_served %>%
 kable(sh_tbl)
 ```
 
+Mentor Data {data-orientation=columns}
+=====================================  
 
-    
+Row {.tabset .tabset-fade}
+--------------------------------
+
+### Number of Mentors
+
+
+```{r}
+mentor_dat <- dbReadTable(getReal_2016db, "mentor report")
+
+mentor_dat <- mentor_dat %>%
+    select(10,11,12, 14)%>%
+    filter(Year == "16-17")
+
+
+#kable(mentor_dat)
+
+mentor_n <- plot_ly(mentor_dat, x = ~council_name, y =~mentors, type= 'bar') %>%
+    layout(title="Mentors by Council")
+
+mentor_n
+
+
+```
+
+------------------------------
+###Number of Mentors by Council
+
+```{r}
+
+mentor_tbl <- mentor_dat %>%
+    select(4,1)
+
+
+kable(mentor_tbl)
+```
+
+
+Row {.tabset .tabset-fade}
+--------------------------------
+### Logged Mentor Hours
+
+```{r}
+logged_hrs <- plot_ly(mentor_dat, x =~council_name, y =~logged_hours, type="bar") %>%
+    layout(title="Logged Hours by Mentors")
+
+logged_hrs
+
+
+```
+
+----------------------------------
+### Logged Hours by Mentors: Council
+
+```{r}
+logged_tbl <- mentor_dat %>%
+    select(4,2)
+
+kable(logged_tbl)
+```
+
