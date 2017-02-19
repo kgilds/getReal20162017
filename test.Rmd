@@ -95,7 +95,9 @@ enrollment_2 <- enrollment
 #enroll
 
 enroll_p <- plot_ly(enrollment_total, x=~council, y = ~Total, type = 'bar') %>%
-    layout(title="Enrollment by Council")
+    layout(title="Enrollment by Council",
+           xaxis=list(title="Council"),
+           yaxis =list(title="Number of Student"))
 
 
 enroll_p
@@ -134,7 +136,9 @@ students_s <- students_served %>%
 #students_served <- ggplotly(students_served)
 
 ss <- plot_ly(students_s, x= ~date, y = ~students_served) %>%
-    layout(title="Students Served by Month")
+    layout(title="Students Served by Month",
+           xaxis=list(title="Time Frame"),
+           yaxis=list(title="Students Served"))
 
 
 ss
@@ -169,7 +173,9 @@ sh <- students_served %>%
     summarise(sessions_held =sum(sessions_held))
 
 sh_p <- plot_ly(sh, x =~date, y = ~sessions_held) %>%
-    layout(title="Sessions Held by Month")
+    layout(title="Sessions Held by Month",
+           xaxis=list(title="Time Frame"),
+           yaxis=list(title= "Sessions Held"))
 
 sh_p
 ```
@@ -205,7 +211,9 @@ mentor_dat <- mentor_dat %>%
 #kable(mentor_dat)
 
 mentor_n <- plot_ly(mentor_dat, x = ~council_name, y =~mentors, type= 'bar') %>%
-    layout(title="Mentors by Council")
+    layout(title="Mentors by Council",
+           xaxis=list(title="Council"),
+           yaxis=list(title="Number of Mentors"))
 
 mentor_n
 
@@ -231,7 +239,9 @@ Row {.tabset .tabset-fade}
 
 ```{r}
 logged_hrs <- plot_ly(mentor_dat, x =~council_name, y =~logged_hours, type="bar") %>%
-    layout(title="Logged Hours by Mentors")
+    layout(title="Logged Hours by Mentors",
+           xaxis=list(title="Council"),
+           yaxis=list(title="Mentors Logged Hours"))
 
 logged_hrs
 
