@@ -1,0 +1,174 @@
+---
+title: "Attendance_history"
+author: "Kevin Gilds, MPA"
+date: "February 18, 2017"
+output: 
+        html_document
+        
+---
+
+```{r read_dbase, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+library(sqldf)
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite") 
+
+getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite") #established connection with database
+
+library(DT)
+library(getREAL)
+library(dplyr)
+library(pander)
+library(ggplot2)
+library(effsize)
+library(knitr)
+library(catspec)
+
+```
+
+```{r read_1516, echo=FALSE}
+attendance_1516 <-dbReadTable(getReal_2016db, "attendance_1516") #read readarts1516 table
+
+names(attendance_1516)
+
+attendance_1516 <- attendance_1516 %>%
+     mutate("Year_Id" = "M3")%>%
+     rename(baseline = basline)%>%
+     rename(Att_diff = Abs_Change)%>%
+     select(1,3, 4, 6,7) #select variables of interest 
+      
+names(attendance_1516)
+
+```
+
+
+
+```{r read_1415, echo=FALSE}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Reports/MY-2014-2015/Summ Evaluation Report/data") #change working directory to find database
+
+getReal_2015db<- dbConnect(SQLite(),   dbname="data_Final_GetReal_2014_2015.sqlite") #read database
+
+attendance_1415 <-dbReadTable(getReal_2015db, "absences_final") #read read_1415
+
+names(attendance_1415)
+
+attendance_1415 <- attendance_1415%>% 
+    mutate("Year_Id" = "M2") %>% #add variable data
+    rename(Att_diff = diff)%>%
+    rename(Council = council)%>%
+    rename(final= total_abs_final)%>%
+    rename(baseline = total_abs_baseline)%>%#rename variable/column name
+    select(1,4,3, 5,6)#select column of interest
+
+names(attendance_1415)
+
+```
+
+```{r}
+
+head(attendance_1516)
+names(attendance_1516)
+names(attendance_1415)
+
+
+attendance_his <- rbind(attendance_1415, attendance_1516)
+
+head(attendance_his)
+
+```
+
+```{r council_name_fix_lang, echo=FALSE}
+## Change council names to be consistent wiht how they displayed with the surveys
+attendance_his$Council <-sub("Girl Scouts of the Gateway Council", "Gateway Council", fixed=TRUE, attendance_his$Council)
+
+attendance_his$Council <-sub("Girl Scouts of Citrus Council", "Citrus Council", fixed=TRUE, attendance_his$Council)
+
+attendance_his$Council <-sub("Girl Scouts of Southeast Florida", "Southeast Council", fixed=TRUE, attendance_his$Council)
+
+attendance_his$Council <-sub("Southeast Council, Inc", "Southeast Council", fixed=TRUE, attendance_his$Council)
+
+attendance_his$Council <-sub("Southeast Council.", "Southeast Council", fixed=TRUE, attendance_his$Council)
+
+attendance_his$Council <-sub("Girl Scout Council of Tropical Florida", "Tropical Council", fixed = TRUE, attendance_his$Council)
+
+attendance_his$Council <-sub("Girl Scouts of West Central Florida", "West Central Council", fixed = TRUE, attendance_his$Council)
+
+attendance_his$Council <-sub("Girl Scout Council of the Panhandle", "Panhandle Council", fixed = TRUE, attendance_his$Council)
+
+attendance_his$Council <-sub("Pandhandle Council", "Panhandle Council", fixed = TRUE, attendance_his$Council)
+
+
+attendance_his$Council <-sub("Girl Scouts of Gulfcoast Florida Inc.",  "Gulfcoast Council", fixed = TRUE, attendance_his$Council)
+
+```
+
+```{r}
+perfect_att <- attendance_his%>%
+    filter(final ==0 & baseline ==0)
+
+
+nrow(perfect_att)
+```
+
+
+```{r att_avg_allstudents}
+attendance_avg <- attendance_his %>%
+    summarise(Att_diff = mean(Att_diff))
+
+kable(attendance_avg)
+
+```
+
+
+```{r}
+
+attendance_avg_1 <- attendance_his %>%
+    filter(baseline >0 & final >0)
+    
+head(attendance_avg_1)
+tail(attendance_avg_1)
+
+attendance_avg_1 <- attendance_his %>%
+    filter(baseline >0 & final >0)%>%
+    summarise(Att_diff = mean(Att_diff))
+
+
+
+attendance_avg_1
+```
+
+
+
+
+```{r att_sum_year}
+att_sum_y <- attendance_his %>%
+    group_by(Year_Id)%>%
+    summarise(Att_diff=mean(Att_diff))
+
+att_sum_y
+
+```
+
+
+
+
+```{r sum_att_council}
+att_sum_c <- attendance_his %>%
+    group_by(Council)%>%
+    summarise(Att_diff =mean(Att_diff))
+
+att_sum_c
+
+#year_id_lang_summary <-summarise(year_id_lang_summary, Grade_Change #=mean(Grade_Change)) #summarize Grade change by year id
+```
+```{r}
+
+abs_plot <- ggplot(att_sum_c,(aes(x = Att_diff, y =Council)))
+abs_plot + geom_count()
+
+
+
+
+```
+
