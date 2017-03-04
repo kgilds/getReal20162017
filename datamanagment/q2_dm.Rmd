@@ -20,10 +20,10 @@ library(pander)
 
 setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/Feb 2017")
 
-q2_data<- read_csv("q2_grades_03042017.csv", skip=1)
+q2_data <- readRDS("q2_data.Rds")
 
 
-names(q2_data)
+#names(q2_data)
 
 
 ```
