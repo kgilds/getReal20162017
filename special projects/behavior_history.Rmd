@@ -1,0 +1,161 @@
+---
+title: "Behavior History"
+author: "Kevin Gilds, MPA"
+date: "February 18, 2017"
+output: 
+        html_document
+        
+---
+
+```{r read_dbase, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+library(sqldf)
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite") 
+
+getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite") #established connection with database
+
+library(DT)
+library(getREAL)
+library(dplyr)
+library(pander)
+library(ggplot2)
+library(effsize)
+library(knitr)
+library(catspec)
+
+```
+
+```{r read_1516, echo=FALSE}
+
+suspensions_1516 <-dbReadTable(getReal_2016db, "suspensions_1516") #read readarts1516 table
+
+suspensions_1516 <- suspensions_1516 %>%
+     mutate("Year_Id" = "M3")%>%
+     rename(baseline = basline) %>%
+     rename(council = Council) %>%
+     rename(susp_diff = Suspensions_Change) %>%
+     select(1,2,3,4,6,7)#select variables of interest 
+      
+
+```
+
+
+
+```{r read_1415, echo=FALSE}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Reports/MY-2014-2015/Summ Evaluation Report/data") #change working directory to find database
+
+getReal_2015db<- dbConnect(SQLite(),   dbname="data_Final_GetReal_2014_2015.sqlite") #read database
+
+
+suspenions_1415 <-dbReadTable(getReal_2015db, "behavior_data") #read read_1415
+
+
+
+suspenions_1415 <- suspenions_1415%>% 
+    mutate("Year_Id" = "M2") %>%
+    rename(final = total_final)%>%
+    rename(baseline = total_baseline)%>%
+    rename(susp_diff = total_diff)%>%
+    select(1,2,4,3,5,6)#add variable and name it M2. 
+
+```
+
+
+```{r}
+names(suspensions_1516)
+names(suspenions_1415)
+
+susp_his <- rbind(suspensions_1516, suspenions_1415)
+
+susp_unique<- susp_his [!(duplicated(susp_his$girlCode) | duplicated(susp_his$girlCode, fromLast = TRUE)), ]
+
+dim(susp_unique)
+
+susp_unique <- susp_unique %>%
+    mutate("Match" = "No")
+
+head(susp_unique)
+
+susp_dupes <-duplicated(susp_his$girlCode) | duplicated(susp_his$girlCode, fromLast=TRUE)
+
+susp_dupes <-susp_his[susp_dupes, ]
+
+dim(susp_dupes)
+
+susp_dupes <- susp_dupes %>%
+    mutate("Match" = "Yes")
+
+
+susp_his <- rbind(susp_unique, susp_dupes)
+
+dim(susp_his)
+
+
+    
+```
+
+
+```{r council_name_fix_lang, echo=FALSE}
+## Change council names to be consistent wiht how they displayed with the surveys
+susp_his$council <-sub("Girl Scouts of the Gateway Council", "Gateway Council", fixed=TRUE, susp_his$council)
+
+susp_his$council <-sub("Girl Scouts of Citrus Council", "Citrus Council", fixed=TRUE, susp_his$council)
+
+susp_his$council <-sub("Girl Scouts of Southeast Florida", "Southeast Council", fixed=TRUE, susp_his$council)
+
+susp_his$council <-sub("Southeast Council, Inc", "Southeast Council", fixed=TRUE, susp_his$council)
+
+susp_his$council <-sub("Southeast Council.", "Southeast Council", fixed=TRUE, susp_his$council)
+
+susp_his$council <-sub("Girl Scout Council of Tropical Florida", "Tropical Council", fixed = TRUE, susp_his$council)
+
+susp_his$council <-sub("Girl Scouts of West Central Florida", "West Central Council", fixed = TRUE, susp_his$council)
+
+susp_his$council <-sub("Girl Scout Council of the Panhandle", "Panhandle Council", fixed = TRUE, susp_his$council)
+
+susp_his$council <-sub("Pandhandle Council", "Panhandle Council", fixed = TRUE, susp_his$council)
+
+
+susp_his$council <-sub("Girl Scouts of Gulfcoast Florida Inc.",  "Gulfcoast Council", fixed = TRUE, susp_his$council)
+
+```
+
+
+```{r}
+nrow(susp_his)
+
+no_susp <- susp_his %>%
+    filter(baseline ==0 & final == 0)
+
+nrow(no_susp)
+
+head(no_susp)
+tail(no_susp)
+
+1304-1082
+
+
+decrease_susp <- susp_his %>%
+    filter(susp_diff < 0) %>%
+    count(Match)
+
+
+decrease_susp
+nrow(decrease_susp)
+
+success <- (nrow(decrease_susp) +nrow(no_susp)) /1304
+
+increase_susp <- susp_his %>%
+    filter(susp_diff >0) %>%
+    count(Match)
+
+increase_susp
+
+#n_success <- nrow(increase_susp) +nrow(no_su) /1034
+
+success
+
+```
+
