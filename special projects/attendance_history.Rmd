@@ -104,6 +104,12 @@ attendance_his$Council <-sub("Girl Scouts of Gulfcoast Florida Inc.",  "Gulfcoas
 ```
 
 ```{r}
+nrow(attendance_his)
+```
+
+
+
+```{r}
 perfect_att <- attendance_his%>%
     filter(final ==0 & baseline ==0)
 
@@ -134,6 +140,10 @@ attendance_avg_1 <- attendance_his %>%
     summarise(Att_diff = mean(Att_diff))
 
 
+attendance_count <- attendance_his %>%
+    count(Att_diff > 0)
+
+attendance_count
 
 attendance_avg_1
 ```
