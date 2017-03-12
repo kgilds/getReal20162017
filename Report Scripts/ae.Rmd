@@ -3,6 +3,7 @@ title: "Academic Engagement Notebook"
 params:
   council: West Central Council
 output:
+  pdf_document: default
   html_document: default
   github_document: default
   word_document: default
