@@ -18,7 +18,6 @@ library(pander)
 .
 ```{r q2_read_data}
 
-setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/Feb 2017")
 
 q2_data <- readRDS("q2_data.Rds")
 
@@ -85,7 +84,7 @@ colnames (q2_data)[65] <- "M/J LANG ARTS TRAN"
 colnames (q2_data)[66] <- "M/J DE LANG ARTS ESOL"
 colnames (q2_data)[67] <- "blankspace"
 
-names(q2_data)
+#names(q2_data)
 
 ```
 
@@ -139,7 +138,7 @@ q2_data <- q2_data[!(duplicated(q2_data$girl_code) | duplicated(q2_data$girl_cod
 
 dim(q2_data)
 
-#pander(table(q2_data$girl_code)) #test for duplicate girl codes
+pander(table(q2_data$girl_code)) #test for duplicate girl codes
 
 #preUnique<- pre [!(duplicated(pre$girlCode) | duplicated(pre$girlCode, fromLast = TRUE)), ]
 
