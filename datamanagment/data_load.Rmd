@@ -2,11 +2,12 @@
 title: "read_data"
 author: "Kevin Gilds, MPA"
 date: '`r Sys.Date()`'
-output: html_document
+output: 
+        github_document: default
 ---
 
 ```{r student_survey, echo=FALSE}
-
+library(pander)
 library(tidyverse)
 
 ```
@@ -17,18 +18,20 @@ library(tidyverse)
 
 ```{r read_data, echo=FALSE}
 
-setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/December 2016")
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/Feb 2017")
 
-rawdata <- read_csv("student_survey_12262016.csv", skip=1) #reads student survey
-
-
-parent <- read_csv("parent_survey_12262016.csv", skip=1) #reads parent survey
+rawdata <- read_csv("student_data_03042017.csv", skip=1) #reads student survey
 
 
-teacher <- read_csv("teacher_survey_12262016.csv", skip=1) # reads teacher survey
+parent <- read_csv("parent_data_03042017.csv", skip=1) #reads parent survey
 
 
-q1_dm <- read_csv("q1_data_12262016.csv", skip = 1) #read  q1_dmcsv file
+teacher <- read_csv("teacher_data_03042017.csv", skip=1) # reads teacher survey
+
+
+q1_dm <- read_csv("q1_data_03042017.csv", skip = 1) #read  q1_dmcsv file
+
+q2_dm <- read_csv("q2_data_03042017.csv", skip =1)
 
 
 ```
@@ -43,6 +46,8 @@ saveRDS(parent, "parent.Rds") #save parent survey data in rds format
 saveRDS(teacher, "teacher.Rds") #save teacher survey data in rds format
 
 saveRDS(q1_dm, "q1_data.RDS") #save q1 data in rds format
+
+saveRDS(q2_dm, "q2_data.Rds")
 
 
 ```
