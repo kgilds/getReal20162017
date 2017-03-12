@@ -2,7 +2,10 @@
 title: "matched_survey_history"
 author: "Kevin Gilds, MPA"
 date: "September 1, 2016"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
+  github_document: default
 ---
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
