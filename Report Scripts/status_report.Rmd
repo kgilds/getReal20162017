@@ -2,14 +2,13 @@
 title: "Status Report"
 author: "Kevin Gilds, MPA"
 date: '`r Sys.Date()`'
-output:
-  
-  pdf_document:
-    toc: no
+output: 
+  pdf_document: 
+    latex_engine: xelatex
 ---
 
 
-### Data downloaded on: 12/02/2016
+### Data downloaded on: 03/04/2017
 
 
 
@@ -137,6 +136,14 @@ q1 <- q1 %>%
 
 ```
 
+```{r echo=FALSE}
+q2 <- dbReadTable(getReal_db, "Q2_attendance_1617")
+
+q2 <- q2 %>%
+    select(council) %>%
+    mutate("dataSource" = "Q2")
+
+```
 
 
 ```{r counts, echo=FALSE}
@@ -172,6 +179,9 @@ survey_status <- rbind(girl_parent, pre_teacher) #add teacher survey
 survey_status <- rbind(survey_status, q1) #add q1
 
 
+survey_status <- rbind(survey_status, q2) #add q2
+
+
 ```
 
 
@@ -184,6 +194,10 @@ survey_status3 <- with(survey_status,table(dataSource))
 survey_status3 <- addmargins(survey_status3)
 
 pander(survey_status3)
+
+saveRDS(survey_status, "data_entry_stat.rds")
+
+
 
 
 
@@ -198,6 +212,9 @@ survey_status2 <- addmargins(survey_status2)
 
 pander(survey_status2)
 
+
+
+#barplot(survey_status2)
 
 ```
 
@@ -250,6 +267,17 @@ q1_dupes <- q1_dupes %>%
 
 ```
 
+```{r eval=FALSE, echo=FALSE}
+q2_dupes <- dbReadTable(getReal_db, "Q2_duplicates_1617")
+
+q2_dupes <- q2_dupes %>%
+    select(council) %>%
+    mutate("data_Source" = "Q2_dupes")
+
+
+```
+
+
 
 ```{r bind_dupes, echo=FALSE}
 
@@ -261,6 +289,8 @@ dupe_status <- rbind(student_d_parent_d, teacher_dupes)
 
 
 dupe_status <-rbind(dupe_status, q1_dupes)
+
+#dupe_status <- rbind(dupe_status, q2_dupes)
 
 ```
 
