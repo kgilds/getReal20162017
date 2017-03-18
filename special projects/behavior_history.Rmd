@@ -3,7 +3,7 @@ title: "Behavior History"
 author: "Kevin Gilds, MPA"
 date: "February 18, 2017"
 output: 
-        html_document
+        github_document
         
 ---
 
@@ -123,39 +123,114 @@ susp_his$council <-sub("Girl Scouts of Gulfcoast Florida Inc.",  "Gulfcoast Coun
 ```
 
 
+# Get Successful Percentage
+
 ```{r}
-nrow(susp_his)
+
+head(susp_his)
+
+total <-susp_his %>%
+    summarise(n=n())
+
+total
 
 no_susp <- susp_his %>%
-    filter(baseline ==0 & final == 0)
+    filter(baseline ==0 & final == 0)%>%
+    summarise(n= n())
 
-nrow(no_susp)
-
-head(no_susp)
-tail(no_susp)
-
-1304-1082
-
+no_susp
 
 decrease_susp <- susp_his %>%
-    filter(susp_diff < 0) %>%
-    count(Match)
-
+    filter(susp_diff < 0)%>%
+    summarise(n= n())
 
 decrease_susp
-nrow(decrease_susp)
 
-success <- (nrow(decrease_susp) +nrow(no_susp)) /1304
+success <- (no_susp + decrease_susp) / total *100
 
-increase_susp <- susp_his %>%
-    filter(susp_diff >0) %>%
-    count(Match)
+success
 
-increase_susp
+
+successs <- nrow(no_susp) + nrow(decrease_susp) /nrow(total)
+    
+#increase_susp <- susp_his %>%
+    #filter(susp_diff >0) %>%
+    #count(Match)
+
+#increase_susp
 
 #n_success <- nrow(increase_susp) +nrow(no_su) /1034
 
-success
+
+
+```
+
+# Plots
+
+```{r}
+
+
+susp_plot <- ggplot(susp_his,(aes(x =susp_diff, y =council)))
+susp_plot + geom_count()
+
+susp_plot_m <- ggplot(susp_his, (aes(x =susp_diff, y =Match)))
+susp_plot_m + geom_count()
+
+susp_plot_m <- ggplot(susp_his, (aes(x =susp_diff, y = Year_Id,)))
+susp_plot_m + geom_count()
+
+
+
+```
+
+
+# No Suspensions by Various Criteria
+
+```{r}
+
+no_susp_c <- susp_his %>%
+    filter(baseline ==0 & final == 0)%>%
+    count(council)
+
+no_susp_c
+
+
+
+no_susp_y <- susp_his %>%
+    filter(baseline ==0 & final == 0)%>%
+    count(Year_Id, council)
+
+no_susp_y
+
+
+
+no_susp_y <- susp_his %>%
+    filter(baseline ==0 & final == 0)%>%
+    count(Match, council)
+```
+
+# Decrease in Suspensions by various criteria
+
+```{r}
+decrease_susp_c <- susp_his %>%
+    filter(susp_diff < 0)%>%
+    count(council)
+
+decrease_susp_c
+
+decrease_susp_y <- susp_his %>%
+    filter(susp_diff < 0)%>%
+    count(Year_Id, council)
+
+decrease_susp_y
+
+
+decrease_susp_m <- susp_his %>%
+    filter(susp_diff < 0)%>%
+    count(Match, council)
+
+decrease_susp_m
+
 
 ```
 
