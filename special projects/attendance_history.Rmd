@@ -3,7 +3,7 @@ title: "Attendance_history"
 author: "Kevin Gilds, MPA"
 date: "February 18, 2017"
 output: 
-        html_document
+    github_document
         
 ---
 
