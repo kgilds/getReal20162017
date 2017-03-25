@@ -23,6 +23,7 @@ library(ggplot2)
 library(effsize)
 library(knitr)
 library(catspec)
+library(formattable)
 
 ```
 
@@ -63,7 +64,7 @@ suspenions_1415 <- suspenions_1415%>%
 ```
 
 
-```{r}
+```{r susp_his, echo=FALSE }
 names(suspensions_1516)
 names(suspenions_1415)
 
@@ -97,7 +98,7 @@ dim(susp_his)
 ```
 
 
-```{r council_name_fix_lang, echo=FALSE}
+```{r counci_name_susp, echo=FALSE}
 ## Change council names to be consistent wiht how they displayed with the surveys
 susp_his$council <-sub("Girl Scouts of the Gateway Council", "Gateway Council", fixed=TRUE, susp_his$council)
 
@@ -123,47 +124,26 @@ susp_his$council <-sub("Girl Scouts of Gulfcoast Florida Inc.",  "Gulfcoast Coun
 ```
 
 
-# Get Successful Percentage
+# Introduction
+
+Matching attendance data set from the past two membership years.
+
+
+
+* M2 = MY: 2014-2015
+
+* M3 = MY: 2015-2016
+
 
 ```{r}
+council_status <- with(susp_his,table(council, Year_Id))
 
-head(susp_his)
+council_status <- addmargins(council_status)
 
-total <-susp_his %>%
-    summarise(n=n())
-
-total
-
-no_susp <- susp_his %>%
-    filter(baseline ==0 & final == 0)%>%
-    summarise(n= n())
-
-no_susp
-
-decrease_susp <- susp_his %>%
-    filter(susp_diff < 0)%>%
-    summarise(n= n())
-
-decrease_susp
-
-success <- (no_susp + decrease_susp) / total *100
-
-success
-
-
-successs <- nrow(no_susp) + nrow(decrease_susp) /nrow(total)
-    
-#increase_susp <- susp_his %>%
-    #filter(susp_diff >0) %>%
-    #count(Match)
-
-#increase_susp
-
-#n_success <- nrow(increase_susp) +nrow(no_su) /1034
-
-
+kable(council_status)
 
 ```
+
 
 # Plots
 
@@ -176,7 +156,7 @@ susp_plot + geom_count()
 susp_plot_m <- ggplot(susp_his, (aes(x =susp_diff, y =Match)))
 susp_plot_m + geom_count()
 
-susp_plot_m <- ggplot(susp_his, (aes(x =susp_diff, y = Year_Id,)))
+susp_plot_m <- ggplot(susp_his, (aes(x =susp_diff, y = Year_Id)))
 susp_plot_m + geom_count()
 
 
@@ -184,15 +164,113 @@ susp_plot_m + geom_count()
 ```
 
 
-# No Suspensions by Various Criteria
+# Average Difference by Year
 
 ```{r}
+susp_avg_y <- susp_his %>%
+    filter(baseline != 0, final !=0) %>%
+    group_by(Year_Id)%>%
+    summarise(avg_diff =mean(susp_diff) )
+
+susp_avg_y
+```
+
+```{r}
+susp_avg_c <- susp_his %>%
+    filter(baseline != 0, final !=0) %>%
+    group_by(council, Year_Id)%>%
+    summarise(avg_diff =mean(susp_diff) )
+
+susp_avg_c
+```
+
+
+
+# Get Successful Percentage
+
+```{r percent, echo=FALSE}
+
+
+
+#susp_suc <- function(){
+     
+     #no_susp  <- filter(susp_his, baseline == 0, final ==0)
+     #dec_susp <- filter(susp_his, susp_diff < 0)
+     
+     #suc      <- rbind(no_susp, dec_susp)
+     #suc
+     
+#}
+
+
+
+    
+
+
+susp_suc_y <- function(x){
+     no_susp_y  <- filter(susp_his, Year_Id == x, baseline == 0, final ==0)
+     dec_susp_y <- filter(susp_his, Year_Id == x, susp_diff < 0)
+     suc_y      <- rbind(no_susp_y, dec_susp_y)
+     suc_y
+     
+    }
+
+
+
+
+m2 <- susp_suc_y("M2")
+
+m2 <- table(m2$council)
+
+m2 <- as.data.frame(m2)
+
+m2
+
+head(susp_his)
+
+m2_all <- susp_his %>%
+    filter(Year_Id == "M2")
+
+
+m2_all_tbl <- table(m2_all$council)
+
+m2_all_tbl <- as.data.frame(m2_all_tbl)
+
+m2_all_tbl
+
+m2 <- m2 %>%
+    rename(council = Var1)%>%
+    rename(success = Freq)
+
+m2_per <-cbind(m2_all_tbl, m2)
+
+m2_per <- m2_per%>%
+    mutate(percent = success /Freq)
+
+m2_per$percent <- percent(m2_per$percent)
+
+m2_per <- m2_per %>%
+    select(3,4,5)
+
+
+kable(m2_per)
+
+
+```
+
+
+
+
+# No Suspensions by Various Criteria
+
+```{r no_sup, echo=FALSE}
 
 no_susp_c <- susp_his %>%
     filter(baseline ==0 & final == 0)%>%
-    count(council)
+    count(council) 
 
-no_susp_c
+
+kable(no_susp_c)
 
 
 
@@ -200,36 +278,42 @@ no_susp_y <- susp_his %>%
     filter(baseline ==0 & final == 0)%>%
     count(Year_Id, council)
 
-no_susp_y
+kable(no_susp_y)
 
 
 
-no_susp_y <- susp_his %>%
+no_susp_m <- susp_his %>%
     filter(baseline ==0 & final == 0)%>%
     count(Match, council)
+
+kable(no_susp_m)
+
+table(no_susp_m)
+
+
 ```
 
 # Decrease in Suspensions by various criteria
 
-```{r}
+```{r decrease_susp, echo=FALSE}
 decrease_susp_c <- susp_his %>%
     filter(susp_diff < 0)%>%
     count(council)
 
-decrease_susp_c
+kable(decrease_susp_c)
 
 decrease_susp_y <- susp_his %>%
     filter(susp_diff < 0)%>%
     count(Year_Id, council)
 
-decrease_susp_y
+kable(decrease_susp_y)
 
 
 decrease_susp_m <- susp_his %>%
     filter(susp_diff < 0)%>%
     count(Match, council)
 
-decrease_susp_m
+kable(decrease_susp_m)
 
 
 ```
