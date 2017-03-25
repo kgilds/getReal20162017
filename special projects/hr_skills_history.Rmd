@@ -3,9 +3,9 @@ title: "matched_survey_history"
 author: "Kevin Gilds, MPA"
 date: "September 1, 2016"
 output:
-  pdf_document: default
   html_document: default
   github_document: default
+  pdf_document: default
 ---
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
