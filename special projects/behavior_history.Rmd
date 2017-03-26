@@ -192,17 +192,17 @@ susp_avg_c
 
 
 
-#susp_suc <- function(){
+susp_suc <- function(){
      
-     #no_susp  <- filter(susp_his, baseline == 0, final ==0)
-     #dec_susp <- filter(susp_his, susp_diff < 0)
+     no_susp  <- filter(susp_his, baseline == 0, final ==0)
+     dec_susp <- filter(susp_his, susp_diff < 0)
      
-     #suc      <- rbind(no_susp, dec_susp)
-     #suc
+     suc      <- rbind(no_susp, dec_susp)
      
-#}
+     
+}
 
-
+susp_suc()
 
     
 
@@ -218,6 +218,56 @@ susp_suc_y <- function(x){
 
 
 
+
+
+
+
+
+```
+
+# Multiple Years
+
+```{r}
+all <- susp_suc()
+
+all <- table(all$council)
+
+all <- as.data.frame(all)
+
+
+susp_his_c <- table(susp_his$council)
+
+susp_his_c <- as.data.frame(susp_his_c)
+
+susp_his_c
+
+all <- all %>%
+    rename(council = Var1)%>%
+    rename(success = Freq)
+
+all_per <-cbind(susp_his_c, all)
+
+all_per <- all_per%>%
+    mutate(percent = success /Freq)
+
+all_per$percent <- percent(all_per$percent)
+
+all_per <- all_per %>%
+    select(3,4,5)
+
+kable(all_per)
+
+
+
+```
+
+
+
+
+
+# Membership Year 2014-2015
+
+```{r}
 m2 <- susp_suc_y("M2")
 
 m2 <- table(m2$council)
@@ -252,13 +302,49 @@ m2_per$percent <- percent(m2_per$percent)
 m2_per <- m2_per %>%
     select(3,4,5)
 
-
 kable(m2_per)
-
 
 ```
 
+# Membership Year by 2015-2016
+```{r}
 
+m3 <- susp_suc_y("M3")
+
+m3 <- table(m3$council)
+
+m3 <- as.data.frame(m3)
+
+m3
+
+m3_all <- susp_his %>%
+    filter(Year_Id == "M3")
+
+
+m3_all_tbl <- table(m3_all$council)
+
+m3_all_tbl <- as.data.frame(m3_all_tbl)
+
+m3_all_tbl
+
+m3 <- m3 %>%
+    rename(council = Var1)%>%
+    rename(success = Freq)
+
+m3_per <-cbind(m3_all_tbl, m3)
+
+m3_per <- m3_per%>%
+    mutate(percent = success /Freq)
+
+m3_per$percent <- percent(m3_per$percent)
+
+m3_per <- m3_per %>%
+    select(3,4,5)
+
+kable(m3_per)
+
+
+```
 
 
 # No Suspensions by Various Criteria
