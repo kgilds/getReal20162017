@@ -65,8 +65,8 @@ suspenions_1415 <- suspenions_1415%>%
 
 
 ```{r susp_his, echo=FALSE }
-names(suspensions_1516)
-names(suspenions_1415)
+#names(suspensions_1516)
+#names(suspenions_1415)
 
 susp_his <- rbind(suspensions_1516, suspenions_1415)
 
@@ -135,7 +135,7 @@ Matching attendance data set from the past two membership years.
 * M3 = MY: 2015-2016
 
 
-```{r}
+```{r council_stauts, echo=FALSE}
 council_status <- with(susp_his,table(council, Year_Id))
 
 council_status <- addmargins(council_status)
@@ -147,7 +147,7 @@ kable(council_status)
 
 # Plots
 
-```{r}
+```{r plots, echo=FALSE}
 
 
 susp_plot <- ggplot(susp_his,(aes(x =susp_diff, y =council)))
@@ -166,7 +166,7 @@ susp_plot_m + geom_count()
 
 # Average Difference by Year
 
-```{r}
+```{r susp_avg_y, echo=FALSE}
 susp_avg_y <- susp_his %>%
     filter(baseline != 0, final !=0) %>%
     group_by(Year_Id)%>%
@@ -175,7 +175,7 @@ susp_avg_y <- susp_his %>%
 susp_avg_y
 ```
 
-```{r}
+```{r susp_avg, echo=FALSE}
 susp_avg_c <- susp_his %>%
     filter(baseline != 0, final !=0) %>%
     group_by(council, Year_Id)%>%
@@ -188,24 +188,32 @@ susp_avg_c
 
 # Get Successful Percentage
 
-```{r percent, echo=FALSE}
-
-
+```{r susp_suc, echo=FALSE}
 
 susp_suc <- function(){
      
      no_susp  <- filter(susp_his, baseline == 0, final ==0)
      dec_susp <- filter(susp_his, susp_diff < 0)
-     
      suc      <- rbind(no_susp, dec_susp)
      
      
 }
 
-susp_suc()
-
+no_sup <- susp_his %>%
+    filter(baseline == 0, final == 0)
     
 
+no_per <-nrow(no_sup)/nrow(susp_his)
+
+no_per <- percent(no_per)
+
+no_per
+
+```
+
+Most students over the course of the two years did not receive a suspension `r (no_per) `
+
+```{r percent, echo=FALSE}
 
 susp_suc_y <- function(x){
      no_susp_y  <- filter(susp_his, Year_Id == x, baseline == 0, final ==0)
@@ -227,7 +235,7 @@ susp_suc_y <- function(x){
 
 # Multiple Years
 
-```{r}
+```{r all, echo=FALSE}
 all <- susp_suc()
 
 all <- table(all$council)
@@ -267,14 +275,14 @@ kable(all_per)
 
 # Membership Year 2014-2015
 
-```{r}
+```{r m2, echo=FALSE}
 m2 <- susp_suc_y("M2")
 
 m2 <- table(m2$council)
 
 m2 <- as.data.frame(m2)
 
-m2
+
 
 head(susp_his)
 
@@ -307,7 +315,7 @@ kable(m2_per)
 ```
 
 # Membership Year by 2015-2016
-```{r}
+```{r m3, echo=FALSE}
 
 m3 <- susp_suc_y("M3")
 
