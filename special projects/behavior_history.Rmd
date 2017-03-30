@@ -196,8 +196,9 @@ susp_suc <- function(){
      dec_susp <- filter(susp_his, susp_diff < 0)
      suc      <- rbind(no_susp, dec_susp)
      
-     
 }
+
+susp_suc
 
 no_sup <- susp_his %>%
     filter(baseline == 0, final == 0)
@@ -209,9 +210,20 @@ no_per <- percent(no_per)
 
 no_per
 
+decrease_susp <- susp_his %>%
+    filter(susp_diff < 0)
+
+dec_per <- nrow(decrease_susp) / nrow(susp_his)
+
+dec_per <- percent(dec_per)
+
+tot_suc <- dec_per + no_per
+
+tot_suc
+
 ```
 
-Most students over the course of the two years did not receive a suspension `r (no_per) `
+Over the course of two years `r (tot_suc)` students  have had a successful outcome and `r (no_per) ` never received a suspension.
 
 ```{r percent, echo=FALSE}
 
