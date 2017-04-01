@@ -72,18 +72,18 @@ susp_his <- rbind(suspensions_1516, suspenions_1415)
 
 susp_unique<- susp_his [!(duplicated(susp_his$girlCode) | duplicated(susp_his$girlCode, fromLast = TRUE)), ]
 
-dim(susp_unique)
+#dim(susp_unique)
 
 susp_unique <- susp_unique %>%
     mutate("Match" = "No")
 
-head(susp_unique)
+#head(susp_unique)
 
 susp_dupes <-duplicated(susp_his$girlCode) | duplicated(susp_his$girlCode, fromLast=TRUE)
 
 susp_dupes <-susp_his[susp_dupes, ]
 
-dim(susp_dupes)
+#dim(susp_dupes)
 
 susp_dupes <- susp_dupes %>%
     mutate("Match" = "Yes")
@@ -91,7 +91,7 @@ susp_dupes <- susp_dupes %>%
 
 susp_his <- rbind(susp_unique, susp_dupes)
 
-dim(susp_his)
+#dim(susp_his)
 
 
     
@@ -140,9 +140,11 @@ council_status <- with(susp_his,table(council, Year_Id))
 
 council_status <- addmargins(council_status)
 
-kable(council_status)
+pander(council_status)
 
 ```
+
+The number of students in the dataset is `r nrow(susp_his)` and the number of matched students acorss the two years is `r nrow(susp_dupes)`. 
 
 
 # Plots
@@ -164,29 +166,9 @@ susp_plot_m + geom_count()
 ```
 
 
-# Average Difference by Year
-
-```{r susp_avg_y, echo=FALSE}
-susp_avg_y <- susp_his %>%
-    filter(baseline != 0, final !=0) %>%
-    group_by(Year_Id)%>%
-    summarise(avg_diff =mean(susp_diff) )
-
-susp_avg_y
-```
-
-```{r susp_avg, echo=FALSE}
-susp_avg_c <- susp_his %>%
-    filter(baseline != 0, final !=0) %>%
-    group_by(council, Year_Id)%>%
-    summarise(avg_diff =mean(susp_diff) )
-
-susp_avg_c
-```
 
 
-
-# Get Successful Percentage
+# Successful Outcome
 
 ```{r susp_suc, echo=FALSE}
 
@@ -198,7 +180,7 @@ susp_suc <- function(){
      
 }
 
-susp_suc
+#susp_suc
 
 no_sup <- susp_his %>%
     filter(baseline == 0, final == 0)
@@ -208,10 +190,14 @@ no_per <-nrow(no_sup)/nrow(susp_his)
 
 no_per <- percent(no_per)
 
-no_per
+#no_per
 
 decrease_susp <- susp_his %>%
     filter(susp_diff < 0)
+
+#nrow(decrease_susp)
+#nrow(no_sup)
+#nrow(susp_his)
 
 dec_per <- nrow(decrease_susp) / nrow(susp_his)
 
@@ -219,11 +205,11 @@ dec_per <- percent(dec_per)
 
 tot_suc <- dec_per + no_per
 
-tot_suc
+#tot_suc
 
 ```
 
-Over the course of two years `r (tot_suc)` students  have had a successful outcome and `r (no_per) ` never received a suspension.
+Over the course of two years `r (tot_suc)` students  have had a successful outcome and `r (no_per) ` never received a suspension. A successful outcome is never receiving a suspension and decreasing amount of suspensions. However, there is a segment of students  around 8 percent that on average increased there amount of suspesnions across the school year. 
 
 ```{r percent, echo=FALSE}
 
@@ -245,7 +231,8 @@ susp_suc_y <- function(x){
 
 ```
 
-# Multiple Years
+
+# Outcome over two years
 
 ```{r all, echo=FALSE}
 all <- susp_suc()
@@ -259,7 +246,7 @@ susp_his_c <- table(susp_his$council)
 
 susp_his_c <- as.data.frame(susp_his_c)
 
-susp_his_c
+#susp_his_c
 
 all <- all %>%
     rename(council = Var1)%>%
@@ -282,9 +269,6 @@ kable(all_per)
 ```
 
 
-
-
-
 # Membership Year 2014-2015
 
 ```{r m2, echo=FALSE}
@@ -296,7 +280,7 @@ m2 <- as.data.frame(m2)
 
 
 
-head(susp_his)
+#head(susp_his)
 
 m2_all <- susp_his %>%
     filter(Year_Id == "M2")
@@ -306,7 +290,7 @@ m2_all_tbl <- table(m2_all$council)
 
 m2_all_tbl <- as.data.frame(m2_all_tbl)
 
-m2_all_tbl
+#m2_all_tbl
 
 m2 <- m2 %>%
     rename(council = Var1)%>%
@@ -335,7 +319,7 @@ m3 <- table(m3$council)
 
 m3 <- as.data.frame(m3)
 
-m3
+#m3
 
 m3_all <- susp_his %>%
     filter(Year_Id == "M3")
@@ -345,7 +329,7 @@ m3_all_tbl <- table(m3_all$council)
 
 m3_all_tbl <- as.data.frame(m3_all_tbl)
 
-m3_all_tbl
+#m3_all_tbl
 
 m3 <- m3 %>%
     rename(council = Var1)%>%
@@ -366,10 +350,58 @@ kable(m3_per)
 
 ```
 
+# Average Difference by Year
+
+```{r susp_avg_y, echo=FALSE}
+susp_avg_y <- susp_his %>%
+    filter(baseline != 0, final !=0) %>%
+    group_by(Year_Id)%>%
+    summarise(avg_diff =mean(susp_diff) )
+
+kable(susp_avg_y)
+```
+
+
+```{r susp_avg, echo=FALSE}
+susp_avg_c <- susp_his %>%
+    filter(baseline != 0, final !=0) %>%
+    group_by(council, Year_Id)%>%
+    summarise(avg_diff =mean(susp_diff) )
+
+kable(susp_avg_c)
+```
+
+```{r susp_avg_cm, echo=FALSE, eval=FALSE}
+
+susp_avg_cm <- susp_his %>%
+    count(Match)
+
+kable(susp_avg_cm)
+
+```
+
+
+
+
+```{r susp_avg_m, echo=FALSE, eval=FALSE}
+susp_avg_m <- susp_his %>%
+    filter(baseline != 0, final !=0) %>%
+    group_by(Match)%>%
+    summarise(avg_diff =mean(susp_diff) )%>%
+    count(Match)
+
+kable(susp_avg_m)
+
+```
+
+
+
+
+
 
 # No Suspensions by Various Criteria
 
-```{r no_sup, echo=FALSE}
+```{r no_sup, echo=FALSE, eval=FALSE}
 
 no_susp_c <- susp_his %>%
     filter(baseline ==0 & final == 0)%>%
@@ -394,14 +426,14 @@ no_susp_m <- susp_his %>%
 
 kable(no_susp_m)
 
-table(no_susp_m)
+#table(no_susp_m)
 
 
 ```
 
 # Decrease in Suspensions by various criteria
 
-```{r decrease_susp, echo=FALSE}
+```{r decrease_susp, echo=FALSE, eval=FALSE}
 decrease_susp_c <- susp_his %>%
     filter(susp_diff < 0)%>%
     count(council)
@@ -423,4 +455,10 @@ kable(decrease_susp_m)
 
 
 ```
+
+
+
+
+
+
 
