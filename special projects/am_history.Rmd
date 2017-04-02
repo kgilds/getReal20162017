@@ -8,7 +8,7 @@ output: html_document
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 
-
+library(formattable)
 library(sqldf)
 setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
 
@@ -31,6 +31,29 @@ setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
 
 am <-dbReadTable(getReal_2016db,"am_history")
 
+dim(am)
+
+am_unique<- am [!(duplicated(am$girlCode) | duplicated(am$girlCode, fromLast = TRUE)), ] #find and subset uniquie students
+
+am_unique <- am_unique %>% 
+    mutate("Match" = "No") # Add in variable and response
+
+dim(am_unique)
+
+am_dupes <-duplicated(am$girlCode) | duplicated(am$girlCode, fromLast=TRUE) #find duplicated cases
+
+am_dupes <- am[am_dupes, ] # subset dupes
+
+dim(am_dupes)
+
+am_dupes <- am_dupes %>%
+    mutate("Match" = "Yes") #add variable and response
+
+
+am<- rbind(am_dupes, am_unique)
+
+
+dim(am)
 
 ```
 
@@ -75,6 +98,12 @@ council_status <- with(am,table(council, Year_Id))
 
 pander(council_status)
 
+
+match_status <- with(am,table(council, Match))
+
+pander(match_status)
+
+
 ```
 
 
@@ -82,6 +111,15 @@ pander(council_status)
 # Academic Mastery
 
 ### General Information 
+
+```{r an_diff_m, echo=FALSE}
+am_diff_m <- am %>%
+    group_by(Match) %>%
+    summarise(mean= mean(am.diff))
+
+kable(am_diff_m)
+
+```
 
 The mean difference between pre and post survey is `r pander(mean(am$am.diff))`
 
@@ -197,6 +235,21 @@ cohen.d(am$Pre, am$Post)
 
 ##Post Survey History
 
+```{r post_hr, echo=FALSE}
+match_am <- am %>%
+    group_by(Match) %>%
+    count(Post >=4.8) %>%
+    mutate(Percent = n/sum (n))
+    
+match_am$Percent <- percent(match_am$Percent)
+
+
+
+    
+kable(match_am)
+```
+
+
 ```{r}
 
 council_am <- am %>%
@@ -231,6 +284,16 @@ datatable(council_am_test)
 
 
 ### Post Survey AM Average Score
+
+
+
+```{r am_avg_m, echo=FALSE}
+am_avg_m <- am %>%
+    group_by(Match)%>%
+    summarise(Post =mean(Post))
+
+kable(am_avg_m)
+```
 
 ```{r}
 am_avg <- am %>%
