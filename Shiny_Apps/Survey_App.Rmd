@@ -1,0 +1,175 @@
+---
+title: "Girl Survey Outcome App"
+author: "Kevin Gilds, MPA, kevingilds@gmail.com"
+date: '`r Sys.Date()`'
+output: html_document
+runtime: shiny
+---
+
+### As of March 31, 2017
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+library(pander)
+library(psych)
+library(sqldf)
+
+
+outcomes <- readRDS("girl_survey_03312017.rds")
+
+
+
+
+
+
+
+```
+
+```{r echo=FALSE,message=FALSE, warning=FALSE}
+
+library(shiny)
+library(ggplot2)
+
+ui <- fluidPage(shinyUI(
+    fluidPage(
+        titlePanel("Life Skills"),
+        
+        # Create a new Row in the UI for selectInputs
+        fluidRow(
+            column(12, 
+                   selectInput("council", 
+                                "Select a Council:", 
+                               c(unique(as.character(outcomes$council))))
+            )
+        ),
+            # Create a new row for the table.
+            mainPanel(
+                tabsetPanel(type= "tabs",
+                tabPanel("Healhy Relationships", tableOutput("hr_tbl"), plotOutput("hr_plot"),
+                
+                plotOutput("hr_hist"),
+                
+                plotOutput("hr_box"), tableOutput("hr_desc")),
+                
+                tabPanel("Academic Engagagment", tableOutput("ae_tbl"), plotOutput("ae_plot"),
+                         plotOutput("ae_hist"), plotOutput("ae_box"), tableOutput("ae_desc")),
+                
+                tabPanel("Academic Mastery", tableOutput("am_tbl"), plotOutput("am_plot"),
+                          plotOutput("am_hist"), plotOutput("am_box"), tableOutput("am_desc")))
+                
+                   
+               
+            )
+            )
+         ))
+
+server <- function(input, output) {
+    
+        
+        
+        output$hr_plot <- renderPlot({
+        hr_tbl <- filter(outcomes, council == input$council)
+        ggplot(hr_tbl, aes(hr.avg >=4.45)) + geom_bar(fill="blue", width = .5) + labs(x="Achieving at High Level", title = "Pre: Healthy Relationships")
+    
+     })
+        
+       output$hr_hist <- renderPlot ({
+        hr_tbl <- filter(outcomes, council == input$council)
+        hr_hist <- ggplot(hr_tbl, aes(x=hr.avg)) 
+        hr_hist + geom_histogram(fill="blue") + labs(x=" All Outcome Scores", title = "Pre: Healthy Relationships")
+            
+    })
+     
+        output$hr_tbl <- renderTable({
+        hr_tbl <- filter(outcomes, council == input$council)
+        hr_tbl <- with(hr_tbl,table(hr.avg >=4.45))
+          
+    
+ 
+    })
+
+       output$hr_box <-renderPlot ({
+        hr_tbl <- filter(outcomes, council == input$council)
+        hr_box <- ggplot(hr_tbl, aes(x=factor(0), hr.avg))
+        hr_box + geom_boxplot(fill="blue") + labs(y=" All Outcome Scores", title = "Pre: Healthy Relationships")
+        
+        
+           })
+    
+    output$hr_desc <- renderTable ({
+        hr_tbl <- filter(outcomes, council == input$council)
+        hr_desc <- describe(hr_tbl$hr.avg)
+        
+    })
+    
+    ####Academic Engagement
+      output$ae_tbl <-renderTable ({
+          ae_tbl <- filter(outcomes, council == input$council)
+          ae_tbl <- with(ae_tbl,table(ae.avg >= 4.5))
+      })
+    
+    output$ae_plot <-renderPlot ({
+         ae_tbl <-filter(outcomes,council ==input$council)
+         ae_plot <-ggplot(ae_tbl, aes(ae.avg >= 4.5)) 
+         ae_plot + geom_bar(fill="blue", width = .5) + labs(x="Achieving at High Level", title = "Pre: Academic Engagement") 
+     
+         })
+    
+    output$ae_hist <- renderPlot ({
+        ae.tbl <-filter(outcomes, council ==input$council)
+        ae.hist <- ggplot(ae.tbl, aes(ae.avg)) 
+        ae.hist + geom_histogram(fill="blue") + labs(x="All Outcome Scores", title="Pre: Academic Engagement")
+    })
+     
+    output$ae_box <- renderPlot ({
+        ae_tbl <-filter(outcomes, council == input$council)
+        ae_box <-ggplot(ae_tbl, aes(x=factor(0), ae.avg))
+        ae_box + geom_boxplot(fill="blue") + labs(y="All Outcome Scores", title = "Pre: Academic Engagement")
+    })
+    
+    
+     output$ae_desc <- renderTable ({
+        ae_tbl <- filter(outcomes, council == input$council)
+        ae_desc <- describe(ae_tbl$ae.avg)
+        
+        })
+    
+    
+    ###Academic Mastery
+    
+     output$am_tbl <-renderTable ({
+          am_tbl <- filter(outcomes, council == input$council)
+          am_tbl <- with(am_tbl,table(am.avg >= 4.8))
+      })
+    
+    output$am_plot <-renderPlot ({
+         am_tbl <-filter(outcomes,council ==input$council)
+         am_plot <-ggplot(am_tbl, aes(am.avg >= 4.8)) 
+         am_plot + geom_bar(fill="blue", width = .5) + labs(x="Achieving at High Level", title = "Pre: Academic Mastery") 
+     
+         })
+    
+    output$am_hist <- renderPlot ({
+        am.tbl <-filter(outcomes, council ==input$council)
+        am.hist <- ggplot(am.tbl, aes(am.avg)) 
+        am.hist + geom_histogram(fill="blue") + labs(x="All Outcome Scores", title="Pre: Academic Mastery")
+    })
+     
+    output$am_box <- renderPlot ({
+        am_tbl <-filter(outcomes, council == input$council)
+        am_box <-ggplot(am_tbl, aes(x=factor(0), am.avg))
+        am_box + geom_boxplot(fill="blue") + labs(y="All Outcome Scores", title = "Pre: Academic Mastery")
+    })
+    
+    output$am_desc <- renderTable ({
+        am_tbl <- filter(outcomes, council == input$council)
+        am_desc <- describe(am_tbl$am.avg)
+        
+        })
+    
+    
+    }
+
+shinyApp(ui= ui, server = server)
+
+```
