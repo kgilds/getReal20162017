@@ -32,6 +32,30 @@ setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
 
 ae <-dbReadTable(getReal_2016db,"ae_history")
 
+dim(ae)
+
+ae_unique <- ae[!(duplicated(ae$girlCode) | duplicated(ae$girlCode, fromLast = TRUE)), ]
+
+dim(ae_unique)
+
+ae_unique <- ae_unique %>% 
+    mutate("Match" = "No") # Add in variable and response
+
+
+ae_dupes <-duplicated(ae$girlCode) | duplicated(ae$girlCode, fromLast=TRUE) #find duplicated cases
+
+ae_dupes <- ae[ae_dupes, ] # subset dupes
+
+dim(ae_dupes)
+
+ae_dupes <- ae_dupes %>%
+    mutate("Match" = "Yes") #add variable and response
+
+ae <- rbind(ae_dupes, ae_unique)
+
+
+
+
 
 ```
 
@@ -76,6 +100,12 @@ council_status <- with(ae,table(council, Year_Id))
 
 pander(council_status)
 
+match_status <- with(ae,table(council, Match))
+
+pander(match_status)
+
+
+
 ```
 
 
@@ -83,6 +113,19 @@ pander(council_status)
 # Academic Mastery
 
 ### General Information 
+
+```{r ae_diff, echo=FALSE}
+
+ae_diff_m <- ae %>%
+    group_by(Match) %>%
+    summarise(mean= mean(ae.diff))
+
+kable(ae_diff_m)
+
+```
+
+```
+
 
 The mean difference between pre and post survey is `r pander(mean(ae$ae.diff))`
 
@@ -190,6 +233,15 @@ cohen.d(ae$Pre, ae$Post)
 
 ##Post Survey History
 
+```{r post_ae, echo=FALSE}
+
+match_ae <- ae %>%
+    group_by(Match) %>%
+    count(Post >=4.5)
+
+kable(match_ae)
+```
+
 ```{r}
 
 council_ae <- ae %>%
@@ -224,6 +276,15 @@ datatable(council_ae_test)
 
 
 ### Post Survey ae Average Score
+
+```{r ae_avg_m}
+ae_avg_m <- ae %>%
+    group_by(Match)%>%
+    summarise(Post =mean(Post))
+
+kable(ae_avg_m)
+```
+
 
 ```{r}
 ae_avg <- ae %>%
