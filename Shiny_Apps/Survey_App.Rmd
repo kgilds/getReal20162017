@@ -13,6 +13,7 @@ library(dplyr)
 library(pander)
 library(psych)
 library(sqldf)
+library(formattable)
 
 
 outcomes <- readRDS("girl_survey_03312017.rds")
@@ -81,8 +82,12 @@ server <- function(input, output) {
     })
      
         output$hr_tbl <- renderTable({
-        hr_tbl <- filter(outcomes, council == input$council)
-        hr_tbl <- with(hr_tbl,table(hr.avg >=4.45))
+        hr_tbl <- filter(outcomes, council == input$council) 
+        hr_tbl <- count(hr_tbl,hr.avg >= 4.45)
+        hr_tbl <- mutate(hr_tbl, Percent = n /sum (n))
+        hr_tbl <- mutate(hr_tbl, Percent = round(Percent*100))
+        
+        #hr_tbl <- with(hr_tbl,table(hr.avg >=4.45))
           
     
  
