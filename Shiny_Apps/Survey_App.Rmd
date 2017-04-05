@@ -86,6 +86,7 @@ server <- function(input, output) {
         hr_tbl <- count(hr_tbl,hr.avg >= 4.45)
         hr_tbl <- mutate(hr_tbl, Percent = n /sum (n))
         hr_tbl <- mutate(hr_tbl, Percent = round(Percent*100))
+
         
         #hr_tbl <- with(hr_tbl,table(hr.avg >=4.45))
           
@@ -110,7 +111,10 @@ server <- function(input, output) {
     ####Academic Engagement
       output$ae_tbl <-renderTable ({
           ae_tbl <- filter(outcomes, council == input$council)
-          ae_tbl <- with(ae_tbl,table(ae.avg >= 4.5))
+          ae_tbl <- count(ae_tbl,ae.avg >= 4.5)
+          ae_tbl <- mutate(ae_tbl, Percent = n /sum (n))
+          ae_tbl <- mutate(ae_tbl, Percent = round(Percent*100))
+          #ae_tbl <- with(ae_tbl,table(ae.avg >= 4.5))
       })
     
     output$ae_plot <-renderPlot ({
@@ -144,7 +148,10 @@ server <- function(input, output) {
     
      output$am_tbl <-renderTable ({
           am_tbl <- filter(outcomes, council == input$council)
-          am_tbl <- with(am_tbl,table(am.avg >= 4.8))
+          am_tbl <- count(am_tbl,am.avg >= 4.8)
+          am_tbl <- mutate(am_tbl, Percent = n /sum (n))
+          am_tbl <- mutate(am_tbl, Percent = round(Percent*100))
+          #am_tbl <- with(am_tbl,table(am.avg >= 4.8))
       })
     
     output$am_plot <-renderPlot ({
