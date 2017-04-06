@@ -28,16 +28,41 @@ library(catspec)
 ```
 
 
-```{r read_databases}
+```{r read_databases, echo=FALSE}
 setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
 
 hr <-dbReadTable(getReal_2016db,"hr_history")
+
+dim(hr)
+
+hr_unique<- hr [!(duplicated(hr$girlCode) | duplicated(hr$girlCode, fromLast = TRUE)), ] #find and subset uniquie students
+
+hr_unique <- hr_unique %>% 
+    mutate("Match" = "No") # Add in variable and response
+
+dim(hr_unique)
+
+hr_dupes <-duplicated(hr$girlCode) | duplicated(hr$girlCode, fromLast=TRUE) #find duplicated cases
+
+hr_dupes <- hr[hr_dupes, ] # subset dupes
+
+dim(hr_dupes)
+
+hr_dupes <- hr_dupes %>%
+    mutate("Match" = "Yes") #add variable and response
+
+
+hr <- rbind(hr_dupes, hr_unique)
+
+
+
+
 
 
 ```
 
 
-```{r}
+```{r council_names, echo=FALSE}
 ## Change council names to be consistent wiht how they displayed with the surveys
 hr$council <-sub("Girl Scouts of the Gateway Council", "Gateway Council", fixed=TRUE, hr$council)
 
@@ -72,20 +97,41 @@ Matching survey data set from the past three membership years.
 
 # Data Entry Status 
 
-```{r}
+```{r data_entry, echo=FALSE}
 council_status <- with(hr,table(council, Year_Id))
 
 pander(council_status)
 
+match_status <- with(hr,table(council, Match))
+
+pander(match_status)
+
+
+
 ```
 
+
+
+
+
 ### General Information 
+
+```{r hr_diff_m, echo=FALSE}
+hr_diff_m <- hr %>%
+    group_by(Match) %>%
+    summarise(mean= mean(hr.diff))
+
+kable(hr_diff_m)
+
+```
+
+
 
 The mean difference between pre and post survey is `r pander(mean(hr$hr.diff))`
 
 
 
-```{r}
+```{r plots, echo=FALSE}
 healthy_change_p <- ggplot(hr,(aes(x=hr.diff, y=council)))
 healthy_change_p + geom_count() + geom_vline(xintercept = 0, col="red") + labs(x="Pre and Post Difference", y="Pre Outcome Score", title="Healthy Releationship Survey Results")
 
@@ -93,7 +139,7 @@ healthy_change_p + geom_count() + geom_vline(xintercept = 0, col="red") + labs(x
 ```
 
 
-```{r}
+```{r hr_diff_y, echo=FALSE}
 year_id_hr <- hr %>%
     group_by(Year_Id)
 
@@ -115,7 +161,7 @@ ggplot(year_id_hr, aes(y=hr.diff, x=Year_Id, group=2)) + geom_line() + geom_poin
 
 ### Average Difference between Pre and Post by Council
 
-```{r}
+```{r diff_council, echo=FALSE}
 council_hr <- hr %>%
     group_by(council)
 
@@ -130,7 +176,7 @@ pander(council_hr_c)
 
 ### Avergage Difference between Pre and Post by Membership Year
 
-```{r council_hr}
+```{r council_hr_c, echo=FALSE}
 council_hr <- hr %>%
     group_by(council, Year_Id)
 
@@ -144,7 +190,7 @@ datatable(council_hr_diff)
 
 
 
-```{r}
+```{r plot_density, echo=FALSE, eval=FALSE}
 
 
 
@@ -159,7 +205,7 @@ lines(hr_dent)
 ```
 
 QNorm test
-```{r}
+```{r qnorm, echo=FALSE}
 
 qqnorm(hr$hr.diff)
 qqline(hr$hr.diff, col = 2)
@@ -167,14 +213,14 @@ qqline(hr$hr.diff, col = 2)
 ```
 
 Shapiro Test
-```{r}
+```{r shapiro.test, echo=FALSE}
 shapiro.test(hr$hr.diff)
 ```
 
 
 T-Test
 
-```{r}
+```{r t_test, echo=FALSE}
 t.test(hr$Pre, hr$Post)
 
 
@@ -197,7 +243,16 @@ cohen.d(hr$Pre, hr$Post)
 
 ### Post Surveys
 
-```{r}
+```{r post_hr, echo=FALSE}
+match_hr <- hr %>%
+    group_by(Match) %>%
+    count(Post >=4.45)
+
+kable(match_hr)
+```
+
+
+```{r council_hr, echo=FALSE}
 
 council_hr <- hr %>%
     group_by(council)
@@ -217,7 +272,7 @@ pander(achieved_hr_post)
 
 
 #### Post survey by Year (by Counts)
-```{r}
+```{r post_council, echo=FALSE}
 
 
 council_hr_test <-council_hr %>%
@@ -231,6 +286,16 @@ datatable(council_hr_test)
 
 
 ### Post Survey HR Average Score
+
+```{r}
+hr_avg_m <- hr %>%
+    group_by(Match)%>%
+    summarise(Post =mean(Post))
+
+kable(hr_avg_m)
+```
+
+
 
 ```{r}
 hr_avg <- hr %>%
