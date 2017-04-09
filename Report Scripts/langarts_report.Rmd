@@ -1,0 +1,74 @@
+---
+title: "langarts_report"
+author: "Kevin Gilds, MPA"
+date: "April 9, 2017"
+output: html_document
+---
+
+
+```{r reading_import_libaries, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(pander)
+library(ggplot2)
+library(sqldf)
+library(psych)
+library(knitr)
+library(gridExtra)
+library(effsize)
+library(likert)
+library(getREAL)
+
+```
+
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+### Make connection with database
+getRealdb<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+q1_langarts <- dbReadTable(getRealdb,"Q1_langarts_1617")
+
+q2_langarts <- dbReadTable(getRealdb, "Q2_langarts_1617")
+
+dim(q1_langarts)
+
+dim(q2_langarts)
+
+```
+
+
+
+```{r}
+
+#students <- with(q1_reading, tapply(girl_code, reading_pts, mean))
+
+q1_lang_avg <- aggregate(lang_pts ~ girl_code + council, data = q1_langarts, mean)
+
+q1_lang_avg
+
+q2_lang_avg <- aggregate(lang_pts ~ girl_code + council, data = q2_langarts, mean)
+
+q2_lang_avg
+
+```
+
+```{r}
+lang_arts_comparisons <- inner_join(q2_lang_avg, q1_lang_avg, by="girl_code")
+
+lang_arts_comparisons <- lang_arts_comparisons %>%
+    rename(Q2_Avg = lang_pts.x)%>%
+    rename(Q1_Avg = lang_pts.y)%>%
+    rename(council = council.x)%>%
+    mutate(diff = Q2_Avg - Q1_Avg)%>%
+    mutate("Data_Source" = "Q2-Q1")
+
+dim(lang_arts_comparisons)
+
+head(lang_arts_comparisons)
+
+```
+
+
+
+
