@@ -24,6 +24,7 @@ library(ggplot2)
 library(effsize)
 library(knitr)
 library(catspec)
+library(formattable)
 
 ```
 
@@ -274,17 +275,39 @@ read_success_h <- function() {
 ```
 
 
+```{r}
+read_success_m <- read_history %>%
+    filter(final >= 2, Grade_Change >=0) %>%
+    group_by(council) %>%
+    count(council) %>%
+    mutate(Percent = n / sum (n))
+  
+read_success_m$Percent <- percent(read_success_m$Percent) 
+    
+kable(read_success_m)
+```
+
+
 ```{r read_success_df, echo=FALSE}
 read_success_df <- read_history %>%
-    filter(final >=2, Grade_Change >=0) %>%
-    count(Match) %>%
-    mutate(Percent = n / sum (n))
-
-read_success_df
+    filter(final >=2, Grade_Change >=0)
+    
 
 ```
 
 # Read Increase
+
+
+```{r}
+read_increase_m <- read_history %>%
+    group_by(council)%>%
+    filter(final >= 2, Grade_Change >0) %>%
+    count(Match) %>%
+    mutate(Percent = n/sum(n))
+
+kable(read_increase_m)
+```
+
 
 ```{r read_increase, echo=FALSE}
 read_increase <- read_history %>%
@@ -360,11 +383,12 @@ The percent of students who went from failing to passing is **`r fail_to_pass_p`
 
 
 
-```{r read_increase_tbl, echo=FALSE, eval=FALSE}
+```{r read_increase_tbl, echo=FALSE, eval=TRUE}
 
 read_increase_tbl <- read_history %>%
     group_by(council, Year_Id) %>%
-    count(final >=2, Grade_Change >=0)
+    count(final >=2, Grade_Change >=0) %>%
+    mutate(Percent = n /sum(n))
     
 pander(read_increase_tbl)
 ```
