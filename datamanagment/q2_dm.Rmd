@@ -1,9 +1,9 @@
 ---
 title: 'q2_dm '
 output:
-  html_notebook: default
-  html_document: default
   github_document: default
+  html_document: default
+  html_notebook: default
 ---
 
 ### Set working directory, library, and read raw data (needs updated data)
@@ -13,6 +13,7 @@ output:
 library(tidyverse) #load tidy package
 library(sqldf)
 library(pander)
+
 
 ```
 .
@@ -65,10 +66,11 @@ colnames (q2_data)[35] <-  "S_INTENS_READ"
 colnames (q2_data)[36] <- "S_Read_1"
 colnames (q2_data)[37] <- "S_READ_1_ADV"
 colnames (q2_data)[38] <- "S_READ_2"
-colnames (q2_data)[39] <-" S_READ_3"
-colnames (q2_data)[40] <- "S_READ_3_ADV"
-colnames (q2_data)[41] <- "S_free_reading1"
-colnames (q2_data)[42] <- "S_free_reading2"
+colnames (q2_data)[39] <-" S_READ_2_ADV"
+colnames (q2_data)[40] <- "S_Read_3"
+colnames (q2_data)[41] <- "S_READ_3_ADV"
+colnames (q2_data)[42] <- "S_free_reading1"
+colnames (q2_data)[43] <- "S_free_reading2"
 
 # change colnmaes lang arts section
 colnames (q2_data)[46] <- "Q_LANGARTS-1_ESOL"
@@ -136,8 +138,6 @@ q2_data <- q2_data %>%
     filter(Finished ==1)
 
 
-q2_data <- q2_data %>%
-    filter(council !="Girl Scouts of Citrus Council")
 
 head(q2_data)
 #pander(table(q2_data$girl_code)) #test for duplicate girl codes
@@ -273,7 +273,7 @@ head(q2_expelled)
 
 ```{r q2_reading}
 q2_reading <- q2_data %>%
-    gather("reading_course", "Grade",25:31, 34) %>% #gather reading columns and put them in row
+    gather("q_reading_course", "Grade",25:31, 34) %>% #gather reading columns and put them in row
     select(7,13:16, 81:82) #select reading columns
     
 
@@ -303,8 +303,8 @@ q2_freereading <- q2_data %>%
 q2_freereading <- q2_freereading[,c(1,2,3,4,5,7,6)] #re-arrange columns to make them align with q2 readind df
 
 q2_freereading <- q2_freereading %>%
-    rename("reading_course" = free_reading2) %>% #rename to match q2_reading
-    rename("Grade" = free_reading1) #rename to match q2_reading
+    rename("reading_course" = Q_free_reading2) %>% #rename to match q2_reading
+    rename("Grade" = Q_free_reading1) #rename to match q2_reading
     
 
 dim(q2_freereading)
@@ -336,16 +336,81 @@ q2_reading <- rbind(q2_reading, q2_freereading) #bind main q2_reading and free t
 
 dim(q2_reading)
 
-q2_reading
 
-which(is.na(q2_reading$Grade))
+
+
+```
+
+## Semester Reading Grades
+```{r}
+s2_reading <- q2_data %>%
+    gather("q_reading_course", "Grade",35:41) %>%  #gather reading columns and put them in row
+    select(7,13:16, 82:83) #select reading columns
+
+s2_reading <-na.omit(s2_reading) #get rid of cases with no data
+
+#dim(s2_reading)
+
+
+#dim(s2_reading)
+
 
 ```
 
 
+
+
+### semester free read
+```{r}
+
+q2_data$S_free_reading1
+
+dim(q2_data)
+
+
+
+s2_freereading <- q2_data %>%
+    select(7,13:16, 42:43) #select free enter
+
+names(s2_freereading)
+
+s2_freereading$S_free_reading1
+
+s2_freereading_1 <- s2_freereading %>%
+    rename("reading_course" = S_free_reading2) %>% #rename to match q2_reading
+    rename("Grade" = S_free_reading1) #rename to match q2_reading
+    
+s2_freereading_1
+
+s2_freereading_1 <- s2_freereading[grep("READ", s2_freereading_1$reading_course, ignore.case = TRUE),]
+
+s2_freereading_1
+
+#names(s2_freereading)
+    
+#s2_freereading <- s2_freereading[,c(1,2,3,4,5,7,6)] #re-arrange columns to make them align with q2 readind df
+
+```
+
+
+
+```{r}
+
+q2_reading_all <- rbind(s2_reading, q2_reading)
+
+
+
+```
+
+
+
+
+
+
+
 ```{r clean_up_reading}
 
-q2_reading <- q2_reading %>%
+q2_reading <- q2_reading_all %>%
     filter(Grade != "Did not mean to select this course")
 
 
@@ -373,6 +438,53 @@ q2_reading
 ```
 
 
+```{r eval=FALSE}
+dim(q2_reading)
+
+q2_reading$girl_code <- as.character(q2_reading$girl_code)
+
+distinct(q2_reading)
+
+q2_unique <- q2_reading[!(duplicated(q2_reading$girl_code) | duplicated(q2_reading$girl_code, fromLast = TRUE)),]
+
+
+
+q2_reading_quarter <- q2_unique %>%
+    filter(grepl("Q_",q_reading_course))
+
+head(q2_reading_quarter)
+dim(q2_reading_quarter)
+
+```
+
+```{r eval=FALSE}
+q2_reading_sem <- q2_reading %>%
+    filter(grepl("S_", q_reading_course))
+
+
+head(q2_reading_sem)
+
+dim(q2_reading_sem)
+```
+
+```{r eval=FALSE}
+extra_quarters <- anti_join(q2_reading_quarter, q2_reading_sem, by="girl_code")
+
+extra_quarters
+
+head(extra_quarters)
+
+dim(extra_quarters)
+```
+
+
+```{r eval=FALSE}
+q2_reading <- rbind(q2_reading_sem, extra_quarters)
+
+dim(q2_reading)
+
+
+```
 
 
 
@@ -380,11 +492,10 @@ q2_reading
 
 ```{r q2_langarts}
 q2_langarts <- q2_data %>% 
-    gather("langarts_course", "grade", 46:62,65:66) %>% #put lang arts classes in rows
-    select(10, 13:16, 70:71)
+    gather("langarts_course", "grade", 46:62,65:66, 68:83, 86:87) %>% #put lang arts classes in rows
+    select(10, 13:16, 52:53)
 
-
-names(q2_langarts)
+    
 
 q2_langarts <- na.omit(q2_langarts) #get rid of cases with no entry
 
@@ -395,21 +506,21 @@ q2_langarts
 q2_freelang <- q2_data %>%
     select(10, 13:16,63:64) #find free entry lang cases
 
-names(q2_freelang)
+q2_data$Q_free_lang1 #test to see if any data entry for this 
 
 q2_freelang <- q2_freelang[,c(1,2,3,4,5,7,6)] #rearrange columns to match regular lang courses 
 
 
 
-table(q2_freelang$free_lang1, q2_freelang$free_lang2) #check for data
+table(q2_freelang$Q_free_lang1, q2_freelang$Q_free_lang2) #check for data
 
 q2_freelang <- q2_freelang %>%
-    rename("langarts_course" = free_lang2) %>% #rename columns to match reg lang courses
-    rename("grade" = free_lang1)
+    rename("langarts_course" = Q_free_lang2) %>% #rename columns to match reg lang courses
+    rename("grade" = Q_free_lang1)
 
 
 
-names(q2_freelang)
+
 
 
 ```
@@ -425,6 +536,17 @@ names(q2_freelang_english)
 
 ```
 
+
+```{r}
+s2_freelang <- q2_data %>%
+    select(10, 13:16,84:85) #find free entry lang cases
+
+q2_data$S_free_lang1 #test to see if any data entry for this 
+
+```
+
+
+
 ```{r bind_q2_free}
 
 q2_langarts <- rbind(q2_langarts, q2_freelang_english)
@@ -434,6 +556,8 @@ q2_langarts
 
 
 ```
+
+
 
 
 ```{r filter_mistake}
@@ -462,11 +586,73 @@ for(i in q2_langarts$grade){
 
 q2_langarts <-cbind(q2_langarts, lang_pts)
 
+
+```
+
+
+```{r eval=FALSE}
+dim(q2_langarts)
+
+q2_lang_dupes <- duplicated(q2_langarts$girl_code)  | duplicated(q2_langarts$girl_code, fromLast = TRUE)
+
+
+
+q2_lang_dupes <- q2_langarts[q2_lang_dupes, ]
+
+dim(q2_lang_dupes)
+
+
+
+
+q2_lang_u <- q2_langarts[!(duplicated(q2_langarts$girl_code) | duplicated(q2_langarts$girl_code, fromLast = TRUE)),]
+
+dim(q2_lang_u)
+
+
+
+q2_lang_dupes
+
+
+#q2Dupes <- duplicated(q2_data$girl_code) | duplicated(q2_data$girl_code, fromLast=TRUE)
+
+
+#preDupes <-duplicated(pre$girlCode) | duplicated(pre$girlCode, fromLast=TRUE)
+
+#preDupes <-pre[preDupes, ]
+
+q2_lang_quarter <- q2_lang_u %>%
+    filter(grepl("Q_", langarts_course))
+
+
+dim(q2_lang_quarter)
+
+```
+
+
+```{r eval=FALSE}
+s2_lang <- q2_lang_u %>%
+    filter(grepl("S_", langarts_course))
+
+dim(s2_lang)
+```
+
+
+```{r eval=FALSE}
+lang_extra_quarters <- anti_join(q2_lang_quarter, s2_lang, by="girl_code")
+
+dim(lang_extra_quarters)
+```
+
+```{r eval=FALSE}
+q2_langarts <- rbind(lang_extra_quarters, s2_lang)
+
 q2_langarts
+
 ```
 
 
 
+### Joins
 ```{r eval=FALSE}
 q2_behavior_data <- full_join(q2_behavior, q2_attendance, by="girl_code")
 
