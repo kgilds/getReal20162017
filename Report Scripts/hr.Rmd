@@ -3,9 +3,8 @@ title: "Healthy Relationship Notebook"
 params:
   council: West Central Council
 output:
-  html_document: default
   github_document: default
-  
+  html_document: default
 ---
 
 ```{r global_options, include=FALSE}
