@@ -2,13 +2,14 @@
 title: "Status Report"
 author: "Kevin Gilds, MPA"
 date: '`r Sys.Date()`'
-output: 
-  pdf_document: 
+output:
+  pdf_document:
     latex_engine: xelatex
+  html_document: default
 ---
 
 
-### Data downloaded on: 03/04/2017
+### Data downloaded on: 03/31/2017
 
 
 
