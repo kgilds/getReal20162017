@@ -3,6 +3,7 @@ title: "reading_arts_history"
 author: "Kevin Gilds, MPA"
 date: "September 24, 2016"
 output:
+  github_document: default
   html_document: default
   html_notebook: default
 ---
@@ -35,7 +36,7 @@ read_1516 <- read_1516 %>%
     select(council, 1:4,6) %>%  #select variables of interest
     mutate("Year_Id" = "M3")  # add new variable and name M3
     
-read_1516 %>%
+read_1516 <- read_1516 %>%
     rename(baseline = basline)
 
 ```
@@ -160,10 +161,10 @@ read_1314_a <- read_1314_a %>%
 read_1516 <- read_1516[,c(2,1,6,4,3,5)] #reorder variables
 #df2[,c(1,3,2,4)]
 
-read_1516 <- read_1516 %>%
-    rename(baseline=basline)
+#read_1516 <- read_1516 %>%
+    #rename(baseline=basline)
 
-names(read_1516)
+#names(read_1516)
 
 ```
 
@@ -186,11 +187,11 @@ read_1415 <- read_1415[,c(1,2,6, 4, 3, 5)] #reorder 1415
 
 ```{r read_history, echo=FALSE}
 
-names(read_1314_a)
+#names(read_1314_a)
 
-names(read_1415)
+#names(read_1415)
 
-names(read_1516)
+#names(read_1516)
 
 read_1 <-rbind(read_1314_a, read_1415) #combine 1314 and 1415
 
@@ -200,13 +201,13 @@ read_history <- rbind(read_1, read_1516) #combined 1415_1314 & 1516
 
 ```
 
-```{r}
+```{r echo=FALSE}
 
-dim(read_history)
+#dim(read_history)
 
 read_history_unique<- read_history[!(duplicated(read_history$girlCode) | duplicated(read_history$girlCode, fromLast = TRUE)), ] #find and subset uniquie students
 
-dim(read_history_unique)
+#dim(read_history_unique)
 
 read_history_unique <- read_history_unique %>%
     mutate("Match" = "No")
@@ -219,14 +220,14 @@ read_history_dupes <- read_history[read_history_dupes, ] # subset dupes
 read_history_dupes <- read_history_dupes %>%
     mutate("Match" = "Yes")
 
-dim(read_history_dupes)
+
 
 
 
 
 ```
 
-```{r}
+```{r echo=FALSE}
 read_history <- rbind(read_history_dupes, read_history_unique)
 ```
 
@@ -275,16 +276,71 @@ read_success_h <- function() {
 ```
 
 
-```{r}
-read_success_m <- read_history %>%
-    filter(final >= 2, Grade_Change >=0) %>%
-    group_by(council) %>%
-    count(council) %>%
-    mutate(Percent = n / sum (n))
-  
-read_success_m$Percent <- percent(read_success_m$Percent) 
+
+```{r echo=FALSE, eval=FALSE}
+council_test <- table(read_history$council)
+
+council_test
+
+```
+
+```{r echo=FALSE}
+
+
+
+read_success_s <- read_history %>%
+    filter(final >=2, Grade_Change >=0)%>%
+    mutate("Success" = "TRUE")
+
+read_success_n <- read_history %>%
+    filter(final >=2, Grade_Change  < 0) %>%
+    mutate("Success" = "FALSE")
+
+#nrow(read_success_n)
+
+read_success_x <- read_history %>%
+    filter(final < 2) %>%
+    mutate("Success" = "FALSE")
+
+
+read_success_1 <- rbind(read_success_s, read_success_n)
+
+read_success_2 <- rbind(read_success_1, read_success_x)
+
+
+#read_success_2
+
+
+```
+
+
+
+```{r eval=FALSE, echo=FALSE}
+
+wcf <- read_history %>%
+    filter(council == "West Central Council") %>%
+    filter(final < 2, Grade_Change <=0) %>%
+    ungroup ()
     
-kable(read_success_m)
+wcf
+
+read_success <- read_success_2 %>%
+    group_by(council) %>%
+    count(Success) %>%
+    mutate(Percent = n /sum(n))
+    
+
+names(read_success)
+class(read_success)
+
+kable(read_success)
+
+council_c <- read_history %>%
+    count(council)
+
+
+council_c
+
 ```
 
 
@@ -295,10 +351,10 @@ read_success_df <- read_history %>%
 
 ```
 
-# Read Increase
 
 
-```{r}
+
+```{r eval=FALSE, echo=FALSE}
 read_increase_m <- read_history %>%
     group_by(council)%>%
     filter(final >= 2, Grade_Change >0) %>%
@@ -309,27 +365,24 @@ kable(read_increase_m)
 ```
 
 
-```{r read_increase, echo=FALSE}
+```{r read_increase, echo=FALSE, eval=TRUE}
 read_increase <- read_history %>%
     filter(final >=2, Grade_Change >0)
     
 
-head(read_increase)
 
-dim(read_increase)
 
 ```
 
-# Maintained at least  a C
 
 ```{r read_main, echo=FALSE}
 read_main <- read_history %>%
     filter(final >=2, Grade_Change ==0) #No grade change but maintained at least C grade
     
 
-head(read_main)
+#head(read_main)
 
-dim(read_main)
+#dim(read_main)
 
 ```
 
@@ -383,7 +436,7 @@ The percent of students who went from failing to passing is **`r fail_to_pass_p`
 
 
 
-```{r read_increase_tbl, echo=FALSE, eval=TRUE}
+```{r read_increase_tbl, echo=FALSE, eval=FALSE}
 
 read_increase_tbl <- read_history %>%
     group_by(council, Year_Id) %>%
