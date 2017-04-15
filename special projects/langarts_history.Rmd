@@ -2,7 +2,9 @@
 title: "language_arts_history"
 author: "Kevin Gilds, MPA"
 date: "September 24, 2016"
-output: html_document
+output: 
+     
+     github_document: default
 ---
 
 
@@ -22,6 +24,7 @@ library(ggplot2)
 library(effsize)
 library(knitr)
 library(catspec)
+library(formattable)
 
 ```
 
@@ -295,6 +298,61 @@ The percent of students who went from failing to passing is **`r fail_to_pass_p`
 *   The number of students who increased grade from failing to passing **`r nrow(fail_to_pass)`**
 
 *   The number of students who started with a failing grade but finihsed with a passing grade is **`r nrow (fail_baseline)`**
+
+
+
+### Achievement by Council
+
+```{r echo=FALSE}
+
+
+
+lang_success_s <- lang_history %>%
+    filter(final >=2, Grade_Change >=0)%>%
+    mutate("Success" = "TRUE")
+
+lang_success_n <- lang_history %>%
+    filter(final >=2, Grade_Change  < 0) %>%
+    mutate("Success" = "FALSE")
+
+#nrow(read_success_n)
+
+lang_success_x <- lang_history %>%
+    filter(final < 2) %>%
+    mutate("Success" = "FALSE")
+
+
+lang_success_1 <- rbind(lang_success_s, lang_success_n)
+
+lang_success_2 <- rbind(lang_success_1, lang_success_x)
+
+
+#read_success_2
+
+
+```
+
+
+
+```{r eval=TRUE, echo=FALSE}
+
+
+
+lang_success <- lang_success_2 %>%
+    group_by(council) %>%
+    count(Success) %>%
+    mutate(percent = n /sum(n))
+    
+
+lang_success$percent <- percent(lang_success$percent)
+
+
+
+
+kable(lang_success)
+
+
+```
 
 
 
