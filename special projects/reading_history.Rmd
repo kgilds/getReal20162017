@@ -284,64 +284,10 @@ council_test
 
 ```
 
-```{r echo=FALSE}
 
 
 
-read_success_s <- read_history %>%
-    filter(final >=2, Grade_Change >=0)%>%
-    mutate("Success" = "TRUE")
 
-read_success_n <- read_history %>%
-    filter(final >=2, Grade_Change  < 0) %>%
-    mutate("Success" = "FALSE")
-
-#nrow(read_success_n)
-
-read_success_x <- read_history %>%
-    filter(final < 2) %>%
-    mutate("Success" = "FALSE")
-
-
-read_success_1 <- rbind(read_success_s, read_success_n)
-
-read_success_2 <- rbind(read_success_1, read_success_x)
-
-
-#read_success_2
-
-
-```
-
-
-
-```{r eval=FALSE, echo=FALSE}
-
-wcf <- read_history %>%
-    filter(council == "West Central Council") %>%
-    filter(final < 2, Grade_Change <=0) %>%
-    ungroup ()
-    
-wcf
-
-read_success <- read_success_2 %>%
-    group_by(council) %>%
-    count(Success) %>%
-    mutate(Percent = n /sum(n))
-    
-
-names(read_success)
-class(read_success)
-
-kable(read_success)
-
-council_c <- read_history %>%
-    count(council)
-
-
-council_c
-
-```
 
 
 ```{r read_success_df, echo=FALSE}
@@ -434,6 +380,58 @@ The percent of students who went from failing to passing is **`r fail_to_pass_p`
 *   The number of students who started with a failing grade but finihsed with a passing grade is **`r nrow (fail_baseline)`**
 
 
+### Achievement by Council
+
+```{r echo=FALSE}
+
+
+
+read_success_s <- read_history %>%
+    filter(final >=2, Grade_Change >=0)%>%
+    mutate("Success" = "TRUE")
+
+read_success_n <- read_history %>%
+    filter(final >=2, Grade_Change  < 0) %>%
+    mutate("Success" = "FALSE")
+
+#nrow(read_success_n)
+
+read_success_x <- read_history %>%
+    filter(final < 2) %>%
+    mutate("Success" = "FALSE")
+
+
+read_success_1 <- rbind(read_success_s, read_success_n)
+
+read_success_2 <- rbind(read_success_1, read_success_x)
+
+
+#read_success_2
+
+
+```
+
+
+
+```{r eval=TRUE, echo=FALSE}
+
+
+
+read_success <- read_success_2 %>%
+    group_by(council) %>%
+    count(Success) %>%
+    mutate(percent = n /sum(n))
+    
+
+read_success$percent <- percent(read_success$percent)
+
+
+
+
+kable(read_success)
+
+
+```
 
 
 ```{r read_increase_tbl, echo=FALSE, eval=FALSE}
