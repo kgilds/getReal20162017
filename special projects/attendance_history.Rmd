@@ -23,7 +23,7 @@ library(ggplot2)
 library(effsize)
 library(knitr)
 library(catspec)
-
+library(formattable)
 ```
 
 ```{r read_1516, echo=FALSE}
@@ -187,7 +187,6 @@ perfect_att <- attendance_his%>%
     mutate("Success" = "TRUE")
 
 
-nrow(perfect_att)
 
 
 
@@ -208,8 +207,69 @@ increase_att <- attendance_his %>%
 
 attendance_his <- rbind(attendance_his1, increase_att)  #bind all together for analysis down the pipleline. 
 
+attendance_suc_1 <- nrow(reduce_att) + nrow(perfect_att)
+
+attendance_suc_1
+
+attendance_suc_2 <- (attendance_suc_1) / nrow(attendance_his)
+
+
+attendance_suc_2
+
+
+attendance_suc <- percent(attendance_suc_2)
+
+
 ```
 
+```{r eval=FALSE}
+attendance_succ <- attendance_his %>%
+    count(Success)%>%
+    mutate(percent = n /sum(n))
+
+attendance_succ
+
+attendance_succ$n[2]
+
+```
+
+
+
+Attendance Outcome Achievement
+
+The number of students in the dataset are `r nrow(attendance_his)` and the percent of students with a succesful outcome is `r (attendance_suc)`. A successful outcome means not missing a day of school and the student decreasing their number of absences from baseline grading period to the final grading period.
+
+
+```{r }
+attendance_succ <- attendance_his %>%
+    count(Success)%>%
+    mutate(percent = n /sum(n))
+
+attendance_succ$percent <- percent(attendance_succ$percent)
+
+kable(attendance_succ)
+
+
+```
+
+```{r}
+
+```
+
+
+
+```{r}
+attendance_succ_c <- attendance_his %>%
+    group_by(Council)%>%
+    count(Success)%>%
+    mutate(percent = n /sum(n))
+    
+    
+attendance_succ_c$percent <- percent(attendance_succ_c$percent)  
+
+kable(attendance_succ_c)
+    
+```
 
 
 
