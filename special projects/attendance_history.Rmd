@@ -183,7 +183,7 @@ head(attendance_his)
 
 ```{r}
 perfect_att <- attendance_his%>%
-    filter(final ==0 & baseline ==0)%>%
+    filter(final ==0 & baseline ==0)%>%  #filter out students with perfect attendance
     mutate("Success" = "TRUE")
 
 
@@ -193,22 +193,24 @@ nrow(perfect_att)
 
 
 reduce_att <-attendance_his %>%
-    filter(Att_diff2 < 0) %>%
-    mutate("Success" = "TRUE")
+    filter(Att_diff2 < 0) %>%  #filter out students who reduced their attenance
+    mutate("Success" = "TRUE")  #add success variable
 
 
 nrow(reduce_att)
 
-attendance_his1 <-rbind(perfect_att, reduce_att)
+attendance_his1 <-rbind(perfect_att, reduce_att)  
 
 increase_att <- attendance_his %>%
     filter(final !=0) %>%
-    filter(Att_diff2 >=0)%>%
-    mutate("Success" = "FALSE")
+    filter(Att_diff2 >=0)%>%    #find students who increased their attendance and did not decreased # number of times 
+    mutate("Success" = "FALSE")  #add success variable
 
-attendance_his <- rbind(attendance_his1, increase_att)
+attendance_his <- rbind(attendance_his1, increase_att)  #bind all together for analysis down the pipleline. 
 
 ```
+
+
 
 
 ```{r att_avg_allstudents}
