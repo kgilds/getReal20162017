@@ -3,9 +3,9 @@ title: "Healthy Relationship History"
 author: "Kevin Gilds, MPA"
 date: "September 1, 2016"
 output:
-  pdf_document: default
-  html_document: default
   github_document: default
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
@@ -130,7 +130,7 @@ kable(hr_diff_m)
 
 
 
-The mean difference between pre and post survey is `r pander(mean(hr$hr.diff))`
+The mean difference between pre and post survey is `r pander(mean(hr$hr.diff))`The table below shows that those in the program for multiple years did not perform better. 
 
 
 
@@ -257,7 +257,7 @@ pander(achieved_hr_post)
 
 ```
 
-### By Matched Status 
+### Achievement By Matched Status 
 
 ```{r post_hr, echo=FALSE}
 match_hr <- hr %>%
