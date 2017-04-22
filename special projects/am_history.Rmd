@@ -2,7 +2,8 @@
 title: "am_history"
 author: "Kevin Gilds, MPA"
 date: "September 24, 2016"
-output: html_document
+output: 
+    github_document: default
 ---
 
 
@@ -26,25 +27,25 @@ library(catspec)
 ```
 
 
-```{r read_databases}
+```{r read_databases, echo=FALSE}
 setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
 
 am <-dbReadTable(getReal_2016db,"am_history")
 
-dim(am)
+#dim(am)
 
 am_unique<- am [!(duplicated(am$girlCode) | duplicated(am$girlCode, fromLast = TRUE)), ] #find and subset uniquie students
 
 am_unique <- am_unique %>% 
     mutate("Match" = "No") # Add in variable and response
 
-dim(am_unique)
+#dim(am_unique)
 
 am_dupes <-duplicated(am$girlCode) | duplicated(am$girlCode, fromLast=TRUE) #find duplicated cases
 
 am_dupes <- am[am_dupes, ] # subset dupes
 
-dim(am_dupes)
+#dim(am_dupes)
 
 am_dupes <- am_dupes %>%
     mutate("Match" = "Yes") #add variable and response
@@ -53,12 +54,12 @@ am_dupes <- am_dupes %>%
 am<- rbind(am_dupes, am_unique)
 
 
-dim(am)
+#dim(am)
 
 ```
 
 
-```{r}
+```{r council_sub, echo=FALSE}
 ## Change council names to be consistent wiht how they displayed with the surveys
 am$council <-sub("Girl Scouts of the Gateway Council", "Gateway Council", fixed=TRUE, am$council)
 
@@ -93,15 +94,15 @@ Matching survey data set from the past three membership years.
 
 # Data Entry Status 
 
-```{r}
+```{r am_status, echo=FALSE}
 council_status <- with(am,table(council, Year_Id))
 
-pander(council_status)
+kable(council_status)
 
 
-match_status <- with(am,table(council, Match))
+#match_status <- with(am,table(council, Match))
 
-pander(match_status)
+#pander(match_status)
 
 
 ```
@@ -110,7 +111,10 @@ pander(match_status)
 
 # Academic Mastery
 
-### General Information 
+### Average Difference between Pre and Post Surveys 
+
+The mean difference between pre and post survey is `r pander(mean(am$am.diff))`
+
 
 ```{r an_diff_m, echo=FALSE}
 am_diff_m <- am %>%
@@ -121,19 +125,18 @@ kable(am_diff_m)
 
 ```
 
-The mean difference between pre and post survey is `r pander(mean(am$am.diff))`
 
 
 
-```{r}
+```{r am_plot, echo=FALSE}
 am_change_p <- ggplot(am,(aes(x=am.diff, y=council)))
-am_change_p + geom_count() + geom_vline(xintercept = 0, col="red") + labs(x="Pre and Post Difference", y="Pre Outcome Score", title="Healthy Releationship Survey Results")
+am_change_p + geom_count() + geom_vline(xintercept = 0, col="red") + labs(x="Difference Pre and Post", y="Council", title="Academic Mastery Survey Results")
 
 
 ```
 
 
-```{r}
+```{r am_year_ach, echo=FALSE}
 year_id_am <- am %>%
     group_by(Year_Id)
 
@@ -143,11 +146,11 @@ pander(year_id_am)
 
 year_id_am$Year_Id <- as.factor(year_id_am$Year_Id)
 
-summary(year_id_am)
+#summary(year_id_am)
 
 
 
-ggplot(year_id_am, aes(y=am.diff, x=Year_Id, group=2)) + geom_line() + geom_point()
+ggplot(year_id_am, aes(y=am.diff, x=Year_Id, group=2)) + geom_line() + geom_point() + labs (x="Year", y= "Difference Pre and Post", title="Acedemic Mastery: Difference Pre and Post" )
 
 ```
 
@@ -155,7 +158,7 @@ ggplot(year_id_am, aes(y=am.diff, x=Year_Id, group=2)) + geom_line() + geom_poin
 
 ### Average Difference between Pre and Post by Council
 
-```{r}
+```{r council_am_1, echo=FALSE}
 council_am <- am %>%
     group_by(council)
 
@@ -168,9 +171,9 @@ pander(council_am_c)
 ```
 
 
-### Avergage Difference between Pre and Post by Membership Year
 
-```{r council_am}
+
+```{r council_am_2, echo=FALSE, eval= FALSE}
 council_am <- am %>%
     group_by(council, Year_Id)
 
@@ -184,37 +187,31 @@ datatable(council_am_diff)
 
 
 
-```{r}
-
-
-
-
+```{r hist_diff, echo=FALSE, eval=FALSE}
 
 hist(am$am.diff, col="red", freq=FALSE)
 am_dent <- density(am$am.diff)
 lines(am_dent)
 
-
-
 ```
 
-QNorm test
-```{r}
+
+```{r am_qnorm, echo=FALSE, eval=FALSE}
 
 qqnorm(am$am.diff)
 qqline(am$am.diff, col = 2)
 
 ```
 
-Shapiro Test
-```{r}
+
+```{r shapiro_test, echo=FALSE, eval=FALSE}
 shapiro.test(am$am.diff)
 ```
 
 
-T-Test
 
-```{r}
+
+```{r am_tests, echo=FALSE, eval= FALSE}
 t.test(am$Pre, am$Post)
 
 
@@ -224,33 +221,9 @@ cohen.d(am$Pre, am$Post)
 
 
 
+##Post Survey Achievement
 
-
-
-
-
-
-
-
-
-##Post Survey History
-
-```{r post_hr, echo=FALSE}
-match_am <- am %>%
-    group_by(Match) %>%
-    count(Post >=4.8) %>%
-    mutate(Percent = n/sum (n))
-    
-match_am$Percent <- percent(match_am$Percent)
-
-
-
-    
-kable(match_am)
-```
-
-
-```{r}
+```{r council_am, echo=FALSE}
 
 council_am <- am %>%
     group_by(council)
@@ -261,16 +234,30 @@ achieved_am_post <-prop.table(achieved_am_post,1)
 
 achieved_am_post<-round(achieved_am_post*100,2)
 
+kable(achieved_am_post)
 
+```
 
-pander(achieved_am_post)
+# Achievment by Matched Status
 
+```{r post_hr, echo=FALSE}
+match_am <- am %>%
+    group_by(Match) %>%
+    count(Post >=4.8) %>%
+    mutate(Percent = n/sum (n))
+    
+match_am$Percent <- percent(match_am$Percent)
+
+    
+kable(match_am)
 ```
 
 
 
-#### Post survey by Year (by Counts)
-```{r}
+
+
+
+```{r am_datatable, echo=FALSE, eval=FALSE}
 
 
 council_am_test <-council_am %>%
@@ -283,7 +270,7 @@ datatable(council_am_test)
 
 
 
-### Post Survey AM Average Score
+### Post Survey Average Scores
 
 
 
@@ -295,7 +282,7 @@ am_avg_m <- am %>%
 kable(am_avg_m)
 ```
 
-```{r}
+```{r am_avg, echo=FALSE}
 am_avg <- am %>%
     group_by(Year_Id) %>%
     summarise(Post =mean(Post))
@@ -304,8 +291,9 @@ pander(am_avg)
 
 ```
 
-```{r}
-ggplot(am_avg, aes(y=Post, x=Year_Id, group=2)) + geom_line() + geom_point()
+```{r plot_avgs_am, echo=FALSE}
+ggplot(am_avg, aes(y=Post, x=Year_Id, group=2)) + geom_line() + geom_point() + labs(x="Membership Year", y="Post Average", title="Academic Mastery: Post Survey Averages by Year")
+
 
 
 ```
@@ -313,10 +301,10 @@ ggplot(am_avg, aes(y=Post, x=Year_Id, group=2)) + geom_line() + geom_point()
 
 ### Post Survey Average Score by Council
 
-```{r council_am_post_tbl}
+```{r council_am_post_tbl, echo=FALSE}
 
 
-head(council_am)
+#head(council_am)
 
 council_am_post <-summarise(council_am, Post =mean(Post))
 
@@ -325,8 +313,8 @@ pander (council_am_post)
 ```
 
 
-### Pre Surveys
-```{r}
+
+```{r echo=FALSE,eval=FALSE}
 achieved_am <- with(council_am, table(council, Pre >= 4.8))
 
 achieved_am
@@ -339,7 +327,7 @@ pander(achieved_am_p)
 ```
 
 
-```{r}
+```{r echo=FALSE, eval=FALSE}
 council_am_pre <-summarise(council_am, Pre =mean(Pre))
 
 
