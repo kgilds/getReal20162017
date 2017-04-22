@@ -289,7 +289,9 @@ datatable(council_hr_test)
 
 
 
-### Post Survey HR Average Score
+### Post Survey Average Score
+The trend is that students are on averaging scoring better on the post surveys over time from the first year it was measured. However, being in the program for multiple years does not seem to increase scores compared to other students. 
+
 
 ```{r hr_avg, echo=FALSE}
 hr_avg <- hr %>%
