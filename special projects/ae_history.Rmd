@@ -1,7 +1,7 @@
 ---
-title: "academic engagement"
+title: "academic engagement history"
 author: "Kevin Gilds, MPA"
-date: "September 29, 2016"
+date: '`r Sys.Date()`'
 output: 
      github_document: default
 ---
@@ -29,7 +29,7 @@ library(formattable)
 ```
 
 
-```{r read_databases, echo=FALSE}
+```{r read_databases_ae, echo=FALSE}
 setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
 
 ae <-dbReadTable(getReal_2016db,"ae_history")
@@ -62,7 +62,7 @@ ae <- rbind(ae_dupes, ae_unique)
 ```
 
 
-```{r council_names, echo=FALSE}
+```{r council_names_ae, echo=FALSE}
 ## Change council names to be consistent wiht how they displayed with the surveys
 ae$council <-sub("Girl Scouts of the Gateway Council", "Gateway Council", fixed=TRUE, ae$council)
 
@@ -98,31 +98,45 @@ ae$Year_Id <-sub("M3",  "15-16", fixed = TRUE, ae$Year_Id)
 ```
 
 
-```{r ae_succes, echo=FALSE}
+
+```{r succes, echo=FALSE}
 ae_1 <- ae %>%
     filter(Post >=4.5)%>%
     mutate("Success" = "TRUE")
 
+dim(ae_1)
+
 ae_2 <- ae %>%
-    filter(Post <4.5)%>%
+    filter(Post <4.5 & ae.diff >0)%>%
+    mutate("Success" = "TRUE")
+
+
+dim(ae_2)
+
+ae_3 <- ae %>%
+    filter(Post < 4.45 & ae.diff <=0)%>%
     mutate("Success" = "FALSE")
 
-ae <- rbind(ae_1, ae_2)
+dim(ae_3)
 
-head(ae)
+ae_1 <- rbind(ae_1, ae_2)
 
+ae <- rbind(ae_1, ae_3)
+
+#head(ae)
+
+#ae_f <- ae %>%
+    #filter(Success ==FALSE)
+
+#head(ae_f)
+#tail(ae_f)
 
 ```
 
+# Academic Engagement
 
 
 
-
-
-# Introduction
-
-
-# Data Entry Status 
 
 ```{r ae_data, echo=FALSE, eval=FALSE}
 council_status <- with(ae,table(council, Year_Id))
@@ -139,6 +153,64 @@ kable(council_status)
 
 
 ```
+
+##Post Survey Achievment
+
+```{r ae_suc, echo=FALSE}
+ae_suc <- ae %>%
+    count(Success)%>%
+    mutate(percent = n/sum(n))
+
+ae_suc$percent <- percent(ae_suc$percent)
+
+kable(ae_suc)
+
+```
+
+
+
+
+### By Council in Percent
+
+```{r council_aepost, echo=FALSE}
+
+council_ae <- ae %>%
+    group_by(council) %>%
+    count(Success) %>%
+    mutate(percent = n / sum(n))
+
+
+council_ae$percent <- percent(council_ae$percent)
+
+council_ae <- council_ae %>%
+    filter(Success == TRUE)
+
+kable(council_ae)
+
+
+```
+
+
+
+
+### Achievement by Matched Status
+
+```{r post_ae, echo=FALSE}
+
+match_ae <- ae %>%
+    group_by(Match) %>%
+    count(Post >=4.5)%>%
+    mutate(percent = n /sum(n))
+
+match_ae$percent <- percent(match_ae$percent)
+
+
+kable(match_ae)
+```
+
+
+
+
 
 
 
@@ -237,58 +309,19 @@ qqline(ae$ae.diff, col = 2)
 ```
 
 
-```{r shapiro_test, echo=FALSE, eval= FALSE}
+```{r shapiro_test_ae, echo=FALSE, eval= FALSE}
 shapiro.test(ae$ae.diff)
 ```
 
 
 
 
-```{r t_test, echo=FALSE, eval=FALSE}
+```{r t_test_ae, echo=FALSE, eval=FALSE}
 t.test(ae$Pre, ae$Post)
 
 
 
 cohen.d(ae$Pre, ae$Post)
-```
-
-
-
-
-##Post Survey Achievment
-
-### By Council in Percent
-
-```{r council_post, echo=FALSE}
-
-council_ae <- ae %>%
-    group_by(council)
-
-achieved_ae_post <- with(council_ae, table(council, Post >= 4.5))
-
-achieved_ae_post <-prop.table(achieved_ae_post,1)
-
-achieved_ae_post<-round(achieved_ae_post*100,2)
-
-
-
-kable(achieved_ae_post)
-
-```
-
-### Achievement by Matched Status
-
-```{r post_ae, echo=FALSE}
-
-match_ae <- ae %>%
-    group_by(Match) %>%
-    count(Post >=4.5)%>%
-    mutate(percent = n /sum(n))
-
-match_ae$percent <- percent(match_ae$percent)
-
-
-kable(match_ae)
 ```
 
 
@@ -343,11 +376,11 @@ ggplot(ae_avg, aes(y=Post, x=Year_Id, group=2)) + geom_line() + geom_point() + l
 ```{r council_ae_post_tbl, echo=FALSE}
 
 
-#head(council_ae)
+council_avg <- ae %>%
+    group_by(council)%>%
+    summarise(Post =mean(Post))
 
-council_ae_post <-summarise(council_ae, Post =mean(Post))
-
-pander (council_ae_post)
+kable(council_avg)
 
 ```
 
