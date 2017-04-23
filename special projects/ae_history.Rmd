@@ -99,7 +99,7 @@ ae$Year_Id <-sub("M3",  "15-16", fixed = TRUE, ae$Year_Id)
 
 
 
-```{r succes, echo=FALSE}
+```{r succes_ae, echo=FALSE}
 ae_1 <- ae %>%
     filter(Post >=4.5)%>%
     mutate("Success" = "TRUE")
@@ -199,7 +199,7 @@ kable(council_ae)
 
 match_ae <- ae %>%
     group_by(Match) %>%
-    count(Post >=4.5)%>%
+    count(Success)%>%
     mutate(percent = n /sum(n))
 
 match_ae$percent <- percent(match_ae$percent)
