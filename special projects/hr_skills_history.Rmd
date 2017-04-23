@@ -95,12 +95,12 @@ hr$Year_Id <-sub("M3",  "15-16", fixed = TRUE, hr$Year_Id)
 
 ```
 
-```{r succes, echo=FALSE}
+```{r succes_hr, echo=FALSE}
 hr_1 <- hr %>%
     filter(Post >=4.45)%>%
     mutate("Success" = "TRUE")
 
-dim(hr_1)
+#dim(hr_1)
 
 hr_2 <- hr %>%
     filter(Post <4.45 & hr.diff >0)%>%
@@ -108,19 +108,19 @@ hr_2 <- hr %>%
 
 
 
-dim(hr_2)
+#dim(hr_2)
 
 hr_3 <- hr %>%
     filter(Post < 4.45 & hr.diff <=0)%>%
     mutate("Success" = "FALSE")
 
-dim(hr_3)
+#dim(hr_3)
 
 hr_1 <- rbind(hr_1, hr_2)
 
 hr <- rbind(hr_1, hr_3)
 
-head(hr)
+#head(hr)
 
 #hr_f <- hr %>%
     #filter(Success ==FALSE)
@@ -184,7 +184,7 @@ kable(council_hr)
 ```{r post_hr_1, echo=FALSE}
 match_hr <- hr %>%
     group_by(Match) %>%
-    count(Post >=4.45) %>%
+    count(Success) %>%
     mutate(percent = n /sum(n))
 
 match_hr$percent <- percent(match_hr$percent)
