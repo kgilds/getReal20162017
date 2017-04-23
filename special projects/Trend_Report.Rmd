@@ -1,0 +1,99 @@
+---
+title: "Get REAL! Trend Report"
+author: "Kevin Gilds, MPA"
+date: "April 23, 2017"
+output:
+  github_document: default
+  html_document: default
+---
+
+```{r data, echo=FALSE, message=FALSE}
+
+library(sqldf)
+library(knitr)
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+
+hr <-dbReadTable(getReal_2016db,"hr_history")
+
+```
+
+
+
+# Executive Summary
+
+
+
+
+## Life Skills
+
+Current Objective --70% of participating girls will demonstrate an increased understanding of pertinent life skills as demonstrated by a pre and post assessment.
+
+The surveys administered to the students measures the following life skills, healthy relationships, academic engagement, and academic mastery.
+
+•	Healthy Relationships--Measures relationship skills with peers and adults.
+
+•	Academic Engagement--Measures specific behaviors related to school success.
+
+•	Academic Mastery--Measures attitude toward education.
+
+The questions and the scoring methodology of the girl survey were developed and tested by the Girl Scout Research Institute. Girls answer multiple questions to obtain an outcome score for each life skill domain. Responses to survey questions are assigned numbers/points and outcome scores are calculated by averaging responses to survey questions for each category. The points for each outcome set are averaged to obtain an outcome score. Outcome cutpoints are determined by the number of questions in the outcome set and response options. Outcomes scores range from 0-6. Below is a breakdown of the cut-points by the outcomes measured. Outcome cut-points are used to determine high achievement. Below is a breakdown of the cutpoints by the outcomes measured.
+
+### Data Entry Status for Life Skills
+
+
+```{r council, echo=FALSE}
+## Change council names to be consistent wiht how they displayed with the surveys
+hr$council <-sub("Girl Scouts of the Gateway Council", "Gateway Council", fixed=TRUE, hr$council)
+
+hr$council <-sub("Girl Scouts of Citrus Council", "Citrus Council", fixed=TRUE, hr$council)
+
+hr$council <-sub("Girl Scouts of Southeast Florida", "Southeast Council", fixed=TRUE, hr$council)
+
+hr$council <-sub("Southeast Council, Inc", "Southeast Council", fixed=TRUE, hr$council)
+
+hr$council <-sub("Southeast Council.", "Southeast Council", fixed=TRUE, hr$council)
+
+hr$council <-sub("Girl Scout Council of Tropical Florida", "Tropical Council", fixed = TRUE, hr$council)
+
+hr$council <-sub("Girl Scouts of West Central Florida", "West Central Council", fixed = TRUE, hr$council)
+
+hr$council <-sub("Girl Scout Council of the Panhandle", "Panhandle Council", fixed = TRUE, hr$council)
+
+hr$council <-sub("Girl Scouts of Gulfcoast Florida Inc.",  "Gulfcoast Council", fixed = TRUE, hr$council)
+
+```
+
+
+
+
+```{r data_entry, echo=FALSE}
+council_status <- with(hr,table(council, Year_Id))
+
+council_status <- addmargins(council_status)
+
+
+kable(council_status)
+
+#match_status <- with(hr,table(council, Match))
+
+#pander(match_status)
+
+```
+
+
+```{r child="hr_skills_history.Rmd"}
+
+```
+
+
+```{r child="ae_history.Rmd"}
+
+```
+
+```{r child="am_history.Rmd"}
+
+```
+
