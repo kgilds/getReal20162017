@@ -29,7 +29,7 @@ library(formattable)
 ```
 
 
-```{r read_databases, echo=FALSE}
+```{r read_databases_hr, echo=FALSE}
 setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
 
 hr <-dbReadTable(getReal_2016db,"hr_history")
@@ -63,7 +63,7 @@ hr <- rbind(hr_dupes, hr_unique)
 ```
 
 
-```{r council_names, echo=FALSE}
+```{r council_names_hr, echo=FALSE}
 ## Change council names to be consistent wiht how they displayed with the surveys
 hr$council <-sub("Girl Scouts of the Gateway Council", "Gateway Council", fixed=TRUE, hr$council)
 
@@ -100,14 +100,33 @@ hr_1 <- hr %>%
     filter(Post >=4.45)%>%
     mutate("Success" = "TRUE")
 
+dim(hr_1)
+
 hr_2 <- hr %>%
-    filter(Post <4.45)%>%
+    filter(Post <4.45 & hr.diff >0)%>%
+    mutate("Success" = "TRUE")
+
+
+
+dim(hr_2)
+
+hr_3 <- hr %>%
+    filter(Post < 4.45 & hr.diff <=0)%>%
     mutate("Success" = "FALSE")
 
-hr <- rbind(hr_1, hr_2)
+dim(hr_3)
+
+hr_1 <- rbind(hr_1, hr_2)
+
+hr <- rbind(hr_1, hr_3)
 
 head(hr)
 
+#hr_f <- hr %>%
+    #filter(Success ==FALSE)
+
+#head(hr_f)
+#tail(hr_f)
 
 ```
 
@@ -116,26 +135,64 @@ head(hr)
 # Healthy Relationships
 
 
+## Post Survey Success
 
 
-```{r data_entry, echo=FALSE, eval=FALSE}
-council_status <- with(hr,table(council, Year_Id))
+```{r hr_suc, echo=FALSE}
+hr_suc <- hr %>%
+    count(Success)%>%
+    mutate(percent = n/sum(n))
 
-council_status <- addmargins(council_status)
+hr_suc$percent <- percent(hr_suc$percent)
 
-
-pander(council_status)
-
-#match_status <- with(hr,table(council, Match))
-
-#pander(match_status)
-
-
+kable(hr_suc)
 
 ```
 
 
+### Achievement by Council
 
+```{r council_hr, echo=FALSE}
+
+council_hr <- hr %>%
+    group_by(council) %>%
+    count(Success) %>%
+    mutate(percent = n / sum(n))
+
+
+council_hr$percent <- percent(council_hr$percent)
+
+council_hr <- council_hr %>%
+    filter(Success == TRUE)
+
+kable(council_hr)
+
+#achieved_hr_post <- with(council_hr, table(council, Post >= 4.45))
+
+#achieved_hr_post <-prop.table(achieved_hr_post,1)
+
+#achieved_hr_post<-round(achieved_hr_post*100,2)
+
+
+
+#pander(achieved_hr_post)
+
+```
+
+### Achievement by Matched Status 
+
+```{r post_hr_1, echo=FALSE}
+match_hr <- hr %>%
+    group_by(Match) %>%
+    count(Post >=4.45) %>%
+    mutate(percent = n /sum(n))
+
+match_hr$percent <- percent(match_hr$percent)
+
+
+
+kable(match_hr)
+```
 
 
 ### Average Difference between Pre and Post Surveys
@@ -237,13 +294,13 @@ qqline(hr$hr.diff, col = 2)
 ```
 
 
-```{r shapiro.test, echo=FALSE, eval=FALSE}
+```{r shapiro.test_hr, echo=FALSE, eval=FALSE}
 shapiro.test(hr$hr.diff)
 ```
 
 
 
-```{r t_test, echo=FALSE, eval=FALSE}
+```{r t_test_hr, echo=FALSE, eval=FALSE}
 t.test(hr$Pre, hr$Post)
 
 
@@ -259,51 +316,6 @@ cohen.d(hr$Pre, hr$Post)
 
 
 
-## Post Survey Achievement
-
-### By Council in Percent
-
-```{r council_hr, echo=FALSE}
-
-council_hr <- hr %>%
-    group_by(council) %>%
-    count(Success) %>%
-    mutate(percent = n / sum(n))
-
-
-council_hr$percent <- percent(council_hr$percent)
-
-council_hr <- council_hr %>%
-    filter(Success == TRUE)
-
-kable(council_hr)
-
-#achieved_hr_post <- with(council_hr, table(council, Post >= 4.45))
-
-#achieved_hr_post <-prop.table(achieved_hr_post,1)
-
-#achieved_hr_post<-round(achieved_hr_post*100,2)
-
-
-
-#pander(achieved_hr_post)
-
-```
-
-### Achievement By Matched Status 
-
-```{r post_hr, echo=FALSE}
-match_hr <- hr %>%
-    group_by(Match) %>%
-    count(Post >=4.45) %>%
-    mutate(percent = n /sum(n))
-
-match_hr$percent <- percent(match_hr$percent)
-
-
-
-kable(match_hr)
-```
 
 
 
