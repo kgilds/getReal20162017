@@ -104,7 +104,7 @@ ae_1 <- ae %>%
     filter(Post >=4.5)%>%
     mutate("Success" = "TRUE")
 
-dim(ae_1)
+#dim(ae_1)
 
 ae_2 <- ae %>%
     filter(Post <4.5 & ae.diff >0)%>%
@@ -117,7 +117,7 @@ ae_3 <- ae %>%
     filter(Post < 4.45 & ae.diff <=0)%>%
     mutate("Success" = "FALSE")
 
-dim(ae_3)
+#dim(ae_3)
 
 ae_1 <- rbind(ae_1, ae_2)
 
@@ -170,7 +170,7 @@ kable(ae_suc)
 
 
 
-### By Council in Percent
+### Achievement by Council
 
 ```{r council_aepost, echo=FALSE}
 
@@ -214,7 +214,7 @@ kable(match_ae)
 
 
 
-### Average Difference between Pre and Post Surveys
+## Average Difference between Pre and Post Surveys
 
 The mean difference between pre and post survey is `r pander(mean(ae$ae.diff))`. The table below shows that those in the program for multiple years did not perform better. 
 
@@ -241,7 +241,7 @@ ae_change_p + geom_count() + geom_vline(xintercept = 0, col="red") + labs(x="Cou
 
 ```
 
-### Average Differenc by Year 
+### Average Difference by Year 
 ```{r year_id, echo=FALSE}
 year_id_ae <- ae %>%
     group_by(Year_Id)
@@ -341,7 +341,7 @@ datatable(council_ae_test)
 
 
 
-### Post Survey Average Score
+## Post Survey Average Score
 
 The trend is that students are on averaging scoring better on the post surveys over time from the first year it was measured. However, being in the program for multiple years does not seem to increase scores compared to other students. 
 
