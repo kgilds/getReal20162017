@@ -81,6 +81,21 @@ am$council <-sub("Girl Scouts of Gulfcoast Florida Inc.",  "Gulfcoast Council", 
 
 ```
 
+
+
+```{r}
+am$Year_Id <-sub("M1",  "13-14", fixed = TRUE, am$Year_Id)
+
+am$Year_Id <-sub("M2",  "14-15", fixed = TRUE, am$Year_Id)
+
+am$Year_Id <-sub("M3",  "15-16", fixed = TRUE, am$Year_Id)
+
+
+
+```
+
+
+
 # Introduction
 
 Matching survey data set from the past three membership years.
