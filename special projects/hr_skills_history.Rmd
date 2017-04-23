@@ -85,21 +85,44 @@ hr$council <-sub("Girl Scouts of Gulfcoast Florida Inc.",  "Gulfcoast Council", 
 
 ```
 
-# Introduction
+```{r update_year_hr, echo=FALSE}
+hr$Year_Id <-sub("M1",  "13-14", fixed = TRUE, hr$Year_Id)
 
-Matching survey data set from the past three membership years.
+hr$Year_Id <-sub("M2",  "14-15", fixed = TRUE, hr$Year_Id)
 
-* M1 = MY: 2013-2014
-
-* M2 = MY: 2014-2015
-
-* M3 = MY: 2015-2016
+hr$Year_Id <-sub("M3",  "15-16", fixed = TRUE, hr$Year_Id)
 
 
-# Data Entry Status 
+```
 
-```{r data_entry, echo=FALSE}
+```{r succes, echo=FALSE}
+hr_1 <- hr %>%
+    filter(Post >=4.45)%>%
+    mutate("Success" = "TRUE")
+
+hr_2 <- hr %>%
+    filter(Post <4.45)%>%
+    mutate("Success" = "FALSE")
+
+hr <- rbind(hr_1, hr_2)
+
+head(hr)
+
+
+```
+
+
+
+# Healthy Relationships
+
+
+
+
+```{r data_entry, echo=FALSE, eval=FALSE}
 council_status <- with(hr,table(council, Year_Id))
+
+council_status <- addmargins(council_status)
+
 
 pander(council_status)
 
@@ -117,9 +140,11 @@ pander(council_status)
 
 ### Average Difference between Pre and Post Surveys
 
+The mean difference between pre and post survey is `r pander(mean(hr$hr.diff))`. The table below shows that those in the program for multiple years did not perform better. 
 
 
-```{r hr_diff_m, echo=FALSE, eval=FALSE}
+
+```{r hr_diff_m, echo=FALSE}
 hr_diff_m <- hr %>%
     group_by(Match) %>%
     summarise(mean= mean(hr.diff)) 
@@ -129,8 +154,6 @@ kable(hr_diff_m)
 ```
 
 
-
-The mean difference between pre and post survey is `r pander(mean(hr$hr.diff))`The table below shows that those in the program for multiple years did not perform better. 
 
 
 
@@ -243,17 +266,27 @@ cohen.d(hr$Pre, hr$Post)
 ```{r council_hr, echo=FALSE}
 
 council_hr <- hr %>%
-    group_by(council)
-
-achieved_hr_post <- with(council_hr, table(council, Post >= 4.45))
-
-achieved_hr_post <-prop.table(achieved_hr_post,1)
-
-achieved_hr_post<-round(achieved_hr_post*100,2)
+    group_by(council) %>%
+    count(Success) %>%
+    mutate(percent = n / sum(n))
 
 
+council_hr$percent <- percent(council_hr$percent)
 
-pander(achieved_hr_post)
+council_hr <- council_hr %>%
+    filter(Success == TRUE)
+
+kable(council_hr)
+
+#achieved_hr_post <- with(council_hr, table(council, Post >= 4.45))
+
+#achieved_hr_post <-prop.table(achieved_hr_post,1)
+
+#achieved_hr_post<-round(achieved_hr_post*100,2)
+
+
+
+#pander(achieved_hr_post)
 
 ```
 
