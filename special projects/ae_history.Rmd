@@ -84,6 +84,20 @@ ae$council <-sub("Girl Scouts of Gulfcoast Florida Inc.",  "Gulfcoast Council", 
 
 ```
 
+
+
+```{r update_yearae, echo=FALSE}
+ae$Year_Id <-sub("M1",  "13-14", fixed = TRUE, ae$Year_Id)
+
+ae$Year_Id <-sub("M2",  "14-15", fixed = TRUE, ae$Year_Id)
+
+ae$Year_Id <-sub("M3",  "15-16", fixed = TRUE, ae$Year_Id)
+
+
+
+```
+
+
 # Introduction
 
 Matching survey data set from the past three membership years.
@@ -99,6 +113,9 @@ Matching survey data set from the past three membership years.
 
 ```{r ae_data, echo=FALSE}
 council_status <- with(ae,table(council, Year_Id))
+
+council_status <- addmargins(council_status)
+
 
 kable(council_status)
 
