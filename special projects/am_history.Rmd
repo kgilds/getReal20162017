@@ -198,7 +198,7 @@ kable(council_am)
 ```{r post_hr, echo=FALSE}
 match_am <- am %>%
     group_by(Match) %>%
-    count(Post >=4.8) %>%
+    count(Success) %>%
     mutate(Percent = n/sum (n))
     
 match_am$Percent <- percent(match_am$Percent)
