@@ -96,24 +96,40 @@ am$Year_Id <-sub("M3",  "15-16", fixed = TRUE, am$Year_Id)
 
 
 
-```{r am_succes, echo=FALSE}
+
+```{r succes, echo=FALSE}
 am_1 <- am %>%
     filter(Post >=4.8)%>%
     mutate("Success" = "TRUE")
 
+#dim(am_1)
+
 am_2 <- am %>%
-    filter(Post <4.8)%>%
+    filter(Post <4.8 & am.diff >0)%>%
+    mutate("Success" = "TRUE")
+
+
+#dim(am_2)
+
+am_3 <- am %>%
+    filter(Post < 4.8 & am.diff <=0)%>%
     mutate("Success" = "FALSE")
 
-am <- rbind(am_1, am_2)
+#dim(am_3)
+
+am_1 <- rbind(am_1, am_2)
+
+am <- rbind(am_1, am_3)
 
 #head(am)
 
+am_f <- am %>%
+    filter(Success ==FALSE)
+
+#head(am_f)
+#tail(am_f)
 
 ```
-
-
-
 
 
 
@@ -142,7 +158,63 @@ kable(council_status)
 
 # Academic Mastery
 
-### Average Difference between Pre and Post Surveys 
+
+## Post Survey Achievment
+
+```{r am_suc, echo=FALSE}
+am_suc <- am %>%
+    count(Success)%>%
+    mutate(percent = n/sum(n))
+
+am_suc$percent <- percent(am_suc$percent)
+
+kable(am_suc)
+
+```
+
+
+### Achievement by Council
+
+```{r council_am, echo=FALSE}
+
+council_am <- am %>%
+    group_by(council) %>%
+    count(Success) %>%
+    mutate(percent = n / sum(n))
+
+
+council_am$percent <- percent(council_am$percent)
+
+council_am <- council_am %>%
+    filter(Success == TRUE)
+
+kable(council_am)
+
+
+```
+
+### Achievment by Matched Status
+
+```{r post_hr, echo=FALSE}
+match_am <- am %>%
+    group_by(Match) %>%
+    count(Post >=4.8) %>%
+    mutate(Percent = n/sum (n))
+    
+match_am$Percent <- percent(match_am$Percent)
+
+    
+kable(match_am)
+```
+
+
+
+
+
+
+
+
+## Average Difference between Pre and Post Surveys 
 
 The mean difference between pre and post survey is `r pander(mean(am$am.diff))`. Students who had been in the program tend to improve their attitude compared to students in the program for the first time. 
 
@@ -252,44 +324,6 @@ cohen.d(am$Pre, am$Post)
 
 
 
-##Post Survey Achievement
-
-```{r council_am, echo=FALSE}
-
-council_am <- am %>%
-    group_by(council) %>%
-    count(Success) %>%
-    mutate(percent = n / sum(n))
-
-
-council_am$percent <- percent(council_am$percent)
-
-council_am <- council_am %>%
-    filter(Success == TRUE)
-
-kable(council_am)
-
-
-```
-
-# Achievment by Matched Status
-
-```{r post_hr, echo=FALSE}
-match_am <- am %>%
-    group_by(Match) %>%
-    count(Post >=4.8) %>%
-    mutate(Percent = n/sum (n))
-    
-match_am$Percent <- percent(match_am$Percent)
-
-    
-kable(match_am)
-```
-
-
-
-
-
 
 ```{r am_datatable, echo=FALSE, eval=FALSE}
 
@@ -304,7 +338,7 @@ datatable(council_am_test)
 
 
 
-### Post Survey Average Scores
+## Post Survey Average Scores
 
 Overall the trend is that average scores have increased from the firs year this Academic Mastery. In year 14-15, there was a dip in the scores but in 15-16 the average score increased from 13-14. Students who have been in the program multiple year did have a have a higher average score than those who have only been in the program once. 
 
