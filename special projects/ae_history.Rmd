@@ -98,20 +98,33 @@ ae$Year_Id <-sub("M3",  "15-16", fixed = TRUE, ae$Year_Id)
 ```
 
 
+```{r ae_succes, echo=FALSE}
+ae_1 <- ae %>%
+    filter(Post >=4.5)%>%
+    mutate("Success" = "TRUE")
+
+ae_2 <- ae %>%
+    filter(Post <4.5)%>%
+    mutate("Success" = "FALSE")
+
+ae <- rbind(ae_1, ae_2)
+
+head(ae)
+
+
+```
+
+
+
+
+
+
 # Introduction
-
-Matching survey data set from the past three membership years.
-
-* M1 = MY: 2013-2014
-
-* M2 = MY: 2014-2015
-
-* M3 = MY: 2015-2016
 
 
 # Data Entry Status 
 
-```{r ae_data, echo=FALSE}
+```{r ae_data, echo=FALSE, eval=FALSE}
 council_status <- with(ae,table(council, Year_Id))
 
 council_status <- addmargins(council_status)
