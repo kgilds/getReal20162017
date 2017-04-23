@@ -1,7 +1,7 @@
 ---
 title: "am_history"
 author: "Kevin Gilds, MPA"
-date: "September 24, 2016"
+date: '`r Sys.Date()`'
 output: 
     github_document: default
 ---
@@ -83,7 +83,7 @@ am$council <-sub("Girl Scouts of Gulfcoast Florida Inc.",  "Gulfcoast Council", 
 
 
 
-```{r}
+```{r update_year, echo=FALSE}
 am$Year_Id <-sub("M1",  "13-14", fixed = TRUE, am$Year_Id)
 
 am$Year_Id <-sub("M2",  "14-15", fixed = TRUE, am$Year_Id)
@@ -96,21 +96,37 @@ am$Year_Id <-sub("M3",  "15-16", fixed = TRUE, am$Year_Id)
 
 
 
-# Introduction
+```{r am_succes, echo=FALSE}
+am_1 <- am %>%
+    filter(Post >=4.8)%>%
+    mutate("Success" = "TRUE")
 
-Matching survey data set from the past three membership years.
+am_2 <- am %>%
+    filter(Post <4.8)%>%
+    mutate("Success" = "FALSE")
 
-* M1 = MY: 2013-2014
+am <- rbind(am_1, am_2)
 
-* M2 = MY: 2014-2015
-
-* M3 = MY: 2015-2016
+#head(am)
 
 
-# Data Entry Status 
+```
 
-```{r am_status, echo=FALSE}
+
+
+
+
+
+
+
+
+
+```{r am_status, echo=FALSE, eval=FALSE}
 council_status <- with(am,table(council, Year_Id))
+
+
+council_status <- addmargins(council_status)
+
 
 kable(council_status)
 
@@ -128,7 +144,7 @@ kable(council_status)
 
 ### Average Difference between Pre and Post Surveys 
 
-The mean difference between pre and post survey is `r pander(mean(am$am.diff))`
+The mean difference between pre and post survey is `r pander(mean(am$am.diff))`. Students who had been in the program tend to improve their attitude compared to students in the program for the first time. 
 
 
 ```{r an_diff_m, echo=FALSE}
@@ -241,15 +257,18 @@ cohen.d(am$Pre, am$Post)
 ```{r council_am, echo=FALSE}
 
 council_am <- am %>%
-    group_by(council)
+    group_by(council) %>%
+    count(Success) %>%
+    mutate(percent = n / sum(n))
 
-achieved_am_post <- with(council_am, table(council, Post >= 4.8))
 
-achieved_am_post <-prop.table(achieved_am_post,1)
+council_am$percent <- percent(council_am$percent)
 
-achieved_am_post<-round(achieved_am_post*100,2)
+council_am <- council_am %>%
+    filter(Success == TRUE)
 
-kable(achieved_am_post)
+kable(council_am)
+
 
 ```
 
@@ -287,6 +306,8 @@ datatable(council_am_test)
 
 ### Post Survey Average Scores
 
+Overall the trend is that average scores have increased from the firs year this Academic Mastery. In year 14-15, there was a dip in the scores but in 15-16 the average score increased from 13-14. Students who have been in the program multiple year did have a have a higher average score than those who have only been in the program once. 
+
 
 
 ```{r am_avg_m, echo=FALSE}
@@ -318,12 +339,16 @@ ggplot(am_avg, aes(y=Post, x=Year_Id, group=2)) + geom_line() + geom_point() + l
 
 ```{r council_am_post_tbl, echo=FALSE}
 
+council_avg <- am %>%
+    group_by(council)%>%
+    summarise(Post =mean(Post))
 
-#head(council_am)
+kable(council_avg)
 
-council_am_post <-summarise(council_am, Post =mean(Post))
 
-pander (council_am_post)
+#council_am_post <-summarise(council_am, Post =mean(Post))
+
+#pander (council_am_post)
 
 ```
 
