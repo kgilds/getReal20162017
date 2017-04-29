@@ -24,6 +24,7 @@ library(effsize)
 library(knitr)
 library(catspec)
 library(formattable)
+library(bookdown)
 ```
 
 ```{r read_1516, echo=FALSE}
@@ -143,17 +144,23 @@ attendance_his$Council <-sub("Girl Scouts of Gulfcoast Florida Inc.",  "Gulfcoas
 
 ```
 
-# Introduction
 
-Matching attendance data set from the past two membership years.
+```{r update_year_attendance, echo=FALSE}
+attendance_his$Year_Id <-sub("M2",  "14-15", fixed = TRUE, attendance_his$Year_Id)
 
-* M2 = MY: 2014-2015
-
-* M3 = MY: 2015-2016
+attendance_his$Year_Id <-sub("M3",  "15-16", fixed = TRUE, attendance_his$Year_Id)
 
 
+```
 
-```{r council_stauts_lang, echo=FALSE}
+
+
+
+
+
+
+
+```{r council_stauts_lang, echo=FALSE,eval=FALSE}
 council_status <- with(attendance_his,table(Council, Year_Id))
 
 
@@ -282,7 +289,7 @@ kable(attendance_succ_c)
 
 ### Decrease in Absences
 
-```{r att_avg_allstudents, echo=FALSE}
+```{r att_avg_allstudents, echo=FALSE, eval=FALSE}
 attendance_avg <- attendance_his %>%
     summarise(Att_diff2 = mean(Att_diff2))
 
@@ -302,7 +309,7 @@ attendance_avg_1 <- attendance_his %>%
 
 attendance_avg_1 <- attendance_his %>%
     filter(baseline >0 & final >0)%>%
-    summarise(Att_diff = mean(Att_diff2))
+    summarise(Avg_Change = mean(Att_diff2))
 
 
 attendance_count <- attendance_his %>%
@@ -313,11 +320,11 @@ attendance_count <- attendance_his %>%
 kable(attendance_avg_1)
 ```
 
-```{r}
+```{r echo=FALSE}
 att_sum_m <- attendance_his %>%
     filter(baseline !=0 & final !=0) %>%
     group_by(Match) %>%
-    summarise(Att_diff =mean(Att_diff2))
+    summarise(Avg_Change =mean(Att_diff2))
 
 kable(att_sum_m)
 
@@ -328,7 +335,7 @@ kable(att_sum_m)
 ```{r att_sum_year, echo=FALSE}
 att_sum_y <- attendance_his %>%
     group_by(Year_Id)%>%
-    summarise(Att_diff=mean(Att_diff2))
+    summarise(Avg_Change=mean(Att_diff2))
 
 kable(att_sum_y)
 
@@ -346,13 +353,13 @@ att_sum_c <- attendance_his %>%
 
 #year_id_lang_summary <-summarise(year_id_lang_summary, Grade_Change #=mean(Grade_Change)) #summarize Grade change by year id
 ```
-```{r abs_plot, echo=FALSE}
+```{r abs_plot, echo=FALSE, fig.path='Figs/'}
 
 abs_plot <- ggplot(att_sum_c,(aes(x = Att_diff2, y =Council)))
-abs_plot + geom_count()
+abs_plot + geom_count() + labs(x="Average Attendance Difference", title="Attendance History: Average Difference")
 
 
-
+labs(x="Pre and Post Difference", y="Council", title="Healthy Releationship Survey Results")
 
 ```
 

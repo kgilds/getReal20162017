@@ -187,6 +187,43 @@ lang_history <- rbind(lang_1, lang_1516) #combined 1415_1314 & 1516
 ```
 
 
+```{r echo=FALSE}
+
+#dim(lang_history)
+
+lang_history_unique<- lang_history[!(duplicated(lang_history$girlCode) | duplicated(lang_history$girlCode, fromLast = TRUE)), ] #find and subset uniquie students
+
+#dim(lang_history_unique)
+
+lang_history_unique <- lang_history_unique %>%
+    mutate("Match" = "No")
+
+lang_history_dupes <-duplicated(lang_history$girlCode) | duplicated(lang_history$girlCode, fromLast=TRUE) #find duplicated cases
+
+lang_history_dupes <- lang_history[lang_history_dupes, ] # subset dupes
+
+
+lang_history_dupes <- lang_history_dupes %>%
+    mutate("Match" = "Yes")
+
+#dim(lang_history_dupes)
+
+
+
+
+```
+
+
+
+```{r echo=FALSE}
+lang_history <- rbind(lang_history_dupes, lang_history_unique) #bind in unique df and dup df with labels. 
+
+#dim(lang_history)
+```
+
+
+
+
 
 ```{r council_name_fix_lang, echo=FALSE}
 ## Change council names to be consistent wiht how they displayed with the surveys
@@ -213,6 +250,18 @@ lang_history$council <-sub("Girl Scouts of Gulfcoast Florida Inc.",  "Gulfcoast 
 
 ```
 
+
+```{r update_year_reading, echo=FALSE}
+
+#change name of year to be consistent across domain reports
+lang_history$Year_Id <-sub("M1",  "13-14", fixed = TRUE, lang_history$Year_Id) 
+
+lang_history$Year_Id <-sub("M2",  "14-15", fixed = TRUE, lang_history$Year_Id)
+
+lang_history$Year_Id <-sub("M3",  "15-16", fixed = TRUE, lang_history$Year_Id)
+
+
+```
 
 
 
@@ -295,9 +344,11 @@ The percent of students with a successful outcome is **`r lang_success_h()`**
 
 The percent of students who went from failing to passing is **`r fail_to_pass_p`**
 
+*   The number of students who started with a failing grade is **`r nrow (fail_baseline)`**
+
+
 *   The number of students who increased grade from failing to passing **`r nrow(fail_to_pass)`**
 
-*   The number of students who started with a failing grade but finihsed with a passing grade is **`r nrow (fail_baseline)`**
 
 
 
@@ -334,19 +385,17 @@ lang_success_2 <- rbind(lang_success_1, lang_success_x)
 
 
 
-```{r eval=TRUE, echo=FALSE}
-
-
+```{r lang_success_c, eval=TRUE, echo=FALSE}
 
 lang_success <- lang_success_2 %>%
-    group_by(council) %>%
+    group_by(council, Year_Id) %>%
     count(Success) %>%
     mutate(percent = n /sum(n))
     
-
 lang_success$percent <- percent(lang_success$percent)
 
-
+lang_success <- lang_success %>%
+    filter(Success ==TRUE)
 
 
 kable(lang_success)
@@ -354,6 +403,22 @@ kable(lang_success)
 
 ```
 
+```{r lang_suc_m, echo=FALSE}
+lang_success_m <- lang_success_2 %>%
+    group_by(Match) %>%
+    count(Success) %>%
+    mutate(percent = n /sum(n))
+    
+lang_success_m$percent <- percent(lang_success_m$percent)
+
+lang_success_m <- lang_success_m %>%
+    filter(Success == TRUE)
+
+kable(lang_success_m)
+
+
+
+```
 
 
 
@@ -376,7 +441,7 @@ pander(lang_increase_tbl)
 
 
 
-```{r lang_history_filtered, echo=FALSE}
+```{r lang_history_filtered, echo=FALSE, eval=FALSE}
 lang_history_filtered <- lang_history %>%
     filter(baseline !=4 | final != 4) #filter out all A's. Compare means
 
@@ -389,7 +454,7 @@ hist(lang_history_filtered$Grade_Change) #create historgram to look at distribut
 ```
 
 
-```{r stat_test, echo=FALSE}
+```{r stat_test_lang, echo=FALSE, eval=FALSE}
 
 pander(t.test(lang_history$baseline, lang_history$final))
 
@@ -398,8 +463,7 @@ cohen.d(lang_history$baseline, lang_history$final)
 ```
 
 
-Tests with filtered data
-```{r stat test filtered, echo=FALSE}
+```{r stat test filtered_lang, echo=FALSE, eval=FALSE}
 
 pander(t.test(lang_history_filtered$baseline, lang_history_filtered$final))
 
@@ -425,9 +489,9 @@ pander(year_id_lang_summary) #review the data
 
 
 
-```{r plot_council_lang_summary}
+```{r plot_council_lang_summary, echo=FALSE}
 
-ggplot(year_id_lang_summary, aes(y=Grade_Change, x=Year_Id, group=2)) + geom_line() + geom_point() + labs (title= "Average Grade Change by Year")
+ggplot(year_id_lang_summary, aes(y=Grade_Change, x=Year_Id, group=2)) + geom_line() + geom_point() + labs (title= "Average Grade Change by Year", x="Membership Year", y="Average Difference")
 
 ```
 
@@ -444,7 +508,7 @@ council_lang_summary_c <-summarise(council_lang_summary_c, Grade_Change =mean(Gr
 
 pander(council_lang_summary_c)  #print summary nicely
 
-ggplot(council_lang_summary_c, aes(y=Grade_Change, x=Year_Id, colour=council, group=2))  + geom_point(size=3) + labs(title= "Average Grade Change by Year and Council")   #graphical summary
+ggplot(council_lang_summary_c, aes(y=Grade_Change, x=Year_Id, colour=council, group=2))  + geom_point(size=3) + labs(title= "Average Grade Change by Year and Council", x="Membership Year", y="Average Grade Difference")   #graphical summary
 
 ```
 

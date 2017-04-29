@@ -228,7 +228,7 @@ read_history_dupes <- read_history_dupes %>%
 ```
 
 ```{r echo=FALSE}
-read_history <- rbind(read_history_dupes, read_history_unique)
+read_history <- rbind(read_history_dupes, read_history_unique) #bind in unique df and dup df with labels. 
 ```
 
 
@@ -260,6 +260,18 @@ read_history$council <-sub("Girl Scouts of Gulfcoast Florida Inc.",  "Gulfcoast 
 
 
 
+```{r update_year_reading, echo=FALSE}
+
+#change name of year to be consistent across domain reports
+read_history$Year_Id <-sub("M1",  "13-14", fixed = TRUE, read_history$Year_Id) 
+
+read_history$Year_Id <-sub("M2",  "14-15", fixed = TRUE, read_history$Year_Id)
+
+read_history$Year_Id <-sub("M3",  "15-16", fixed = TRUE, read_history$Year_Id)
+
+
+```
+
 
 ```{r read_success_h, echo=FALSE}
 
@@ -278,7 +290,7 @@ read_success_h <- function() {
 
 
 ```{r echo=FALSE, eval=FALSE}
-council_test <- table(read_history$council)
+council_test <- table(read_history$council) # data entry status
 
 council_test
 
@@ -292,7 +304,7 @@ council_test
 
 ```{r read_success_df, echo=FALSE}
 read_success_df <- read_history %>%
-    filter(final >=2, Grade_Change >=0)
+    filter(final >=2, Grade_Change >=0)  #filter those who have C or greater and had grade change greater than or equal to zero for 
     
 
 ```
@@ -303,9 +315,9 @@ read_success_df <- read_history %>%
 ```{r eval=FALSE, echo=FALSE}
 read_increase_m <- read_history %>%
     group_by(council)%>%
-    filter(final >= 2, Grade_Change >0) %>%
-    count(Match) %>%
-    mutate(Percent = n/sum(n))
+    filter(final >= 2, Grade_Change >0) %>% #filter students who finished with C or higher and have greater than zero grade change
+    count(Match) %>%  #count by match status
+    mutate(Percent = n/sum(n)) #obtain percent
 
 kable(read_increase_m)
 ```
@@ -313,7 +325,7 @@ kable(read_increase_m)
 
 ```{r read_increase, echo=FALSE, eval=TRUE}
 read_increase <- read_history %>%
-    filter(final >=2, Grade_Change >0)
+    filter(final >=2, Grade_Change >0)  #create object with student who increased grade and also finished with a C or higher
     
 
 
@@ -336,7 +348,7 @@ read_main <- read_history %>%
 
 ```{r fail_baseline, echo=FALSE}
 
-fail_baseline <- read_history %>%
+fail_baseline <- read_history %>% #filter students with a failing grade at baseline
     filter(baseline <= 1)
 
 
@@ -347,12 +359,12 @@ fail_baseline <- read_history %>%
 ```{r fail_to_pass, echo=FALSE}
 
 fail_to_pass <- read_history %>%
-    filter(baseline <=1, final >=2)
+    filter(baseline <=1, final >=2)  #filter students that were failing at baseline but passing at final
 
-fail_to_pass_p <- nrow(fail_to_pass) /nrow(fail_baseline)
+fail_to_pass_p <- nrow(fail_to_pass) /nrow(fail_baseline) #obtain percent by dividing rows
 
-fail_to_pass_p <- round(fail_to_pass_p*100,2)
-fail_to_pass_p <- pander(paste0(fail_to_pass_p,"%", sep= ""))
+fail_to_pass_p <- round(fail_to_pass_p*100,2) #make percent pretty
+fail_to_pass_p <- pander(paste0(fail_to_pass_p,"%", sep= "")) #make percent prettier for inline code down stream.
 
 
 
@@ -375,9 +387,11 @@ The percent of students with a successful outcome is **`r read_success_h()`**
 
 The percent of students who went from failing to passing is **`r fail_to_pass_p`**
 
+*   The number of students who started with a failing grade **`r nrow (fail_baseline)`**
+
+
 *   The number of students who increased grade from failing to passing **`r nrow(fail_to_pass)`**
 
-*   The number of students who started with a failing grade but finihsed with a passing grade is **`r nrow (fail_baseline)`**
 
 
 ### Achievement by Council
@@ -387,16 +401,16 @@ The percent of students who went from failing to passing is **`r fail_to_pass_p`
 
 
 read_success_s <- read_history %>%
-    filter(final >=2, Grade_Change >=0)%>%
+    filter(final >=2, Grade_Change >=0)%>%  #final grade is C or greater and either increased grade or maintained grade. 
     mutate("Success" = "TRUE")
 
 read_success_n <- read_history %>%
-    filter(final >=2, Grade_Change  < 0) %>%
+    filter(final >=2, Grade_Change  < 0) %>%  #final grade is C or greater than but grade dropped. 
     mutate("Success" = "FALSE")
 
 #nrow(read_success_n)
 
-read_success_x <- read_history %>%
+read_success_x <- read_history %>%  #final grade is less than a C
     filter(final < 2) %>%
     mutate("Success" = "FALSE")
 
@@ -413,23 +427,41 @@ read_success_2 <- rbind(read_success_1, read_success_x)
 
 
 
-```{r eval=TRUE, echo=FALSE}
+```{r read_success_analysis, echo=FALSE}
 
 
 
 read_success <- read_success_2 %>%
-    group_by(council) %>%
-    count(Success) %>%
-    mutate(percent = n /sum(n))
+    group_by(council, Year_Id) %>%  #segment by council, year_id
+    count(Success) %>%  #count success
+    mutate(percent = n /sum(n))  #create percent
     
 
-read_success$percent <- percent(read_success$percent)
+read_success$percent <- percent(read_success$percent) #make percent pretty
+
+read_success <- read_success %>%
+    filter(Success == TRUE) #view only success to make easier to read
 
 
+kable(read_success)  #make pretty table
 
 
-kable(read_success)
+```
 
+
+```{r read_success, echo=FALSE}
+read_success_m <- read_success_2 %>%
+    group_by(Match) %>%  #segment by match status
+    count(Success) %>%   # count success
+    mutate(percent = n /sum(n))  #find percent
+    
+
+read_success_m$percent <- percent(read_success_m$percent) #make percent pretty with sign
+
+read_success_m <- read_success_m %>%
+    filter(Success == TRUE)  #make view with only success
+
+kable(read_success_m)  #print pretty table
 
 ```
 
@@ -458,16 +490,16 @@ pander(read_increase_tbl)
 read_history_filtered <- read_history %>%
     filter(baseline !=4 | final != 4) #filter out all A's. Compare means
 
-summary(read_history_filtered$Grade_Change) #summarize filtered data
+#summary(read_history_filtered$Grade_Change) #summarize filtered data
 
 
-hist(read_history_filtered$Grade_Change) #create historgram to look at distribution
+#hist(read_history_filtered$Grade_Change) #create historgram to look at distribution
 
 
 ```
 
 
-```{r stat_test, echo=FALSE}
+```{r stat_test, echo=FALSE, eval=FALSE}
 
 pander(t.test(read_history$baseline, read_history$final))
 
@@ -476,8 +508,8 @@ cohen.d(read_history$baseline, read_history$final)
 ```
 
 
-Tests with filtered data
-```{r stat test filtered, echo=FALSE}
+
+```{r stat test filtered, echo=FALSE, eval=FALSE}
 
 pander(t.test(read_history_filtered$baseline, read_history_filtered$final))
 
@@ -485,19 +517,22 @@ cohen.d(read_history_filtered$baseline, read_history_filtered$final)
 
 ```
 
-```{r}
+# Grade Changes from baseline to final 
+
+### Grade change by Matched Status
+```{r read_change, echo=FALSE}
 read_m <- read_history %>%
-    group_by(Match) %>%
-    summarise(Grade_Change = mean(Grade_Change))
+    group_by(Match) %>%  #segment by Match status
+    summarise(Grade_Change = mean(Grade_Change))  #does grade change vary by matched status
 
 
-read_m
+kable(read_m) #print in nice table
 
 
 ```
 
 
-
+### Grade Change by Year
 ```{r council_read_summary, echo=FALSE}
 
 year_id_read_summary <- read_history %>%
@@ -515,9 +550,9 @@ pander(year_id_read_summary) #review the data
 
 
 
-```{r plot_council_read_summary}
+```{r plot_council_read_summary, echo=FALSE}
 
-ggplot(year_id_read_summary, aes(y=Grade_Change, x=Year_Id, group=2)) + geom_line() + geom_point() + labs (title= "Average Grade Change by Year")
+ggplot(year_id_read_summary, aes(y=Grade_Change, x=Year_Id, group=2)) + geom_line() + geom_point() + labs (title= "Average Grade Change by Year", x="Membership Year", y="Average Grade Change")
 
 ```
 
@@ -534,7 +569,7 @@ council_read_summary_c <-summarise(council_read_summary_c, Grade_Change =mean(Gr
 
 pander(council_read_summary_c)  #print summary nicely
 
-ggplot(council_read_summary_c, aes(y=Grade_Change, x=Year_Id, colour=council, group=2))  + geom_point(size=3) + labs(title= "Average Grade Change by Year and Council")   #graphical summary
+ggplot(council_read_summary_c, aes(y=Grade_Change, x=Year_Id, colour=council, group=2))  + geom_point(size=3) + labs(title= "Average Grade Change by Year and Council", x="Membership Year", y="Average Grade Change")   #graphical summary
 
 ```
 
