@@ -231,7 +231,7 @@ kable(am_diff_m)
 
 
 
-```{r am_plot, echo=FALSE}
+```{r am_plot_diff, echo=FALSE, fig.path='Figs/'}
 am_change_p <- ggplot(am,(aes(x=am.diff, y=council)))
 am_change_p + geom_count() + geom_vline(xintercept = 0, col="red") + labs(x="Difference Pre and Post", y="Council", title="Academic Mastery Survey Results")
 
@@ -239,7 +239,7 @@ am_change_p + geom_count() + geom_vline(xintercept = 0, col="red") + labs(x="Dif
 ```
 
 
-```{r am_year_ach, echo=FALSE}
+```{r am_year_ach, echo=FALSE, fig.path='Figs/'}
 year_id_am <- am %>%
     group_by(Year_Id)
 
@@ -361,7 +361,7 @@ pander(am_avg)
 
 ```
 
-```{r plot_avgs_am, echo=FALSE}
+```{r plot_avgs_am, echo=FALSE, fig.path='Figs/'}
 ggplot(am_avg, aes(y=Post, x=Year_Id, group=2)) + geom_line() + geom_point() + labs(x="Membership Year", y="Post Average", title="Academic Mastery: Post Survey Averages by Year")
 
 
