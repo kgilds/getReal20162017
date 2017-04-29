@@ -359,7 +359,6 @@ abs_plot <- ggplot(att_sum_c,(aes(x = Att_diff2, y =Council)))
 abs_plot + geom_count() + labs(x="Average Attendance Difference", title="Attendance History: Average Difference")
 
 
-labs(x="Pre and Post Difference", y="Council", title="Healthy Releationship Survey Results")
 
 ```
 
