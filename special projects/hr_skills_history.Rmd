@@ -223,7 +223,7 @@ healthy_change_p + geom_count() + geom_vline(xintercept = 0, col="red") + labs(x
 
 ### Average Difference by Year
 
-```{r hr_diff_y, echo=FALSE}
+```{r hr_diff_y, echo=FALSE, fig.path='Figs/'}
 year_id_hr <- hr %>%
     group_by(Year_Id)
 
@@ -359,7 +359,7 @@ kable(hr_avg_m)
 
 
 
-```{r hr_post_avg, echo=FALSE}
+```{r hr_post_avg, echo=FALSE, fig.path='Figs/'}
 ggplot(hr_avg, aes(y=Post, x=Year_Id, group=2)) + geom_line() + geom_point()+ scale_y_continuous(limit= c(4.45,5)) + labs(x="Membership Year", y="Post Average", title="Healthy Relationships Post Survey Averages by Year")
 
 
