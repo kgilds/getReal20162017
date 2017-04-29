@@ -111,7 +111,7 @@ ae_2 <- ae %>%
     mutate("Success" = "TRUE")
 
 
-dim(ae_2)
+#dim(ae_2)
 
 ae_3 <- ae %>%
     filter(Post < 4.45 & ae.diff <=0)%>%
@@ -234,7 +234,7 @@ kable(ae_diff_m)
 
 
 
-```{r ae_change_plot, echo=FALSE}
+```{r ae_change_plot, echo=FALSE, fig.path='Figs/'}
 ae_change_p <- ggplot(ae,(aes(x=ae.diff, y=council)))
 ae_change_p + geom_count() + geom_vline(xintercept = 0, col="red") + labs(x="Council", y="Pre Outcome Score", title="Academic Engagement Survey Results")
 
@@ -242,7 +242,7 @@ ae_change_p + geom_count() + geom_vline(xintercept = 0, col="red") + labs(x="Cou
 ```
 
 ### Average Difference by Year 
-```{r year_id, echo=FALSE}
+```{r year_id_ae_plot, echo=FALSE, fig.path='Figs/'}
 year_id_ae <- ae %>%
     group_by(Year_Id)
 
@@ -363,7 +363,7 @@ kable(ae_avg)
 
 ```
 
-```{r plotbyyear, echo=FALSE}
+```{r plotbyyear, echo=FALSE, fig.path='Figs/'}
 ggplot(ae_avg, aes(y=Post, x=Year_Id, group=2)) + geom_line() + geom_point() + labs(x="Membership Year", y="Post Average", title="Academic Engagement: Post Survey Averages by Year")
 
 
