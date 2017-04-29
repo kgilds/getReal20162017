@@ -214,7 +214,7 @@ kable(hr_diff_m)
 
 
 
-```{r plots, echo=FALSE, fig.path='Figs/'}
+```{r hr_change_p, echo=FALSE, fig.path='Figs/'}
 healthy_change_p <- ggplot(hr,(aes(x=hr.diff, y=council)))
 healthy_change_p + geom_count() + geom_vline(xintercept = 0, col="red") + labs(x="Pre and Post Difference", y="Council", title="Healthy Releationship Survey Results")
 
