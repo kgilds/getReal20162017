@@ -233,7 +233,7 @@ attendance_succ$n[2]
 
 
 
-# Attendance Outcome Achievement
+# Attendance Data
 
 The number of students in the dataset are **`r nrow(attendance_his)`** and the number of students that could be matched across two years is **`r nrow(attendance_dupes)`**.The percent of students with a succesful outcome is **`r (attendance_suc)`**.  A successful outcome means not missing a day of school and the student decreasing their number of absences from baseline grading period to the final grading period.
 
