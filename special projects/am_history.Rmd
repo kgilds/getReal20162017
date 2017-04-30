@@ -216,7 +216,7 @@ kable(match_am)
 
 ## Average Difference between Pre and Post Surveys 
 
-The mean difference between pre and post survey is `r pander(mean(am$am.diff))`. Students who had been in the program tend to improve their attitude compared to students in the program for the first time. 
+The mean difference between pre and post survey is `r pander(mean(am$am.diff))`. 
 
 
 ```{r an_diff_m, echo=FALSE}
@@ -339,8 +339,6 @@ datatable(council_am_test)
 
 
 ## Post Survey Average Scores
-
-Overall the trend is that average scores have increased from the firs year this Academic Mastery. In year 14-15, there was a dip in the scores but in 15-16 the average score increased from 13-14. Students who have been in the program multiple year did have a have a higher average score than those who have only been in the program once. 
 
 
 
