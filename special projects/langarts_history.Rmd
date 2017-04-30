@@ -388,7 +388,7 @@ lang_success_2 <- rbind(lang_success_1, lang_success_x)
 ```{r lang_success_c, eval=TRUE, echo=FALSE}
 
 lang_success <- lang_success_2 %>%
-    group_by(council, Year_Id) %>%
+    group_by(council) %>%
     count(Success) %>%
     mutate(percent = n /sum(n))
     
