@@ -7,7 +7,7 @@ output:
         
 ---
 
-```{r read_dbase, echo=FALSE, warning=FALSE, message=FALSE}
+```{r read_dbase_beha, echo=FALSE, warning=FALSE, message=FALSE}
 
 
 library(sqldf)
@@ -27,7 +27,7 @@ library(formattable)
 
 ```
 
-```{r read_1516, echo=FALSE}
+```{r read_1516_beh, echo=FALSE}
 
 suspensions_1516 <-dbReadTable(getReal_2016db, "suspensions_1516") #read readarts1516 table
 
@@ -43,7 +43,7 @@ suspensions_1516 <- suspensions_1516 %>%
 
 
 
-```{r read_1415, echo=FALSE}
+```{r read_1415_beh, echo=FALSE}
 
 setwd("C:/Users/kevin/Dropbox/GetReal/Reports/MY-2014-2015/Summ Evaluation Report/data") #change working directory to find database
 
@@ -129,7 +129,7 @@ susp_his$council <-sub("Girl Scouts of Gulfcoast Florida",  "Gateway Council", f
 Matching attendance data set from the past two membership years. The number of students in the dataset is `r nrow(susp_his)` and the number of matched students acorss the two years is `r nrow(susp_dupes)`. 
 
 
-```{r update_year_attendance, echo=FALSE}
+```{r update_year_behavior, echo=FALSE}
 susp_his$Year_Id <-sub("M2",  "14-15", fixed = TRUE, susp_his$Year_Id)
 
 susp_his$Year_Id <-sub("M3",  "15-16", fixed = TRUE, susp_his$Year_Id)
@@ -139,7 +139,7 @@ susp_his$Year_Id <-sub("M3",  "15-16", fixed = TRUE, susp_his$Year_Id)
 
 
 
-```{r council_stauts, echo=FALSE, eval=TRUE}
+```{r council_stauts_behavior, echo=FALSE, eval=TRUE}
 council_status <- with(susp_his,table(council, Year_Id))
 
 council_status <- addmargins(council_status)
@@ -253,7 +253,7 @@ susp_his1 <- rbind(bev_suc, bev_not)
 ### By Council
 ```{r susp_his2, echo=FALSE}
 susp_his2 <- susp_his1 %>%
-    group_by(council, Year_Id)%>%
+    group_by(council)%>%
     count(Success)%>%
     mutate(percent = n /sum(n))
 
