@@ -216,8 +216,7 @@ kable(match_ae)
 
 ## Average Difference between Pre and Post Surveys
 
-The mean difference between pre and post survey is `r pander(mean(ae$ae.diff))`. The table below shows that those in the program for multiple years did not perform better. 
-
+The mean difference between pre and post survey is `r pander(mean(ae$ae.diff))`. 
 
 ```{r ae_diff, echo=FALSE}
 
@@ -343,7 +342,6 @@ datatable(council_ae_test)
 
 ## Post Survey Average Score
 
-The trend is that students are on averaging scoring better on the post surveys over time from the first year it was measured. However, being in the program for multiple years does not seem to increase scores compared to other students. 
 
 ```{r ae_avg_m, echo=FALSE}
 ae_avg_m <- ae %>%
