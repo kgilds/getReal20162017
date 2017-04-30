@@ -124,9 +124,9 @@ susp_his$council <-sub("Girl Scouts of Gulfcoast Florida",  "Gateway Council", f
 ```
 
 
-# Introduction
+# Behavior Data (Suspensions)
 
-Matching attendance data set from the past two membership years. The number of students in the dataset is `r nrow(susp_his)` and the number of matched students acorss the two years is `r nrow(susp_dupes)`. 
+Matching attendance data set from the past two membership years. The number of students in the dataset is `r nrow(susp_his)` and the number of matched students across the two years is `r nrow(susp_dupes)`. 
 
 
 ```{r update_year_behavior, echo=FALSE}
@@ -194,9 +194,6 @@ tot_suc <- dec_per + no_per
 
 ```
 
-Over the course of two years `r (tot_suc)` students  have had a successful outcome and `r (no_per) ` never received a suspension. A successful outcome is never receiving a suspension and decreasing amount of suspensions. 
-
-However, there is a segment of students approximately 8 percent that on average increased the number of suspesnions from baseline to final. 
 
 ```{r percent, echo=FALSE}
 
