@@ -550,7 +550,7 @@ pander(year_id_read_summary) #review the data
 
 
 
-```{r plot_council_read_summary, echo=FALSE}
+```{r plot_council_read_summary, echo=FALSE, fig.path='Figs/'}
 
 ggplot(year_id_read_summary, aes(y=Grade_Change, x=Year_Id, group=2)) + geom_line() + geom_point() + labs (title= "Average Grade Change by Year", x="Membership Year", y="Average Grade Change")
 
@@ -558,7 +558,7 @@ ggplot(year_id_read_summary, aes(y=Grade_Change, x=Year_Id, group=2)) + geom_lin
 
 
 
-```{r read_summary_council, echo=FALSE }
+```{r read_summary_council, echo=FALSE, fig.path='Figs/' }
 
 council_read_summary_c <- read_history %>%
     group_by(council,Year_Id)

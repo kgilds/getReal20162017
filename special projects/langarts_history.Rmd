@@ -489,7 +489,7 @@ pander(year_id_lang_summary) #review the data
 
 
 
-```{r plot_council_lang_summary, echo=FALSE}
+```{r plot_council_lang_summary, echo=FALSE, fig.path='Figs/'}
 
 ggplot(year_id_lang_summary, aes(y=Grade_Change, x=Year_Id, group=2)) + geom_line() + geom_point() + labs (title= "Average Grade Change by Year", x="Membership Year", y="Average Difference")
 
@@ -497,7 +497,7 @@ ggplot(year_id_lang_summary, aes(y=Grade_Change, x=Year_Id, group=2)) + geom_lin
 
 
 
-```{r lang_summary_council, echo=FALSE }
+```{r lang_summary_council, echo=FALSE, fig.path='Figs/' }
 
 council_lang_summary_c <- lang_history %>%
     group_by(council,Year_Id)
