@@ -7,7 +7,7 @@ output:
         
 ---
 
-```{r read_dbase, echo=FALSE, warning=FALSE, message=FALSE}
+```{r read_dbase_attendance, echo=FALSE, warning=FALSE, message=FALSE}
 
 
 library(sqldf)
@@ -27,7 +27,7 @@ library(formattable)
 library(bookdown)
 ```
 
-```{r read_1516, echo=FALSE}
+```{r read_1516_att, echo=FALSE}
 attendance_1516 <-dbReadTable(getReal_2016db, "attendance_1516") #read readarts1516 table
 
 #names(attendance_1516)
@@ -44,7 +44,7 @@ attendance_1516 <- attendance_1516 %>%
 
 
 
-```{r read_1415, echo=FALSE}
+```{r read_1415_att, echo=FALSE}
 
 setwd("C:/Users/kevin/Dropbox/GetReal/Reports/MY-2014-2015/Summ Evaluation Report/data") #change working directory to find database
 
@@ -119,7 +119,7 @@ attendance_his <- rbind(attendance_unique, attendance_dupes)
 
 
 
-```{r council_name_fix_lang, echo=FALSE}
+```{r council_name_fix_att, echo=FALSE}
 ## Change council names to be consistent wiht how they displayed with the surveys
 attendance_his$Council <-sub("Girl Scouts of the Gateway Council", "Gateway Council", fixed=TRUE, attendance_his$Council)
 
@@ -183,7 +183,7 @@ attendance_his <- attendance_his %>%
 ```
 
 
-```{r succcess, echo=FALSE}
+```{r succcess_att, echo=FALSE}
 perfect_att <- attendance_his%>%
     filter(final ==0 & baseline ==0)%>%  #filter out students with perfect attendance
     mutate("Success" = "TRUE")
@@ -220,7 +220,7 @@ attendance_suc <- percent(attendance_suc_2)
 
 ```
 
-```{r eval=FALSE, echo=FALSE}
+```{r att_suc_att, eval=FALSE, echo=FALSE}
 attendance_succ <- attendance_his %>%
     count(Success)%>%
     mutate(percent = n /sum(n))
@@ -273,7 +273,7 @@ kable(attendance_succ_m)
 
 ```{r attendance_succ_c, echo=FALSE}
 attendance_succ_c <- attendance_his %>%
-    group_by(Council, Year_Id)%>%
+    group_by(Council)%>%
     count(Success)%>%
     mutate(percent = n /sum(n))
     
