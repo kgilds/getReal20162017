@@ -11,6 +11,7 @@ output:
 
 library(sqldf)
 library(knitr)
+library(tidyverse)
 setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
 
 getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
@@ -18,7 +19,16 @@ getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
 
 hr <-dbReadTable(getReal_2016db,"hr_history")
 
+
+hr$Year_Id <-sub("M1",  "13-14", fixed = TRUE, hr$Year_Id)
+
+hr$Year_Id <-sub("M2",  "14-15", fixed = TRUE, hr$Year_Id)
+
+hr$Year_Id <-sub("M3",  "15-16", fixed = TRUE, hr$Year_Id)
+
+
 ```
+
 
 
 
@@ -39,7 +49,39 @@ The surveys administered to the students measures the following life skills, hea
 
 •	Academic Mastery--Measures attitude toward education.
 
+
+### Methodology
 The questions and the scoring methodology of the girl survey were developed and tested by the Girl Scout Research Institute. Girls answer multiple questions to obtain an outcome score for each life skill domain. Responses to survey questions are assigned numbers/points and outcome scores are calculated by averaging responses to survey questions for each category. The points for each outcome set are averaged to obtain an outcome score. Outcome cutpoints are determined by the number of questions in the outcome set and response options. Outcomes scores range from 0-6. Below is a breakdown of the cut-points by the outcomes measured. Outcome cut-points are used to determine high achievement. Below is a breakdown of the cutpoints by the outcomes measured.
+
+```{r echo=FALSE}
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+outcomes <-dbReadTable(getReal_2016db, "Outcomes")
+
+outcomes <- outcomes %>%
+    select(2,3)
+    
+kable(outcomes)
+    
+```
+
+. 
+
+### Life Skills Results Summary
+
+The Get REAL! program is meeting the objectives established for itself.
+
+To have a successful outcome students either need to achieve a domain at a high level or increase from pre to post if they are not achieving at a high level. 
+
+
+Over a three year period 970 students had matched pre and post surveys. There are 116 students who were matched for multiple years. The data shows that the match students outperformed their peers in the realm of Academic Mastery but not in Healthy Relationships or Academic Engagement. Post survey outcome scores are trending up from the baseline year. 
+
+* 79% Healthy Relationships
+* 73% Academic Engagement
+* 81% Academic Mastery
+
+
+
 
 ### Data Entry Status for Life Skills
 
@@ -94,6 +136,56 @@ kable(council_status)
 ```
 
 ```{r child="am_history.Rmd"}
+
+```
+
+### Academic Data Results Summary
+
+The Get REAL! program is meeting the academic objectives that it has established for itself. Students who were matched for multiple years are out performing their peers who were only matched once in the academic realms. 
+
+**Reading Improvement:**
+
+*50% of participating students will improve their reading skills as demonstrated by their Language Arts grade increasing or maintaining a "C" grade from the baseline grading period to the final grading period as evidenced by report cards/school reports.*
+
+**Results:76% of the students are achieving this objective**.
+
+The caveat is that 61% of these students are maintaining their grade rather then increasing their grade. In addition to achieving the objective, there has been on average in increase difference between baseline and final grades for both Language Arts and Reading grades. 
+
+**Improved Attendance:**
+
+*60% of participating students will either maintain or improve their attendance rate.*
+
+**Results: 61% of students are achieving this outcome**. 
+
+This is a challenging outcome because a student may have zero absences at baseline and 1 absences in the final. This would be a negative outcome and is not capturing the over arching goal of the program.  
+
+This objective may benefit from a more nuanced wording to capture the impact of the Get REAL program! For instance, looking more closely at the outcome of students with 4 or absences at baseline.  
+
+
+**Improvement In School Behavior**
+
+*70% of participating students will show improvement in behavior by decreasing their number of suspensions from the baseliine to final.*
+
+**Results: 92% of students have demonstrated a successful outcome.** 
+
+Nearly 83% of students in the program  never receive a suspension. However, there is an increased average difference between baseline and final. This means that there is a segment of students about 8% that continue to receive suspensions from baseline to final grading period. 
+
+
+
+```{r child="langarts_history.Rmd"}
+
+```
+
+
+```{r child="reading_history.Rmd"}
+
+```
+
+```{r child="attendance_history.Rmd"}
+
+```
+
+```{r child="behavior_history.Rmd"}
 
 ```
 
