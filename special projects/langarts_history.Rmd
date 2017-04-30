@@ -329,7 +329,7 @@ fail_to_pass_p <- pander(paste0(fail_to_pass_p,"%", sep= ""))
 
 ```
 
-# General Outcome Achievement
+# Language Arts Grade Data
 
 The number of students that were matched from the past 3 Membership Years is **`r nrow(lang_history)`**
 
