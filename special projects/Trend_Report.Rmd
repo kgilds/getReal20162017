@@ -3,8 +3,9 @@ title: "Get REAL! Trend Report"
 author: "Kevin Gilds, MPA"
 date: "April 23, 2017"
 output:
-  github_document: default
+  pdf_document: default
   html_document: default
+  github_document: default
 ---
 
 ```{r data, echo=FALSE, message=FALSE}
@@ -34,21 +35,20 @@ hr$Year_Id <-sub("M3",  "15-16", fixed = TRUE, hr$Year_Id)
 
 # Executive Summary
 
+The goal of this report is to provide an internal report about data trends in the Get REAL! program and to identify strengths and areas for improvement.
+
+The Get REAL! program is meeting the objectives established for itself.
+Student surveys and academic data from the Get REAL! program was pulled from the last 3 year membership years and analayzed for trend data. Attendance data and behavior data were only analyzed for the last two membersip years. 
+
+The overall theme is that students in the program are demonstrating improvement in life skills and academic data. The report will also show increased post survey averages along with increased change in grades.The most impressive statistic is that **75%** of students who started with a failing grade finish with a C or higher in their Language Arts courses. 
+
+This report is broken into a life skills section and academic data section.
+
+
 
 
 
 ## Life Skills
-
-Current Objective --70% of participating girls will demonstrate an increased understanding of pertinent life skills as demonstrated by a pre and post assessment.
-
-The surveys administered to the students measures the following life skills, healthy relationships, academic engagement, and academic mastery.
-
-•	Healthy Relationships--Measures relationship skills with peers and adults.
-
-•	Academic Engagement--Measures specific behaviors related to school success.
-
-•	Academic Mastery--Measures attitude toward education.
-
 
 ### Methodology
 The questions and the scoring methodology of the girl survey were developed and tested by the Girl Scout Research Institute. Girls answer multiple questions to obtain an outcome score for each life skill domain. Responses to survey questions are assigned numbers/points and outcome scores are calculated by averaging responses to survey questions for each category. The points for each outcome set are averaged to obtain an outcome score. Outcome cutpoints are determined by the number of questions in the outcome set and response options. Outcomes scores range from 0-6. Below is a breakdown of the cut-points by the outcomes measured. Outcome cut-points are used to determine high achievement. Below is a breakdown of the cutpoints by the outcomes measured.
@@ -65,14 +65,26 @@ kable(outcomes)
     
 ```
 
-. 
+*Objective --70% of participating girls will demonstrate an increased understanding of pertinent life skills as demonstrated by a pre and post assessment*
+
+
+
+
+The surveys administered to the students measures the following life skills, healthy relationships, academic engagement, and academic mastery.
+
+•	Healthy Relationships--Measures relationship skills with peers and adults.
+
+•	Academic Engagement--Measures specific behaviors related to school success.
+
+•	Academic Mastery--Measures attitude toward education.
+
+
 
 ### Life Skills Results Summary
 
-The Get REAL! program is meeting the objectives established for itself.
+
 
 To have a successful outcome students either need to achieve a domain at a high level or increase from pre to post if they are not achieving at a high level. 
-
 
 Over a three year period 970 students had matched pre and post surveys. There are 116 students who were matched for multiple years. The data shows that the match students outperformed their peers in the realm of Academic Mastery but not in Healthy Relationships or Academic Engagement. Post survey outcome scores are trending up from the baseline year. 
 
@@ -188,4 +200,20 @@ Nearly 83% of students in the program  never receive a suspension. However, ther
 ```{r child="behavior_history.Rmd"}
 
 ```
+
+# Strengths-Challenges-Recommendations
+
+# Strengths 
+Overall the Get REAL! program is meeting the program objectives. The objectives set out are realistic and not too easy to acheive. However, a recommendation will be to review the objective pertaining to attendance. 
+
+The life skills surveys align with the objectives of the program. The surveys tell a story of a student that wants to do well in school but may not have all the social and academic tools to succeeed. 
+
+### Challenges
+
+As positive as the survey results are, they would probably be stronger if there 
+
+
+
+
+
 
