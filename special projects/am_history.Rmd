@@ -408,4 +408,14 @@ datatable(council_am_pre, rownames = FALSE)
 
 ```
 
+```{r updated am to db, echo=FALSE}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+### Write hr_history data to sqlite database
+dbWriteTable(conn = getReal_2016db, name = "am_history", value = am, row.names=FALSE, overwrite=TRUE)
+
+```
 
