@@ -38,20 +38,17 @@ hr$Year_Id <-sub("M3",  "15-16", fixed = TRUE, hr$Year_Id)
 The goal of this report is to provide an internal report about data trends in the Get REAL! program and to identify strengths and areas for improvement.
 
 The Get REAL! program is meeting the objectives established for itself.
-Student surveys and academic data from the Get REAL! program was pulled from the last 3 year membership years and analayzed for trend data. Attendance data and behavior data were only analyzed for the last two membersip years. 
-
-The overall theme is that students in the program are demonstrating improvement in life skills and academic data. The report will also show increased post survey averages along with increased change in grades.The most impressive statistic is that **75%** of students who started with a failing grade finish with a C or higher in their Language Arts courses. 
+Student surveys and academic data from the Get REAL! program were pulled from the last 3 year membership years and analyzed for trend data. Attendance data and behavior data were only analyzed for the last two membership years. 
 
 This report is broken into a life skills section and academic data section.
-
-
-
-
+The overall trend is that students in the program are demonstrating improvement in life skills and academic data. The report shows increased post survey averages along with increased change in grades over the past three years.The most impressive statistic is that **75%** of students who started with a failing grade finish with a C or higher in their Language Arts courses. 
 
 ## Life Skills
 
 ### Methodology
-The questions and the scoring methodology of the girl survey were developed and tested by the Girl Scout Research Institute. Girls answer multiple questions to obtain an outcome score for each life skill domain. Responses to survey questions are assigned numbers/points and outcome scores are calculated by averaging responses to survey questions for each category. The points for each outcome set are averaged to obtain an outcome score. Outcome cutpoints are determined by the number of questions in the outcome set and response options. Outcomes scores range from 0-6. Below is a breakdown of the cut-points by the outcomes measured. Outcome cut-points are used to determine high achievement. Below is a breakdown of the cutpoints by the outcomes measured.
+The questions and the scoring methodology of the girl survey were developed and tested by the Girl Scout Research Institute. Girls answer multiple questions to obtain an outcome score for each life skill domain. Responses to survey questions are assigned numbers/points and outcome scores are calculated by averaging responses to survey questions for each category. 
+
+Outcome cutpoints are determined by the number of questions in the outcome set and response options. Outcomes scores range from 0-6. Below is a breakdown of the cut-points by the outcomes measured. Outcome cut-points are used to determine high achievement. Below is a breakdown of the cutpoints by the outcomes measured.
 
 ```{r echo=FALSE}
 setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
@@ -70,7 +67,7 @@ kable(outcomes)
 
 
 
-The surveys administered to the students measures the following life skills, healthy relationships, academic engagement, and academic mastery.
+The student-survey is administered measures the following life skills, healthy relationships, academic engagement, and academic mastery.
 
 •	Healthy Relationships--Measures relationship skills with peers and adults.
 
@@ -84,9 +81,11 @@ The surveys administered to the students measures the following life skills, hea
 
 
 
-To have a successful outcome students either need to achieve a domain at a high level or increase from pre to post if they are not achieving at a high level. 
+Over a three year period 970 students had matched pre and post surveys. There are 116 students who were matched for multiple years. Post survey outcome scores are trending up from the baseline year and there is a positive increase from pre to post scores.  The data shows that the match students outperformed their peers in the realm of Academic Mastery but not in Healthy Relationships or Academic Engagement. 
 
-Over a three year period 970 students had matched pre and post surveys. There are 116 students who were matched for multiple years. The data shows that the match students outperformed their peers in the realm of Academic Mastery but not in Healthy Relationships or Academic Engagement. Post survey outcome scores are trending up from the baseline year. 
+To have a successful outcome students either need to achieve a domain at a high level on the post survey or increase from pre to post if they are not achieving at a high level. 
+
+The results over two years: 
 
 * 79% Healthy Relationships
 * 73% Academic Engagement
@@ -161,7 +160,7 @@ The Get REAL! program is meeting the academic objectives that it has established
 
 **Results:76% of the students are achieving this objective**.
 
-The caveat is that 61% of these students are maintaining their grade rather then increasing their grade. In addition to achieving the objective, there has been on average in increase difference between baseline and final grades for both Language Arts and Reading grades. 
+The caveat is that 61% of these students are maintaining their grade rather then increasing their grade. In addition to achieving the objective, there has been on average an increase in the difference between baseline and final grades for both Language Arts and Reading grades. 
 
 **Improved Attendance:**
 
@@ -169,7 +168,7 @@ The caveat is that 61% of these students are maintaining their grade rather then
 
 **Results: 61% of students are achieving this outcome**. 
 
-This is a challenging outcome because a student may have zero absences at baseline and 1 absences in the final. This would be a negative outcome and is not capturing the over arching goal of the program.  
+This is a challenging outcome because the objective is not capturing the over arching goal of the program.  For example a student may have zero absences at baseline and 1 absences in the final and  this would be a negative outcome 
 
 This objective may benefit from a more nuanced wording to capture the impact of the Get REAL program! For instance, looking more closely at the outcome of students with 4 or absences at baseline.  
 
@@ -203,14 +202,29 @@ Nearly 83% of students in the program  never receive a suspension. However, ther
 
 # Strengths-Challenges-Recommendations
 
-# Strengths 
-Overall the Get REAL! program is meeting the program objectives. The objectives set out are realistic and not too easy to acheive. However, a recommendation will be to review the objective pertaining to attendance. 
-
-The life skills surveys align with the objectives of the program. The surveys tell a story of a student that wants to do well in school but may not have all the social and academic tools to succeeed. 
+### Strengths 
+The Get REAL! program is meeting the program objectives. The objectives set out are realistic and not too easy to achieve. The life skills surveys align with the objectives of the program. The survey data tell a story of students that desire to do well in school but may not have all the social and academic tools to succeed. 
 
 ### Challenges
 
-As positive as the survey results are, they would probably be stronger if there 
+Data entry on a timely basis and duplicate entry has been a challenge. Matching 970 students over three years is disappointing given the enrollment numbers over the past three years. A primary driver for moving the administration of the surveys to the spring is to facilitate a higher completion rate and to have data entered into Qualtrics by June 30. 
+
+
+
+### Recommendations
+
+* **Emphasize and encourage getting data entry into Qualtrics by June 30, 2017.** 
+
+A data entry cutoff is needed in order to complete the final report. Writer can extend the data entry deadline but does not wish to extend beyond July 5.  
+
+* **Explore updating the Attendance Objective to emphasize more impactful results.** 
+
+Currently the objective is missing the big picture of improved attendance rate. For instance students with zero absences at baseline and one at final is not considered a success. The writer will look at the impact of students with 4 or more absences. Four or more absences in a quarter places a student at risk for chronic absenteeism.  
+
+
+
+
+
 
 
 
