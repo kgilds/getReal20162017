@@ -62,7 +62,9 @@ reading_comparisons <- reading_comparisons %>%
     rename(Q2_Avg = reading_pts.x)%>%
     rename(Q1_Avg = reading_pts.y)%>%
     rename(council = council.x)%>%
-    mutate(diff = Q2_Avg - Q1_Avg)
+    mutate(diff = Q2_Avg - Q1_Avg) %>%
+    mutate("Data_Source" = "Q2-Q1")
+
 
 dim(reading_comparisons)
 
