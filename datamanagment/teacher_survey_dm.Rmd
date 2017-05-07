@@ -167,6 +167,22 @@ post_teacher_unique <-  postTeacherUnique [!(duplicated(postTeacherUnique$girlCo
 ```
 
 
+```{r teacher_post_dupes}
+### Find duplicates
+teacher_post_dupes<-duplicated(postTeacherUnique$girlCode) | duplicated(postTeacherUnique$girlCode, fromLast=TRUE)
+
+##### I think this is pulling the actuall duplicate values####################
+
+teacher_post_dupes<- postTeacherUnique[teacher_post_dupes,]
+
+## How many duplicates
+dim(teacher_post_dupes)
+
+```
+
+
+
+
 
 ### Send data to Sqlite database
 ```{r teacher_sqllite}
@@ -184,6 +200,8 @@ dbWriteTable(conn = getReal_2016db, name = "pre_teacher_dups_1617", value = teac
 
 ### Write post teacher data to sqlite database
 dbWriteTable(conn = getReal_2016db, name = "post_teacher_1617", value = postTeacherUnique, row.names=FALSE, overwrite=TRUE)
+
+dbWriteTable(conn = getReal_2016db, name = "post_teacher_dups_1617", value = teacher_post_dupes, row.names=FALSE, overwrite=TRUE)
 
 
 
