@@ -1,0 +1,31 @@
+---
+title: "Admin_db"
+author: "Kevin Gilds, MPA"
+date: "May 6, 2017"
+output: html_document
+---
+
+```{r}
+library(sqldf)
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+enrollment <- dbReadTable(getReal_2016db, "enrollment_view")
+
+students_served <- dbReadTable(getReal_2016db, "students_served2")
+
+mentor_dat <- dbReadTable(getReal_2016db, "mentor report")
+
+```
+
+
+```{r}
+
+
+setwd("~/GitHub/getReal20162017/Admin")
+saveRDS(enrollment, file="enrollment.rds")
+saveRDS(students_served, file="students_served2.rds")
+saveRDS(mentor_dat, file="mentor_dat.rds")
+```
+
