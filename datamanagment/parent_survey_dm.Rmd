@@ -230,7 +230,7 @@ setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
 
 getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
 
-### Write Q1 Expelled data to sqlite database
+### Write  data to sqlite database
 dbWriteTable(conn = getReal_2016db, name = "pre_parent_1617", value = parentPreUnique, row.names=FALSE, overwrite=TRUE)
 
 
