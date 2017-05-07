@@ -161,6 +161,8 @@ preUnique<- pre [!(duplicated(pre$girlCode) | duplicated(pre$girlCode, fromLast 
 
 dim(preUnique)
 
+head(preUnique)
+
 ```
 
 
@@ -253,9 +255,9 @@ postDupes <-post[postDupes, ]
 
 setwd("~/GitHub/getReal20162017/Shiny_Apps")
 
-preUnique <- select(preUnique, Time, council, hr.avg, ae.avg, am.avg)
+survey_app <- select(preUnique, Time, council, hr.avg, ae.avg, am.avg)
 
-saveRDS(preUnique, file="girl_survey_03312017.rds")
+saveRDS(survey_app, file="girl_survey_05062017.rds")
 
 ```
 
@@ -276,6 +278,7 @@ dbWriteTable(conn = getReal_2016db, name = "girl_pre_duplicates_1617", value = p
 
 dbWriteTable(conn = getReal_2016db, name = "girl_post_1617", value = postUnique, row.names=FALSE, overwrite=TRUE)
 
+dbWriteTable(conn = getReal_2016db, name = "girl_post_duplicates_1617", value = postDupes, row.names=FALSE, overwrite=TRUE)
 
 
 
