@@ -3,13 +3,14 @@ title: "Status Report"
 author: "Kevin Gilds, MPA"
 date: '`r Sys.Date()`'
 output:
+  github_document: default
+  html_document: default
   pdf_document:
     latex_engine: xelatex
-  html_document: default
 ---
 
 
-### Data downloaded on: 03/31/2017
+### Data downloaded on: 05/06/2017
 
 
 
@@ -167,7 +168,7 @@ total_survey_count <- data.frame(Data_Source, Data_Entry)
 
 ```
 
-
+# Survey Data
 ```{r survey_status, echo=FALSE}
 ### Add the teacher to binding for status report
 
@@ -177,15 +178,27 @@ girl_parent <- rbind(pre_girl,pre_parent)
 
 survey_status <- rbind(girl_parent, pre_teacher) #add teacher survey
 
-survey_status <- rbind(survey_status, q1) #add q1
+survey_status <- rbind(survey_status, post_girl)
+
+survey_stauts <- rbind(survey_status, post_teacher)
+
+survey_stauts <- rbind(survey_status, post_parent)
+#survey_status <- rbind(survey_status, q1) #add q1
 
 
-survey_status <- rbind(survey_status, q2) #add q2
+#survey_status <- rbind(survey_status, q2) #add q2
 
 
 ```
 
 
+
+```{r echo=FALSE}
+
+grade_status <- rbind(q1, q2)
+
+
+```
 
 
 ```{r survey_stats, echo=FALSE}
@@ -204,7 +217,16 @@ saveRDS(survey_status, "data_entry_stat.rds")
 
 ```
 
-### Data Entry Status by Council
+# Academic Data
+```{r echo=FALSE}
+grade_status3 <- with(grade_status,table(dataSource)) #table for academic data
+
+pander(grade_status3) #display table
+
+```
+
+
+### Survey Data Entry Status by Council
 ```{r council, survey_status, echo=FALSE}
 
 survey_status2 <-with(survey_status,table(council, dataSource))
@@ -219,6 +241,14 @@ pander(survey_status2)
 
 ```
 
+# Academic Data Entry Status by Council
+```{r echo=FALSE}
+grade_status4 <-with(grade_status,table(council, dataSource)) #table by data entry status and council
+
+survey_status4 <- addmargins(grade_status4) #add margins sum
+
+pander(survey_status4) #diplay table
+```
 
 
 ### Duplicate Entries
@@ -254,6 +284,9 @@ teacher_dupes <- teacher_dupes %>%
     mutate("data_Source" = "Teacher_dupes")
 
 
+
+
+
 ```
 
 
@@ -268,7 +301,7 @@ q1_dupes <- q1_dupes %>%
 
 ```
 
-```{r eval=FALSE, echo=FALSE}
+```{r eval=TRUE, echo=FALSE}
 q2_dupes <- dbReadTable(getReal_db, "Q2_duplicates_1617")
 
 q2_dupes <- q2_dupes %>%
@@ -279,19 +312,14 @@ q2_dupes <- q2_dupes %>%
 ```
 
 
-
+# Survey Duplicate Errors
 ```{r bind_dupes, echo=FALSE}
 
 student_d_parent_d <- rbind(student_dupes, parent_dupes)
 
-
-
 dupe_status <- rbind(student_d_parent_d, teacher_dupes)
 
 
-dupe_status <-rbind(dupe_status, q1_dupes)
-
-#dupe_status <- rbind(dupe_status, q2_dupes)
 
 ```
 
@@ -307,7 +335,8 @@ pander(dupe_status_r)
 ```
 
 
-### Duplicate Entries by Council
+
+### Duplicate Survey Entries by Council
 ```{r dupe_status_council, echo=FALSE}
 
 dupe_status_c <-with(dupe_status,table(council,data_Source))
@@ -318,6 +347,30 @@ pander(dupe_status_c)
 
 ```
 
+# Academic Data Duplicate Errors
+```{r grade_dupe_setup, echo=FALSE}
+grade_dupes <- rbind(q1_dupes, q2_dupes)
 
+
+```
+
+```{r grade_dupe_tbl, echo=FALSE}
+grade_dupes_tbl <- with(grade_dupes,table(data_Source))
+```
+
+
+```{r}
+grade_dupes_c <- with(grade_dupes,table(council, data_Source))
+
+grade_dupes_c
+```
+
+```{r echo=FALSE, eval=FALSE}
+saveRDS(pre_girl, file="pre_girl.rds")
+saveRDS(post_girl, file="post_girl.rds")
+saveRDS(pre_parent, file="pre_parent.rds")
+saveRDS(post_parent, file="post_parent.rds")
+
+```
 
 
