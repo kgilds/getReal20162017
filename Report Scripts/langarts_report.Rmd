@@ -2,7 +2,7 @@
 title: "langarts_report"
 author: "Kevin Gilds, MPA"
 date: "April 9, 2017"
-output: html_document
+output: github_document
 ---
 
 
@@ -11,11 +11,10 @@ library(tidyverse)
 library(pander)
 library(ggplot2)
 library(sqldf)
-library(psych)
 library(knitr)
 library(gridExtra)
 library(effsize)
-library(likert)
+library(reshape2)
 library(getREAL)
 
 ```
@@ -31,6 +30,8 @@ q1_langarts <- dbReadTable(getRealdb,"Q1_langarts_1617")
 
 q2_langarts <- dbReadTable(getRealdb, "Q2_langarts_1617")
 
+q3_langarts <- dbReadTable(getRealdb, "Q3_langarts_1617")
+
 dim(q1_langarts)
 
 dim(q2_langarts)
@@ -45,17 +46,71 @@ dim(q2_langarts)
 
 q1_lang_avg <- aggregate(lang_pts ~ girl_code + council, data = q1_langarts, mean)
 
-q1_lang_avg
+q1_lang_avg_s <- q1_lang_avg %>%
+    mutate("Time" = "Q1")
 
 q2_lang_avg <- aggregate(lang_pts ~ girl_code + council, data = q2_langarts, mean)
 
-q2_lang_avg
+q2_lang_avg_s <- q2_lang_avg %>%
+    mutate("Time" = "Q2")
+
+q3_lang_avg <-aggregate(lang_pts ~ girl_code + council, data= q3_langarts, mean)
+
+q3_lang_avg_s <- q3_lang_avg %>%
+    mutate("Time" = "Q3")
 
 ```
 
+
 ```{r}
+q3_test <- rbind(q1_lang_avg_s, q2_lang_avg_s)
+
+q3_test <- rbind(q3_test,q3_lang_avg_s)
+
+
+head(q3_test)
+```
+
+```{r}
+lang_wide_s <- (q3_test) %>%
+    separate(Time, into=c("Q1", "Q2", "Q3)
+
+lang_wide_s
+```
+
+
+
+```{r}
+lang_wide <- q3_test %>%
+    gather(lang_pts, Time, -girl_code, -council)
+lang_wide
+```
+
+
+
+```{r}
+students <- q3_test %>%
+    group_by(girl_code)%>%
+    mutate(mean = mean(lang_pts))
+
+
+kable(students)
+```
+
+
+
+```{r eval=FALSE}
+
 lang_arts_comparisons <- inner_join(q2_lang_avg, q1_lang_avg, by="girl_code")
 
+
+
+
+```
+
+
+
+```{r eval=FALSE}
 lang_arts_comparisons <- lang_arts_comparisons %>%
     rename(Q2_Avg = lang_pts.x)%>%
     rename(Q1_Avg = lang_pts.y)%>%
@@ -68,7 +123,4 @@ dim(lang_arts_comparisons)
 head(lang_arts_comparisons)
 
 ```
-
-
-
 
