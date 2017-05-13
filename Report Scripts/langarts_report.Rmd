@@ -12,8 +12,6 @@ library(pander)
 library(ggplot2)
 library(sqldf)
 library(knitr)
-library(gridExtra)
-library(effsize)
 library(reshape2)
 library(getREAL)
 
@@ -62,6 +60,100 @@ q3_lang_avg_s <- q3_lang_avg %>%
 ```
 
 
+
+```{r}
+q1q3 <- inner_join(q1_lang_avg_s,q3_lang_avg_s, by="girl_code") %>%
+    rename(council = council.x) %>%
+    rename(baseline = lang_pts.x) %>%
+    rename(data_source_1 = Time.x) %>%
+    rename(final = lang_pts.y) %>%
+    rename(data_source_2 = Time.y)%>%
+    select(1:4,6:7)
+
+head(q1q3)
+
+dim(q1q3)
+```
+
+
+```{r}
+no_q1q3 <- anti_join(q1_lang_avg_s, q3_lang_avg_s, by="girl_code")
+
+head(no_q1q3)
+
+dim(no_q1q3)
+
+```
+
+```{r}
+q1q2 <- inner_join(no_q1q3, q2_lang_avg_s, by="girl_code") %>%
+    rename(council = council.x) %>%
+    rename(baseline = lang_pts.x) %>%
+    rename(data_source_1 = Time.x) %>%
+    rename(final = lang_pts.y) %>%
+    rename(data_source_2 = Time.y)%>%
+    select(1:4,6:7)
+
+
+
+```
+
+
+```{r}
+no_matches <- anti_join(no_q1q3, q2_lang_avg_s, by="girl_code")
+
+dim(no_matches)
+
+head(no_matches)
+```
+
+```{r}
+q1_run <- rbind(q1q3, q1q2)
+
+dim(q1_run)
+
+head(q1_run)
+
+```
+
+
+```{r}
+q2q3 <- inner_join(q2_lang_avg_s, q3_lang_avg_s, by="girl_code")
+
+q2_run <- anti_join(q2q3, q1_run, by="girl_code")%>%
+    rename(council = council.x) %>%
+    rename(baseline = lang_pts.x) %>%
+    rename(data_source_1 = Time.x) %>%
+    rename(final = lang_pts.y) %>%
+    rename(data_source_2 = Time.y)%>%
+    select(1:4,6:7)
+
+
+dim(q2_run)
+
+q1_q2_run <- rbind(q1_run, q2_run)
+
+dim(q1_q2_run)
+
+
+
+
+```
+
+
+```{r}
+kable(q1_q2_run)
+```
+
+
+```{r}
+q1_q2_run_t <- q1_q2_run %>%
+    summarise(n_distinct(girl_code))
+
+q1_q2_run_t
+```
+
+
 ```{r}
 q3_test <- rbind(q1_lang_avg_s, q2_lang_avg_s)
 
@@ -71,31 +163,13 @@ q3_test <- rbind(q3_test,q3_lang_avg_s)
 head(q3_test)
 ```
 
-```{r}
-lang_wide_s <- (q3_test) %>%
-    separate(Time, into=c("Q1", "Q2", "Q3)
-
-lang_wide_s
-```
 
 
 
-```{r}
-lang_wide <- q3_test %>%
-    gather(lang_pts, Time, -girl_code, -council)
-lang_wide
-```
 
 
 
-```{r}
-students <- q3_test %>%
-    group_by(girl_code)%>%
-    mutate(mean = mean(lang_pts))
 
-
-kable(students)
-```
 
 
 
