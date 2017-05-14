@@ -20,8 +20,8 @@ library(sqldf)
 library(psych)
 library(knitr)
 library(gridExtra)
-library(effsize)
-library(likert)
+#library(effsize)
+#library(likert)
 library(getREAL)
 
 ```
