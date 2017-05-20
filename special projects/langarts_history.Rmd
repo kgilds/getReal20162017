@@ -514,5 +514,15 @@ ggplot(council_lang_summary_c, aes(y=Grade_Change, x=Year_Id, colour=council, gr
 
 
 
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+
+getReal_db<- dbConnect(SQLite(), dbname="outcome_history.sqlite") #established connection with d
+
+dbWriteTable(conn =getReal_db, name= "langarts_history", value= lang_history, row.names=FALSE, overwrite=TRUE)
+
+
+```
 
 
