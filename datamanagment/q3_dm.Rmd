@@ -1,0 +1,646 @@
+---
+title: "q3_dm"
+output:
+  github_document: default
+  html_notebook: default
+---
+
+### Set working directory, library, and read raw data (needs updated data)
+
+
+```{r q3_library}
+library(tidyverse) #load tidy package
+library(sqldf)
+library(pander)
+
+```
+.
+```{r q3_read_data}
+q3_data <- readRDS("q3_data.Rds")
+
+
+#names(q3_data)
+
+
+
+```
+
+```{r q3_colnames}
+
+#change column names averages
+colnames (q3_data)[7] <- "reading_avg"
+colnames (q3_data)[10] <- "lang_avg"
+
+# change column names demographics
+colnames (q3_data)[13] <- "council"
+colnames (q3_data)[14] <- "girl_code"
+colnames (q3_data)[15] <- "school"
+colnames (q3_data)[16] <- "enrolled"
+
+# Attendance and Behavior
+colnames (q3_data)[18] <- "unexcused"
+colnames (q3_data)[19] <- "excused"
+colnames (q3_data)[20] <- "in_school"
+colnames (q3_data)[21] <- "out_school"
+colnames (q3_data)[22] <- "expelled"
+colnames (q3_data)[23] <- "Nothing"
+
+
+# Reading 
+colnames (q3_data)[25] <- "M/J INTENS READ"
+colnames (q3_data)[26] <- "M/J READ 1"
+colnames (q3_data)[27] <- "M/J READ 1, ADV"
+colnames (q3_data)[28] <- "M/J READ 2"
+colnames (q3_data)[29] <- "M/J READ 2, ADV"
+colnames (q3_data)[30] <- "M/J READ 3"
+colnames (q3_data)[31] <- "M/J READ3, ADV"
+colnames (q3_data)[32] <- "free_reading1"
+colnames (q3_data)[33] <- "free_reading2"
+colnames (q3_data)[34] <- "M/J DE LA ESOL-READ"
+
+# change colnmaes lang arts section
+colnames (q3_data)[36] <- "M/J LANG ARTS 1 ESOL"
+colnames (q3_data)[37] <- "M/J LANG ARTS 2 ESOL"
+colnames (q3_data)[38] <- "M/J LANG ARTS 3 ESOL"
+colnames (q3_data)[39] <- "M/J DEVELOPMENTAL  LANG ARTS ESOL"
+colnames (q3_data)[40] <- "M/J LANG ARTS 1"
+colnames (q3_data)[41] <- "M/J LANG ARTS 1 ADV"
+colnames (q3_data)[42] <- "M/J LANG ARTS 2"
+colnames (q3_data)[43] <- "M/J LANG ARTS 2 ADV"
+colnames (q3_data)[44] <- "M/J LANG ARTS 3"
+colnames (q3_data)[45] <- "M/J LANG ARTS 3 ADv"
+colnames (q3_data)[46] <- "M/J ENG 2 CAMB SEC 2"
+colnames (q3_data)[47] <- "M/J IB MYP LANG LIT 1"
+colnames (q3_data)[48] <- "M/J ENG 1 CAMB SEC 1"
+colnames (q3_data)[49] <- "M/J IB MYP LANG & LIT 3"
+colnames (q3_data)[50] <- "M/J IB MYP LANG & LIT 2"
+colnames (q3_data)[51] <- "M/J ENG 3 CAMB SEC 3"
+colnames (q3_data)[52] <- "M/J INTENS LANG ARTS"
+colnames (q3_data)[53] <- "free_lang1"
+colnames (q3_data)[54] <- "free_lang2"
+colnames (q3_data)[55] <- "M/J LANG ARTS TRAN"
+colnames (q3_data)[56] <- "M/J DE LANG ARTS ESOL"
+colnames (q3_data)[57] <- "blankspace"
+
+names(q3_data)
+
+```
+
+
+```{r q3_data_clean}
+
+
+
+
+q3_data$girl_code <- as.character(q3_data$girl_code)
+
+### Make all girCode to upper case for matching
+q3_data$girl_code <- toupper(q3_data$girl_code)
+
+
+
+q3_data <- q3_data %>%
+    filter(Finished ==1)
+
+#pander(table(q3_data$girl_code)) #test for duplicate girl codes
+
+```
+
+
+```{r clean_council_names}
+
+q3_data$council <-sub("Girl Scouts of the Gateway Council", "Gateway Council", fixed=TRUE, q3_data$council)
+
+q3_data$council <-sub("Girl Scouts of Citrus Council", "Citrus Council", fixed=TRUE, q3_data$council)
+
+q3_data$council <-sub("Girl Scouts of Southeast Florida", "Southeast Council", fixed=TRUE, q3_data$council)
+
+q3_data$council <-sub("Girl Scout Council of Tropical Florida", "Tropical Council", fixed = TRUE, q3_data$council)
+
+q3_data$council <-sub("Girl Scouts of West Central Florida", "West Central Council", fixed = TRUE, q3_data$council)
+
+q3_data$council <-sub("Girl Scout Council of the Panhandle", "Panhandle Council", fixed = TRUE, q3_data$council)
+
+
+```
+
+
+```{r q3_data_unique}
+
+q3_data <- q3_data[!(duplicated(q3_data$girl_code) | duplicated(q3_data$girl_code, fromLast = TRUE)), ]  #find and extract unique cases
+
+dim(q3_data)
+
+#pander(table(q3_data$girl_code)) #test for duplicate girl codes
+
+#preUnique<- pre [!(duplicated(pre$girlCode) | duplicated(pre$girlCode, fromLast = TRUE)), ]
+
+#dim(preUnique)
+
+
+```
+
+
+
+
+
+```{r q3_dupes}
+
+q3Dupes <- duplicated(q3_data$girl_code) | duplicated(q3_data$girl_code, fromLast=TRUE)
+
+
+#preDupes <-duplicated(pre$girlCode) | duplicated(pre$girlCode, fromLast=TRUE)
+
+#preDupes <-pre[preDupes, ]
+
+#dim(preDupes)
+
+
+
+### Subset the duplicates
+q3Dupes <-q3_data[q3Dupes, ]
+
+
+q3Dupes
+
+```
+
+
+
+
+
+# Attendance: 
+
+```{r q3_attendance}
+q3_attendance <- q3_data %>%
+    select(13:16,18:19)  #take columns of interest
+
+
+
+q3_attendance$unexcused[which(is.na(q3_attendance$unexcused))] <- 0
+q3_attendance$excused[which(is.na(q3_attendance$excused))] <-0
+
+
+q3_attendance <- q3_attendance %>%
+        mutate("total" = unexcused + excused)
+
+
+which(is.na(q3_attendance$total))
+
+mean(q3_attendance$total)
+
+
+```
+
+
+
+# Behavior
+
+```{r q3_behavior}
+q3_behavior <- q3_data %>%
+    select(13:16, 20:21)  #take columns of interest
+    
+    
+q3_behavior$in_school[which(is.na(q3_behavior$in_school))] <- 0  #find na and replace with 0
+q3_behavior$out_school[which(is.na(q3_behavior$out_school))] <-0  #find na values and replace with 0
+
+q3_behavior <- q3_behavior %>%   
+    mutate("total"= in_school + out_school) #calculate total 
+    
+head(q3_behavior) #check work
+
+which(is.na(q3_behavior$total))
+
+mean(q3_behavior$total)
+
+```
+
+# Expelled
+
+```{r q3_expelled}
+q3_expelled <- q3_data %>%
+    select(13:16, 22) #take columns of interest
+
+head(q3_expelled)
+```
+
+
+
+# Reading
+
+
+
+```{r q3_reading}
+q3_reading <- q3_data %>%
+    gather("reading_course", "Grade",25:31, 34) %>% #gather reading columns and put them in row
+    select(7,13:16, 50:51) #select reading columns
+    
+
+names(q3_reading)
+
+dim(q3_reading)
+
+q3_reading <-na.omit(q3_reading) #get rid of cases with no data
+
+
+
+
+dim(q3_reading)
+
+q3_reading
+
+
+
+```
+
+
+
+```{r q3_freereading}
+q3_freereading <- q3_data %>%
+    select(7,13:16, 32:33) #select free enter
+    
+q3_freereading <- q3_freereading[,c(1,2,3,4,5,7,6)] #re-arrange columns to make them align with q3 readind df
+
+q3_freereading <- q3_freereading %>%
+    rename("reading_course" = free_reading2) %>% #rename to match q3_reading
+    rename("Grade" = free_reading1) #rename to match q3_reading
+    
+
+dim(q3_freereading)
+q3_freereading <- na.omit(q3_freereading) #clean up to find cases with data
+
+
+
+dim(q3_freereading)
+
+q3_freereading
+
+
+```
+
+
+```{r q3_free, }
+
+q3_freereading <- q3_freereading[grep("READ", q3_freereading$reading_course, ignore.case=TRUE, fixed=TRUE),]
+
+q3_freereading
+
+```
+
+
+
+```{r q3_reading_bind}
+
+q3_reading <- rbind(q3_reading, q3_freereading) #bind main q3_reading and free text
+
+dim(q3_reading)
+
+q3_reading
+
+which(is.na(q3_reading$Grade))
+
+```
+
+
+```{r clean_up_reading}
+
+q3_reading <- q3_reading %>%
+    filter(Grade != "Did not mean to select this course")
+
+
+
+```
+
+
+
+### Reading Points
+
+```{r reading_pts_q3, echo=FALSE}
+
+reading_pts <- numeric(0)
+
+for(i in q3_reading$Grade){
+
+     reading_pts<- c(reading_pts,switch(i, "A" =4, "B"=3, "C"=2, "D"=1, "F"=0))
+
+     reading_pts
+     
+}
+
+q3_reading <-cbind(q3_reading, reading_pts)
+
+q3_reading
+
+```
+
+
+
+# Language Arts
+
+```{r q3_langarts}
+q3_langarts <- q3_data %>% 
+    gather("langarts_course", "grade", 36:52,55:56)%>% #put lang arts classes in rows
+    select(10, 13:16, 39:40) #select lang arts courses and grades
+
+names(q3_langarts)
+
+q3_langarts <- na.omit(q3_langarts) #get rid of cases with no entry
+
+q3_langarts
+```
+
+```{r}
+q3_freelang <- q3_data %>%
+    select(10, 13:16,53:54) #find free entry lang cases
+
+names(q3_freelang)
+
+q3_freelang <- q3_freelang[,c(1,2,3,4,5,7,6)] #rearrange columns to match regular lang courses 
+
+
+
+table(q3_freelang$free_lang1, q3_freelang$free_lang2) #check for data
+
+q3_freelang <- q3_freelang %>%
+    rename("langarts_course" = free_lang2) %>% #rename columns to match reg lang courses
+    rename("grade" = free_lang1)
+
+
+
+names(q3_freelang)
+
+
+```
+
+```{r grep_lang, echo=FALSE}
+
+
+q3_freelang_english <- q3_freelang[grep("ENGLISH", q3_freelang$langarts_course, ignore.case=TRUE, fixed=TRUE),]
+
+q3_freelang_english
+
+names(q3_freelang_english)
+
+```
+
+```{r bind_q3_free}
+
+q3_langarts <- rbind(q3_langarts, q3_freelang_english)
+
+
+
+
+
+```
+
+
+```{r filter_mistake}
+
+q3_langarts <- q3_langarts %>%
+    filter(grade != "Did not mean to select this course")
+
+
+dim(q3_langarts)
+
+which(is.na(q3_langarts$grade))
+
+```
+
+
+## Languge Points
+
+```{r lang_pts}
+lang_pts <- numeric(0)
+
+for(i in q3_langarts$grade){
+
+     lang_pts<- c(lang_pts,switch(i, "A" =4, "B"=3, "C"=2, "D"=1, "F"=0))
+
+     lang_pts
+}
+
+q3_langarts <-cbind(q3_langarts, lang_pts)
+
+q3_langarts
+
+```
+
+
+
+# Join All Behavior Data
+
+```{r}
+q3_behavior_data <- full_join(q3_behavior, q3_attendance, by="girl_code")
+
+dim(q3_behavior_data)
+head(q3_behavior_data)
+names(q3_behavior_data)
+
+q3_behavior_data <- q3_behavior_data %>%
+    select(1,2,3,4, 5, 7, 13) %>%
+    rename(council = council.x) %>%
+    rename(school = school.x) %>%
+    rename(enrolled = enrolled.x) %>%
+    rename(suspension_total = total.x)%>%
+    rename(absences_total = total.y)
+
+head(q3_behavior_data)
+
+```
+
+
+
+```{r combine_expelled}
+
+q3_behavior_data <- full_join(q3_behavior_data, q3_expelled, by="girl_code")
+
+names(q3_behavior_data)
+
+q3_behavior_data <- q3_behavior_data %>%
+    select(1, 2, 3, 4, 6,7,11) %>%
+    rename(council = council.x) %>%
+    rename(school = school.x)%>%
+    rename(enrolled = enrolled.x)
+    #rename(expelled = expelled.x)
+
+
+head(q3_behavior_data)
+    
+
+```
+
+
+
+#Combine Grades
+
+```{r combine_grades}
+q3_grades_c <- full_join(q3_reading, q3_langarts, by="girl_code")
+
+names(q3_grades_c)
+
+q3_grades_c <- q3_grades_c %>%
+    select(2,6,7,12,13) %>%
+    rename(council = council.x)
+
+head(q3_grades_c)
+
+```
+
+
+```{r "sq1_sqlite", root.dir= "C:/Users/kevin/Dropbox/GetReal/Data/sqlite" }
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+
+getReal_db<- dbConnect(SQLite(), dbname="outcome_history.sqlite") #established connection with database
+
+dbWriteTable(conn =getReal_db, name= "Q3_attendance_1617", value= q3_attendance, row.names=FALSE, overwrite=TRUE)
+
+dbWriteTable(conn =getReal_db, name= "Q3_behavior_1617", value= q3_behavior, row.names=FALSE, overwrite=TRUE)
+
+dbWriteTable(conn =getReal_db, name= "Q3_expelled_1617", value= q3_expelled, row.names=FALSE, overwrite=TRUE)
+
+dbWriteTable(conn =getReal_db, name= "Q3_reading_1617", value= q3_reading, row.names=FALSE, overwrite=TRUE)
+
+dbWriteTable(conn =getReal_db, name= "Q3_langarts_1617", value= q3_langarts, row.names=FALSE, overwrite=TRUE)
+
+dbWriteTable(conn =getReal_db, name= "Q3_duplicates_1617", value= q3Dupes, row.names=FALSE, overwrite=TRUE)
+
+dbWriteTable(conn =getReal_db, name= "Q3_behavior_data_1617", value= q3_behavior_data, row.names=FALSE, overwrite=TRUE)
+
+
+
+```
+
+
+# Functions
+```{r grade_file_function}
+
+
+grades_file <- function(x) {
+    grade_file <- filter(q3_grades_c, council == x)
+    write.csv (grade_file, file="grade_file_q3.csv", row.names=FALSE)
+    
+    
+}
+
+
+```
+
+```{r behavior_function}
+
+behavior_file <- function(x){
+    behavior_file <- filter(q3_behavior_data, council== x)
+    write.csv(behavior_file, file="behavior.file_q3.csv", row.names=FALSE)
+
+    }
+
+```
+
+```{r q3_duplicate_function}
+
+grade_dupes_file <-function(x){
+    grade_dupes <-filter(q3Dupes, council== x)
+    write.csv(grade_dupes, file="grade_dupes_q3.csv", row.names=FALSE)
+    
+}
+
+```
+
+
+
+### Citrus Council
+```{r make_student}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/citrus_council")
+
+
+grades_file("Citrus Council")
+
+behavior_file("Citrus Council")
+
+grade_dupes_file("Citrus Council")
+
+```
+
+
+### Gateway Council
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/gateway_council")
+
+grades_file("Gateway Council")
+
+behavior_file("Gateway Council")
+
+grade_dupes_file("Gateway Council")
+
+
+
+```
+
+
+### Southeast Council
+```{r}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/southeast")
+
+
+grades_file("Southeast Council")
+
+behavior_file("Southeast Council")
+
+grade_dupes_file("Southeast Council")
+
+
+```
+
+
+### Tropical Council
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/tropical_council")
+
+grades_file("Tropical Council")
+
+behavior_file("Tropical Council")
+
+grade_dupes_file("Tropical Council")
+
+```
+
+
+### Panhandle Council
+
+```{r}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/panhandle_council")
+
+grades_file("Panhandle Council")
+
+behavior_file("Panhandle Council")
+
+grade_dupes_file("Panhandle Council")
+
+
+
+```
+
+### West Central Council
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/west_central_council")
+
+grades_file("West Central Council")
+
+behavior_file("West Central Council")
+
+grade_dupes_file("West Central Council")
+
+
+
+```
+=======
+
+
+
