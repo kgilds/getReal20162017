@@ -1,0 +1,305 @@
+[
+	{
+		"id": "1",
+		"type": "book",
+		"title": "Lilla: An Inquiry  Into Morals",
+		"publisher": "Bantam Books",
+		"number-of-pages": "468",
+		"source": "91-16417",
+		"ISBN": "0-553-29961-1",
+		"author": [
+			{
+				"family": "Pirsig",
+				"given": "Robert"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"1991"
+				]
+			]
+		}
+	},
+	{
+		"id": "2",
+		"type": "book",
+		"title": "Lila: an inquiry into morals",
+		"publisher": "Bantam Books",
+		"publisher-place": "New York",
+		"source": "Open WorldCat",
+		"event-place": "New York",
+		"abstract": "Phaedrus is traveling in a sailboat down the Hudson River when he meets Lila, a woman who threatens to disrupt his life and causes him to reexamine his personal philosophy.",
+		"ISBN": "0-553-29961-1",
+		"note": "OCLC: 27138305",
+		"shortTitle": "Lila",
+		"language": "English",
+		"author": [
+			{
+				"family": "Pirsig",
+				"given": "Robert M"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"1992"
+				]
+			]
+		}
+	},
+	{
+		"id": "3",
+		"type": "webpage",
+		"title": "The Importance of being in School: Report on Absenteesim in the Nation's Public Schools",
+		"URL": "http://new.every1graduates.org/wp-content/uploads/2012/05/FINALChronicAbsenteeismReport_May16.pdf",
+		"shortTitle": "The Importance of being in School",
+		"author": [
+			{
+				"family": "Balfanz",
+				"given": "Robet"
+			},
+			{
+				"family": "Byrnes",
+				"given": "Vaughn"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"2012",
+					5
+				]
+			]
+		},
+		"accessed": {
+			"date-parts": [
+				[
+					"2016",
+					12,
+					10
+				]
+			]
+		}
+	},
+	{
+		"id": "4",
+		"type": "article",
+		"title": "Measuring student engagement in upper elemantary through high school: a description of 21 instruments.",
+		"publisher": "IES National Center for Education Evaluation and Regional Assistance",
+		"author": [
+			{
+				"family": "Fredricks",
+				"given": "Jennifer"
+			},
+			{
+				"family": "McColskey",
+				"given": "Wendy"
+			},
+			{
+				"family": "Meli",
+				"given": "Jane"
+			},
+			{
+				"family": "Mordica",
+				"given": "Joy"
+			},
+			{
+				"family": "Montrosse",
+				"given": "Bianca"
+			},
+			{
+				"family": "Mooney",
+				"given": "Kathleen"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"2011",
+					1
+				]
+			]
+		}
+	},
+	{
+		"id": "5",
+		"type": "webpage",
+		"title": "The Attendance Imperative: How States can Advance Achievement by Reducing Chronic Absence",
+		"container-title": "AAM Policy Brief",
+		"URL": "http://www.attendanceworks.org/wordpress/wp-content/uploads/2013/09/AAM-Policy-Brief-Final-9.16.pdf",
+		"issued": {
+			"date-parts": [
+				[
+					"2013",
+					9
+				]
+			]
+		},
+		"accessed": {
+			"date-parts": [
+				[
+					"2016",
+					12,
+					10
+				]
+			]
+		}
+	},
+	{
+		"id": "6",
+		"type": "book",
+		"title": "Thinking, fast and slow",
+		"publisher": "Farrar, Straus and Giroux",
+		"publisher-place": "New York",
+		"source": "Open WorldCat",
+		"event-place": "New York",
+		"ISBN": "978-0-374-53355-7",
+		"language": "English",
+		"author": [
+			{
+				"family": "Kahneman",
+				"given": "Daniel"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"2013"
+				]
+			]
+		}
+	},
+	{
+		"id": "7",
+		"type": "webpage",
+		"title": "Zotero Quick Start Guide",
+		"URL": "http://zotero.org/support/quick_start_guide",
+		"author": [
+			{
+				"literal": "Center for History and New Media"
+			}
+		]
+	},
+	{
+		"id": "8",
+		"type": "article",
+		"title": "Transforming Leadership: Focusing on outcomes of the New Girl Scout Leadership Experience",
+		"publisher": "Girl Scouts of the USA",
+		"call-number": "978-0-88441-708-8"
+	},
+	{
+		"id": "9",
+		"type": "book",
+		"title": "The power elite",
+		"publisher": "Oxford University Press",
+		"publisher-place": "New York",
+		"number-of-pages": "442",
+		"source": "Library of Congress ISBN",
+		"event-place": "New York",
+		"ISBN": "978-0-19-513354-7",
+		"call-number": "HN90.P6 M55 1999",
+		"author": [
+			{
+				"family": "Mills",
+				"given": "C. Wright"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"1999"
+				]
+			]
+		}
+	},
+	{
+		"id": "10",
+		"type": "article",
+		"title": "PreventingMissedOpportunityFull_FINAL9.8.16_2.pdf",
+		"URL": "http://www.attendanceworks.org/wordpress/wp-content/uploads/2016/08/PreventingMissedOpportunityFull_FINAL9.8.16_2.pdf",
+		"accessed": {
+			"date-parts": [
+				[
+					"2017",
+					1,
+					1
+				]
+			]
+		}
+	},
+	{
+		"id": "http://zotero.org/users/1758972/items/N89IXUFR",
+		"type": "webpage",
+		"title": "Every School Day Counts: The Forum Guide to Collecting and Using Attendance Data",
+		"abstract": "Attendance Data in Action",
+		"URL": "https://nces.ed.gov/pubs2009/attendancedata/chapter4b.asp",
+		"shortTitle": "Every School Day Counts",
+		"language": "EN",
+		"accessed": {
+			"date-parts": [
+				[
+					"2017",
+					1,
+					1
+				]
+			]
+		}
+	},
+	{
+		"id": "http://zotero.org/users/1758972/items/QKHCN67W",
+		"type": "article",
+		"title": "SixthGradeEWIFullReport.pdf",
+		"URL": "http://www.baltimore-berc.org/pdfs/SixthGradeEWIFullReport.pdf",
+		"accessed": {
+			"date-parts": [
+				[
+					"2017",
+					1,
+					1
+				]
+			]
+		}
+	},
+	{
+		"id": "http://zotero.org/users/1758972/items/S7488KM5",
+		"type": "book",
+		"title": "The Careless Society: Community and It's Counterfeits",
+		"publisher": "Basic Books",
+		"ISBN": "0-465-09126-1",
+		"author": [
+			{
+				"family": "McKnight",
+				"given": "John"
+			},
+			{
+				"family": "Kretzmann",
+				"given": "John"
+			}
+		],
+		"issued": {
+			"date-parts": [
+				[
+					"1995"
+				]
+			]
+		}
+	},
+	{
+		"id": "http://zotero.org/users/1758972/items/U94JSEHG",
+		"type": "article",
+		"title": "Linking Leadership to Academic Success: The Girl Scout Difference",
+		"publisher": "Girl Scout Research Institute",
+		"URL": "http://www.girlscouts.org/research/pdf/linking_leadership_to_academic_success_report.pdf",
+		"author": [
+			{
+				"family": "Barnett",
+				"given": "Sabrica"
+			}
+		]
+	},
+	{
+		"id": "http://zotero.org/users/1758972/items/Z4VBTATE",
+		"type": "post-weblog"
+	}
+]

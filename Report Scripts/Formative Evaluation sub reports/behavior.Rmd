@@ -1,0 +1,144 @@
+---
+title: "Behavior"
+author: "Kevin Gilds, MPA"
+date: "December 11, 2016"
+output: html_document
+---
+```{r behavior_libaries, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(pander)
+library(ggplot2)
+library(sqldf)
+library(psych)
+library(knitr)
+library(gridExtra)
+library(effsize)
+library(likert)
+library(getREAL)
+
+```
+
+
+```{r behavior_db, echo=FALSE}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+### Make connection with database
+getRealdb <- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+
+q1_behavior <- dbReadTable(getRealdb,"Q1_behavior_1617")
+
+```
+
+# Improvement in School Behavior
+
+*Objective: 70% of participating students will show improvement in behavior by decreasing their number of suspensions from the baseline grading period to final grading period or not having a suspension during the school year as evidenced from the student's report card/school reports.*
+
+
+
+
+
+```{r q1_attendance_mean_behavior, echo=FALSE}
+
+q1_behavior$total <- as.numeric(q1_behavior$total)
+
+
+
+
+```
+
+```{r echo=FALSE}
+no_susp <- filter(q1_behavior, total == 0)
+
+student <- nrow(q1_behavior)
+
+no_susp <- nrow(no_susp)
+
+success <- no_susp/student
+
+success <- round(success*100,2)
+
+success <- paste0(success, "%", sep="")
+
+
+    
+    
+
+
+```
+
+Baseline data indicates number of valid data entries is **`r nrow(q1_behavior)`** and the percent of students who have not experienced a suspension as of Quarter 1 is **`r pander(success)`**
+
+
+
+
+```{r q1_behavior_tbl, echo=FALSE}
+
+q1_suspensions <-with(q1_behavior,table(total))  #table of absences
+
+
+pander(q1_suspensions   ) #pretty table
+
+#q1_suspensions_c <- with(q1_behavior,table(council,total)) #table of absences by council
+
+#pander(q1_suspensions_c) #pretty table
+```
+
+
+```{r total_plot_behaivor, echo=FALSE}
+
+
+total_behavior_p <- ggplot(q1_behavior,(aes(x =total, y = council)))
+
+total_behavior_p + geom_count()
+
+
+
+```
+
+
+# Out of Scool Suspensions
+```{r q1_out_tbl, echo=FALSE}
+
+q1_out <-with(q1_behavior,table(out_school)) #unexcused table
+
+pander(q1_out) #pretty table
+
+
+#q1_out_c <-with(q1_behavior,table(council, out_school)) #unexcused table by council
+
+#pander(q1_out_c) #pretty table
+
+```
+
+
+
+# In School Suspensions
+```{r in_school_tbls}
+q1_in <-with(q1_behavior,table(in_school)) #q1_unexucsed table
+
+pander(q1_in) #make pretty
+
+
+#q1_in_c <-with(q1_behavior,table(council, in_school)) #q1_unexcused by council
+
+#pander(q1_in_c) #pretty tables
+
+```
+
+# Expelled
+```{r expelled, echo=FALSE}
+
+
+q1_expelled <- dbReadTable(getRealdb,"Q1_expelled_1617")
+
+
+q1_expelled_tbl <- with(q1_expelled,table(expelled))
+
+pander(q1_expelled_tbl)
+
+```
+
+
+

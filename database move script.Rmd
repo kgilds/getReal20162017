@@ -1,0 +1,43 @@
+---
+title: "Move data from 1415 to main database"
+output: html_notebook
+---
+
+```{r}
+library(DT)
+library(getREAL)
+library(dplyr)
+library(pander)
+library(ggplot2)
+library(effsize)
+library(knitr)
+```
+
+```{r}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Reports/MY-2014-2015/Summ Evaluation Report/data") #change working directory to find database
+
+getReal_2015db<- dbConnect(SQLite(),   dbname="data_Final_GetReal_2014_2015.sqlite") #read database
+
+pre_student <- dbReadTable(getReal_2015db, "pre_girl_survey")
+
+post_student <-dbReadTable(getReal_2015db, "post_girl_survey")
+
+```
+
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite") 
+
+getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite") #established connection with database
+
+
+dbWriteTable(conn = getReal_2016db, name = "girl_pre_1415", value = pre_student, row.names=FALSE, overwrite=TRUE)
+
+### Write Q1 Expelled data to sqlite database
+dbWriteTable(conn = getReal_2016db, name = "girl_post_1415", value = post_student, row.names=FALSE, overwrite=TRUE)
+
+
+
+```
+

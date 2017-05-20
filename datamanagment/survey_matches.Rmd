@@ -1,0 +1,100 @@
+---
+title: "survey_matches"
+author: "Kevin Gilds, MPA"
+date: "May 18, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r hr_libaries, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(pander)
+library(ggplot2)
+library(sqldf)
+library(knitr)
+
+
+```
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+getRealdb<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+
+pre_student_survey<-dbReadTable(getRealdb, "girl_pre_1617") 
+
+post_student_survey <-dbReadTable(getRealdb, "girl_post_1617")
+
+```
+
+#Healthy Relationships
+```{r}
+pre_hr <- pre_student_survey  %>%
+    select(council, girlCode, hr.avg) %>%
+    mutate("Year_Id" = "16-17")
+
+
+post_hr <- post_student_survey %>%
+    select(council, girlCode, hr.avg) %>%
+    mutate("Year_Id" = "16-17")
+
+
+
+hr <- inner_join(pre_hr, post_hr, by="girlCode")
+
+head(hr)
+
+hr <- hr %>%
+    select(Year_Id.x, council.x, girlCode, hr.avg.x, hr.avg.y) %>%
+    rename("Year_Id" = Year_Id.x) %>%
+    rename("council" = council.x) %>%
+    rename("Pre" = hr.avg.x) %>%
+    rename("Post" = hr.avg.y) %>%
+    mutate ("hr.diff" = Post - Pre)
+
+head(hr)
+
+
+
+```
+
+
+```{r}
+hr_1 <- hr %>%
+    filter(Post >=4.45)%>%
+    mutate("Success" = "TRUE")
+
+#dim(hr_1)
+
+hr_2 <- hr %>%
+    filter(Post <4.45 & hr.diff >0)%>%
+    mutate("Success" = "TRUE")
+
+
+
+#dim(hr_2)
+
+hr_3 <- hr %>%
+    filter(Post < 4.45 & hr.diff <=0)%>%
+    mutate("Success" = "FALSE")
+
+
+hr_1 <- rbind(hr_1, hr_2)
+
+hr <- rbind(hr_1, hr_3)
+
+
+```
+
+
+
+```{r}
+head(hr)
+```
+

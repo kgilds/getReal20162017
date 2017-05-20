@@ -1,0 +1,277 @@
+Council Data Summary
+========================================================
+author: Kevin Gilds, MPA
+date: January 29, 2017
+autosize: true
+
+
+```{r echo=FALSE, warning=FALSE, messages=FALSE}
+
+library(tidyverse)
+library(pander)
+library(ggplot2)
+library(sqldf)
+library(psych)
+library(knitr)
+library(gridExtra)
+library(effsize)
+library(likert)
+library(getREAL)
+
+
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+getRealdb<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+q1_langarts <- dbReadTable(getRealdb,"Q1_langarts_1617")
+
+q1_attendance <- dbReadTable(getRealdb,"Q1_attendance_1617")
+
+
+pre <- dbReadTable(getRealdb,"girl_pre_1617")
+
+q1_behavior <- dbReadTable(getRealdb,"Q1_behavior_1617")
+
+pre_parent  <- dbReadTable(getRealdb, "pre_parent_1617")
+
+
+q1_reading <- dbReadTable(getRealdb,"Q1_reading_1617") #read 1617 q1 reading
+
+
+pre <- pre %>%
+    select(council, hr.avg, ae.avg, am.avg)
+
+```
+
+
+
+
+
+Healhty Relationship Student Survey
+========================================================
+Count of students achieving at a high level at baseline
+
+
+```{r echo=FALSE}
+pre_hr <-with(pre,table(council, hr.avg >=4.45)) 
+
+kable(pre_hr)
+
+#pre_hr_c <- prop.table(pre_hr, 1)
+
+
+#pre_hr_c <- round(pre_hr_c*100,2)
+    
+#kable(pre_hr_c, caption="Percent at high level by council")
+```
+
+***
+
+```{r echo=FALSE}
+hr_bar_pre_c <-ggplot(pre, aes(hr.avg >=4.45))+ geom_bar() + facet_wrap(~council) + labs(x="Achieving at High Level", title= "Pre: Healthy Relationships by Council")
+
+hr_bar_pre_c
+
+```
+
+
+
+
+
+
+Healthy Relationships Parent Survey
+========================================================
+Right:80%
+
+She develops positive relationships with her classmates 
+
+***
+
+![hr_parent](figs/parent_groupded-1.png)
+
+
+Healthy Relationships Teacher Survey
+========================================================
+Right:80%
+
+She has developed positive relationships with her classmates
+
+***
+
+![](figs/q7_teacher-1.png)
+
+
+Academic Engagment Student Survey
+========================================================
+Count of students achieving at a high level at baseline
+
+
+```{r echo=FALSE}
+pre_ae <-with(pre,table(council, ae.avg >=4.5)) 
+
+kable(pre_ae)
+
+#pre_hr_c <- prop.table(pre_hr, 1)
+
+
+#pre_hr_c <- round(pre_hr_c*100,2)
+    
+#kable(pre_hr_c, caption="Percent at high level by council")
+```
+
+***
+
+```{r echo=FALSE}
+ae_bar_pre_c <-ggplot(pre, aes(hr.avg >=4.5))+ geom_bar() + facet_wrap(~council) + labs(x="Achieving at High Level", title= "Pre: Academic Engagement by Council")
+
+ae_bar_pre_c
+
+```
+
+
+
+Academic Engagement Parent Survey
+========================================================
+Right:80%
+
+Question 6: She works on her homework at home without supervision
+
+***
+![ae_parent](figs/pre_parent_g-1.png)
+
+
+Academic Engagement Teacher Survey
+========================================================
+Right:80%
+
+Question 5: She positively participates in class
+
+Question 6: She completes the homework given to her
+
+***
+
+![ae_teacher1](figs/pre_teacher_q1_g-1.png)
+
+
+
+Academic Mastery Student Survey
+========================================================
+Count of students achieving at a high level at baseline
+
+
+```{r echo=FALSE}
+
+pre_am <-with(pre,table(council, am.avg >=4.8)) 
+
+kable(pre_am)
+
+```
+
+
+***
+
+```{r echo=FALSE}
+
+am_bar_pre_c <-ggplot(pre, aes(am.avg >=4.8))+ geom_bar() + facet_wrap(~council) + labs(x="Achieving at High Level", title= "Pre: Academic Mastery by Council")
+
+am_bar_pre_c
+
+
+```
+
+Academic Mastery Parent Survey
+========================================================
+Right:80%
+
+Question 1: She is motivated to graduate high school
+
+Question 3: She has a Good Attitude About School
+
+
+***
+
+![am_parent](figs/am_council_parent-1.png)
+
+
+
+Academic Mastery Teacher Survey
+========================================================
+Right:80%
+
+Question 1: She is motivated to graduate high school
+
+Question 3: She has a Good Attitude About School.
+
+***
+
+![am_council](figs/pre_teacher_am_council-1.png)
+
+
+Language Arts Grades
+========================================================
+
+```{r echo=FALSE}
+grade_table_c <-with(q1_langarts,table(council, grade))
+
+kable(grade_table_c, caption="Q1 Grades by Council")
+
+```
+
+***
+
+![council_lang](figs/council_lang-1.png)
+
+
+Reading Grades
+========================================================
+
+```{r echo=FALSE}
+grade_table_c <-with(q1_reading,table(council, Grade))
+
+kable(grade_table_c, caption="Q1 Grades by Council")
+
+```
+
+***
+
+```{r echo=FALSE}
+ggplot(q1_reading, aes(x=Grade, y=council))+ geom_count()  #plot grades by courses
+
+```
+
+
+Attendance
+========================================================
+
+Total of excused and unexcused absences
+
+
+
+```{r echo=FALSE, fig.width=15, fig.height=7, fig.align="center"}
+total_absPlot <- ggplot(q1_attendance,(aes(x =total, y = council)))
+
+total_absPlot + geom_count()
+
+```
+
+
+
+Behavior
+========================================================
+
+
+Total of in-school suspensions and out-of-school suspensions
+
+```{r echo=FALSE}
+
+q1_suspensions_c <- with(q1_behavior,table(council,total)) #table of absences by council
+
+kable(q1_suspensions_c, caption="Suspensions by Council") #pretty table
+```
+
+***
+
+![behavior](figs/total_plot-1.png)
+
+
+

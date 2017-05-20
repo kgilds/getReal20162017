@@ -1,0 +1,48 @@
+---
+title: "Get_Real_Issues"
+author: "Kevin Gilds, MPA"
+date: "April 1, 2017"
+output: html_document
+---
+
+```{r}
+library(jsonlite)
+library(dplyr)
+library(pander)
+library(httr)
+```
+
+
+```{r}
+url <- "https://api.github.com/repos/kgilds/getReal20162017/issues/comments"
+
+
+
+get_real <- GET(url)
+
+details <- content(get_real, "parse")
+
+details[[1]]$body
+
+```
+
+
+```{r}
+
+getReal_issues <- fromJSON("https://api.github.com/repos/kgilds/getReal20162017/issues")
+
+getReal_issues1 <- fromJSON("https://api.github.com/repos/kgilds/getReal20162017/issues/1/comments")
+
+getReal_issues1$comment
+
+
+
+
+
+paste(format(getReal_issues$title), ":", getReal_issues$body)
+
+
+
+#paste(format(getReal_issues$title), ":", getReal_issues$comments)
+```
+

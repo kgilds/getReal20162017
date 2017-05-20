@@ -1,0 +1,270 @@
+---
+title: "Intro_report"
+author: "Kevin Gilds, MPA"
+date: "July 2, 2016"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+bibliography: get_real.json
+---
+
+
+
+
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+
+library(dplyr)
+library(pander)
+library(ggplot2)
+
+library(knitr)
+
+library(sqldf)
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite") 
+#books <- books %>%
+    #select(46)
+
+#table(books)
+
+enrollment <- dbReadTable(getReal_2016db, "enrollment_view")
+
+enrollment <- enrollment %>%
+    filter(time == "01/13/2017")
+
+enrollment <- enrollment %>%
+    select(4:7, 9)
+    
+
+
+
+mentor_report <- dbReadTable(getReal_2016db, "mentor_report_1516")
+
+mentor_report <- mentor_report %>%
+    filter(Year == "16-17")
+
+
+mentors_tot <- sum(mentor_report$mentors)
+
+logged_hrs <- sum(mentor_report$logged_hours)
+    
+
+#mentors_tot
+
+#logged_hrs
+
+
+attendance <- dbReadTable(getReal_2016db, "monthly_attendance")
+
+#str(attendance)
+
+#attendance$students_served <-as.numeric(attendance$students_served)
+
+#str(attendance)
+
+#oct_attendance <- attendance %>%
+    #filter(date =="October 2016")
+
+
+#summary(oct_attendance$students_served)
+#summary(attendance$students_served)
+
+#attendance$sessions_held <-as.numeric(attendance$sessions_held)
+
+#summary(attendance$sessions_held)
+
+sessions_held <- attendance %>%
+    summarise(sessions_held = sum(sessions_held))
+
+#sessions_held
+```
+
+
+# Introduction
+The Get REAL! program is a statewide mentoring program facilitated by six Girl Scout Councils in Florida. The goal of the Get REAL! program is to help at-risk middle school girls achieve academic success by connecting them to caring mentors in the community. Girl Scout facilitators and mentors deliver the Get REAL! program which includes a literacy component, character building, educational enhancement experience, and community service.The purpose of this report is to provide a detailed summary of the program; identify progress towards achieving objectives and provide recommendations for program improvement.
+
+## Program Operation
+
+Each Girl Scout Council collaborates with school officials to identify girls that would benefit from the Get REAL! program. Referrals come to the Get REAL! staff from school personnel and appropriate referrals for Get REAL! are at-risk girls based on (but not limited to) one or more of the following criteria:
+
+* Enrolled in the 6th to 8th grade
+
+* Are one or more grade levels behind in school;
+
+* Who scored at Level 1 or Level 11 in FSA Reading;
+
+* Have high absenteeism, or high disciplinary referrals;
+
+* Struggling socially/family problems.
+
+
+```{r enrollment_dat, echo=FALSE}
+
+enrollment <- enrollment[, c(5,1:4)]
+
+enrollment_total <-enrollment %>%
+    summarise(Total = sum(Total))
+
+#enrollment_total
+
+enrollment_2 <- enrollment[,-1]
+#total <-colSums(enrollment_2)
+
+#total
+
+
+
+
+
+```
+
+
+
+
+Student recruitment activities included meeting with school officials, word of mouth recruitment, announcement at school assemblies, visiting after-school programs, and sample sessions for mentees. The enrollment goal of the Get REAL! program was to serve 900 students by the end of the 4th Quarter. The Girl Scouts Councils are on target to reach their goal by serving `r (enrollment_total)` students as of December 31, 2016. Below is a map that shows the coverage and enrollment numbers for students in the Get REAL! program across Florida.
+
+```{r enrollment_data, echo=FALSE}
+pander(enrollment)
+```
+
+
+
+![council_enrollment](council_enroll.jpg)
+
+## Attendance Data
+
+The Get REAL! program is being offered on a consistent basis at over 20 locations across Florida. The number of mentoring sessions from October through December is `r (sessions_held)` and the councils were averaging over 20 mentoring sessions a month. Students in the program are attending on a regular basis as evidenced by monthly attendance reports. Review of attendance reports demonstrates that the Girl Scout Councils are serving on average over 100 students every month since October 2016. 
+
+## Staff Quality
+
+All program staff and mentors are personally interviewed, complete an Affidavit of Good Moral Character, submit to a reference check, and must satisfactorily pass a criminal background check in order to begin working with students. Upon successful completion of the application process, new staff and mentors receive training on the approved program curriculum, and safety standards. Trainings that must be completed by new staff and mentors include Girl Scouts 101, CPR/First Aid, Diversity, and Team Building.   
+
+## Mentor Recruitment
+
+The Girl Scout Councils recruited and trained a total of `r (mentors_tot)`  individuals to be mentors and the mentors logged `r (logged_hrs)` hours to assist students in the program. The goal of the Get REAL! program was to recruit enough mentors to maintain a 15-1 student-mentor relationship. Successful mentor recruitment has varied from council to council. One recruitment method for mentors was to present the positive  outcomes of the Get REAL! program to prospects and another method was to  assigned certain students in the program  to recruit prospective mentors. 
+
+
+
+## Program Components
+
+The education literature has shown that students who are engaged in school achieve better educational outcomes such as higher grades and greater achievement on standardized tests[@4]. In contrast, students who are disengaged are at a higher risk for dropping out of school. Student engagement is multiple dimensional including behavioral engagement, emotional engagement, and cognitive engagement[@4] Behavioral engagement consists a student's participation in school activities, emotional engagement refers to the connections and interactions a student has with peers and teachers, and cognitive engagement refers to resilience and the hard work required to be successful at school [@4]
+
+The program components of the Get REAL! program address the multiple facets of student engagement through a literacy program, character building, educational enhancements and community service opportunities. Facilitators and mentors work together to establish relationships with at-risk students and provide opportunities for educational enhancement trips and community services. The program components and activities of the Councils will be discussed in this section.
+
+
+### Literacy Component:
+
+
+The reading portion of the Get REAL! program uses the See Girls Read! curriculum, and girls read at least five books during the 30-session program. As part of the Girl Scout process, students are given input about what books they wish to read. Mentors facilitate discussion about the books the girls are reading, and participants read and write in their journal. The group discussions and writing activities help increase emotional and cognitive engagement in the students. Periodically the girls are encouraged to share their journals with their mentor and the mentor will respond to them. Journaling gives girls additional writing experience and helps establish connections with their mentor. 
+
+A list of books read thus far by students in the Get REAL! program:
+
+
+*Pinned*
+
+*You don't even know me*
+
+*Who am I without him*
+
+*Allegiant*
+
+*Crossover*
+
+*Girl Power*
+
+*Kim & Caitlyn*
+
+*Crossing Jordan*
+
+*Wonder*
+
+*The Girls*
+
+*Speak*
+
+
+
+
+
+
+```{r books, eval=FALSE, echo=FALSE}
+#book_1 <- lapply(books, factor, levels=c("Don't Know/Prefer Not to say","Strongly Disagree", "Disagree", "Disagree a little","Agree a little", "Agree", "Strongly Agree" ), ordered=TRUE)
+
+#book_1 <- table(book_1)
+
+#book_1
+
+#book_1_p <- prop.table(book_1)
+
+#pander(book_1_p)
+
+```
+
+
+### Character Building/Life Skills
+
+
+Relationships and connections with peers and teachers plays a critical role in academic engagement for students [@4]. All Girl Scout councils utilize the modules "Being a Girl", "Friendship" and "Body Image" from the Girls Circle curriculum. The modules focus on self-esteem, social development and interpersonal relationships to help the students solidify relationships with themselves, peers, and teachers.
+
+
+### Educational Enhancements
+
+Girls in the Get REAL! program participate in educational enhancements that consists of out-of-school learning experiences which  include camp visits, legislative day and half-day trips to local educational facilities.  Examples of the educational enhancement opportunities  planned for this year include the following:r 
+
+* Bricks 4 Kidz a S.T.E.M program that also includes financial literacy
+
+* Outing to Camp Mah Kah Wee for team-building activities using an obstacle course
+
+* Non traditional career fair featuring non traditional careers for women
+
+
+
+### Community Care Projects
+
+An important part of Girl Scouting is community care projects to help girls identify what they can do to help their community. Community care projects give the students opportunities to identify problems and work together to make a plan to help solve that problem. Each program group develops their own projects that is specific to their community. Community Care Projects planned for this year include 
+
+* Creating blankets for local homeless shelter
+
+* Donation Drive for the Victims of Hurricane Matthew. Students developed flyers and engaged with school and community to assist as well
+
+
+```{r child="results.Rmd"}
+
+```
+
+
+# Conclusion/Recommendations
+
+The Get REAL! program has administered the same surveys for the past four years and for the past three years the responses have consistently told the story of students who valued education and wanted success but did not have all the tools to be successful. This year the pre survey results indicate that this group of students may be more challenging than in past years. Parent and teacher pre surveys are consistent with the lower levels of relationship skills and attitude toward school.  
+
+The Girl Scout councils are in a strong  position to meet the objectives of the Get REAL! program. The councils are more than half way to meeting the enrollment goal and the Get REAL! program have a strong history of helping students achieve positive outcomes. This group of students presents an opportunity for the Get REAL! program to show how it impacts at risk students. The following are recommendations to help councils achieve the objectives of the program.
+
+*Recommendation 1: Data entry for surveys and academic data*
+
+
+* Ensure all students in the program who are attending complete a pre and post survey. Records of data entry status is available to each council representative. 
+
+* Administering and entering survey data into Qualtrics prior to June 1, 2016. This data management practice will help identify and resolve duplicate issues and to be included in the analysis. 
+
+
+
+
+*Recommendation 2: Document educational interventions/trainings *
+
+* Identify and document ways mentors and program staff provide educational support to the mentees such as study tips, test taking skills or other educational interventions. This can be documented by way of stories and best practices not individual student data. 
+
+* Identify and document ways mentors and program staff implement incentives for students to improve attendance,behavior and grades. 
+
+
+
+
+# References
+
+
+
+
+
+

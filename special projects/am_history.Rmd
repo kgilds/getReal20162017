@@ -1,0 +1,421 @@
+---
+title: "am_history"
+author: "Kevin Gilds, MPA"
+date: '`r Sys.Date()`'
+output: 
+    github_document: default
+---
+
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+
+library(formattable)
+library(sqldf)
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+library(DT)
+library(getREAL)
+library(dplyr)
+library(pander)
+library(ggplot2)
+library(effsize)
+library(knitr)
+library(catspec)
+
+```
+
+
+```{r read_databases, echo=FALSE}
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+am <-dbReadTable(getReal_2016db,"am_history")
+
+#dim(am)
+
+am_unique<- am [!(duplicated(am$girlCode) | duplicated(am$girlCode, fromLast = TRUE)), ] #find and subset uniquie students
+
+am_unique <- am_unique %>% 
+    mutate("Match" = "No") # Add in variable and response
+
+#dim(am_unique)
+
+am_dupes <-duplicated(am$girlCode) | duplicated(am$girlCode, fromLast=TRUE) #find duplicated cases
+
+am_dupes <- am[am_dupes, ] # subset dupes
+
+#dim(am_dupes)
+
+am_dupes <- am_dupes %>%
+    mutate("Match" = "Yes") #add variable and response
+
+
+am<- rbind(am_dupes, am_unique)
+
+
+#dim(am)
+
+```
+
+
+```{r council_sub, echo=FALSE}
+## Change council names to be consistent wiht how they displayed with the surveys
+am$council <-sub("Girl Scouts of the Gateway Council", "Gateway Council", fixed=TRUE, am$council)
+
+am$council <-sub("Girl Scouts of Citrus Council", "Citrus Council", fixed=TRUE, am$council)
+
+am$council <-sub("Girl Scouts of Southeast Florida", "Southeast Council", fixed=TRUE, am$council)
+
+am$council <-sub("Southeast Council, Inc", "Southeast Council", fixed=TRUE, am$council)
+
+am$council <-sub("Southeast Council.", "Southeast Council", fixed=TRUE, am$council)
+
+am$council <-sub("Girl Scout Council of Tropical Florida", "Tropical Council", fixed = TRUE, am$council)
+
+am$council <-sub("Girl Scouts of West Central Florida", "West Central Council", fixed = TRUE, am$council)
+
+am$council <-sub("Girl Scout Council of the Panhandle", "Panhandle Council", fixed = TRUE, am$council)
+
+am$council <-sub("Girl Scouts of Gulfcoast Florida Inc.",  "Gulfcoast Council", fixed = TRUE, am$council)
+
+```
+
+
+
+```{r update_year, echo=FALSE}
+am$Year_Id <-sub("M1",  "13-14", fixed = TRUE, am$Year_Id)
+
+am$Year_Id <-sub("M2",  "14-15", fixed = TRUE, am$Year_Id)
+
+am$Year_Id <-sub("M3",  "15-16", fixed = TRUE, am$Year_Id)
+
+
+
+```
+
+
+
+
+```{r succes, echo=FALSE}
+am_1 <- am %>%
+    filter(Post >=4.8)%>%
+    mutate("Success" = "TRUE")
+
+#dim(am_1)
+
+am_2 <- am %>%
+    filter(Post <4.8 & am.diff >0)%>%
+    mutate("Success" = "TRUE")
+
+
+#dim(am_2)
+
+am_3 <- am %>%
+    filter(Post < 4.8 & am.diff <=0)%>%
+    mutate("Success" = "FALSE")
+
+#dim(am_3)
+
+am_1 <- rbind(am_1, am_2)
+
+am <- rbind(am_1, am_3)
+
+#head(am)
+
+am_f <- am %>%
+    filter(Success ==FALSE)
+
+#head(am_f)
+#tail(am_f)
+
+```
+
+
+
+
+
+
+
+```{r am_status, echo=FALSE, eval=FALSE}
+council_status <- with(am,table(council, Year_Id))
+
+
+council_status <- addmargins(council_status)
+
+
+kable(council_status)
+
+
+#match_status <- with(am,table(council, Match))
+
+#pander(match_status)
+
+
+```
+
+
+
+# Academic Mastery
+
+
+## Post Survey Achievment
+
+```{r am_suc, echo=FALSE}
+am_suc <- am %>%
+    count(Success)%>%
+    mutate(percent = n/sum(n))
+
+am_suc$percent <- percent(am_suc$percent)
+
+kable(am_suc)
+
+```
+
+
+### Achievement by Council
+
+```{r council_am, echo=FALSE}
+
+council_am <- am %>%
+    group_by(council) %>%
+    count(Success) %>%
+    mutate(percent = n / sum(n))
+
+
+council_am$percent <- percent(council_am$percent)
+
+council_am <- council_am %>%
+    filter(Success == TRUE)
+
+kable(council_am)
+
+
+```
+
+### Achievment by Matched Status
+
+```{r post_hr, echo=FALSE}
+match_am <- am %>%
+    group_by(Match) %>%
+    count(Success) %>%
+    mutate(Percent = n/sum (n))
+    
+match_am$Percent <- percent(match_am$Percent)
+
+    
+kable(match_am)
+```
+
+
+
+
+
+
+
+
+## Average Difference between Pre and Post Surveys 
+
+The mean difference between pre and post survey is `r pander(mean(am$am.diff))`. 
+
+
+```{r an_diff_m, echo=FALSE}
+am_diff_m <- am %>%
+    group_by(Match) %>%
+    summarise(mean= mean(am.diff))
+
+kable(am_diff_m)
+
+```
+
+
+
+
+```{r am_plot_diff, echo=FALSE, fig.path='Figs/'}
+am_change_p <- ggplot(am,(aes(x=am.diff, y=council)))
+am_change_p + geom_count() + geom_vline(xintercept = 0, col="red") + labs(x="Difference Pre and Post", y="Council", title="Academic Mastery Survey Results")
+
+
+```
+
+
+```{r am_year_ach, echo=FALSE, fig.path='Figs/'}
+year_id_am <- am %>%
+    group_by(Year_Id)
+
+year_id_am <- summarize(year_id_am, am.diff = mean(am.diff))
+
+pander(year_id_am)
+
+year_id_am$Year_Id <- as.factor(year_id_am$Year_Id)
+
+#summary(year_id_am)
+
+
+
+ggplot(year_id_am, aes(y=am.diff, x=Year_Id, group=2)) + geom_line() + geom_point() + labs (x="Year", y= "Difference Pre and Post", title="Acedemic Mastery: Difference Pre and Post" )
+
+```
+
+
+
+### Average Difference between Pre and Post by Council
+
+```{r council_am_1, echo=FALSE}
+council_am <- am %>%
+    group_by(council)
+
+council_am_c <-summarise(council_am, am.diff =mean(am.diff))
+
+pander(council_am_c)
+
+
+
+```
+
+
+
+
+```{r council_am_2, echo=FALSE, eval= FALSE}
+council_am <- am %>%
+    group_by(council, Year_Id)
+
+council_am_diff <-summarise(council_am, am.diff =mean(am.diff))
+
+pander(council_am_diff)
+
+datatable(council_am_diff)
+
+```
+
+
+
+```{r hist_diff, echo=FALSE, eval=FALSE}
+
+hist(am$am.diff, col="red", freq=FALSE)
+am_dent <- density(am$am.diff)
+lines(am_dent)
+
+```
+
+
+```{r am_qnorm, echo=FALSE, eval=FALSE}
+
+qqnorm(am$am.diff)
+qqline(am$am.diff, col = 2)
+
+```
+
+
+```{r shapiro_test, echo=FALSE, eval=FALSE}
+shapiro.test(am$am.diff)
+```
+
+
+
+
+```{r am_tests, echo=FALSE, eval= FALSE}
+t.test(am$Pre, am$Post)
+
+
+
+cohen.d(am$Pre, am$Post)
+```
+
+
+
+
+```{r am_datatable, echo=FALSE, eval=FALSE}
+
+
+council_am_test <-council_am %>%
+    group_by(council,Year_Id) %>%
+    count(Post >=4.8)
+
+datatable(council_am_test)
+
+```
+
+
+
+## Post Survey Average Scores
+
+
+
+```{r am_avg_m, echo=FALSE}
+am_avg_m <- am %>%
+    group_by(Match)%>%
+    summarise(Post =mean(Post))
+
+kable(am_avg_m)
+```
+
+```{r am_avg, echo=FALSE}
+am_avg <- am %>%
+    group_by(Year_Id) %>%
+    summarise(Post =mean(Post))
+
+pander(am_avg)
+
+```
+
+```{r plot_avgs_am, echo=FALSE, fig.path='Figs/'}
+ggplot(am_avg, aes(y=Post, x=Year_Id, group=2)) + geom_line() + geom_point() + labs(x="Membership Year", y="Post Average", title="Academic Mastery: Post Survey Averages by Year")
+
+
+
+```
+
+
+### Post Survey Average Score by Council
+
+```{r council_am_post_tbl, echo=FALSE}
+
+council_avg <- am %>%
+    group_by(council)%>%
+    summarise(Post =mean(Post))
+
+kable(council_avg)
+
+
+#council_am_post <-summarise(council_am, Post =mean(Post))
+
+#pander (council_am_post)
+
+```
+
+
+
+```{r echo=FALSE,eval=FALSE}
+achieved_am <- with(council_am, table(council, Pre >= 4.8))
+
+achieved_am
+
+achieved_am_p <-prop.table(achieved_am,1)
+
+achieved_am_p<-round(achieved_am_p*100,2)
+
+pander(achieved_am_p)
+```
+
+
+```{r echo=FALSE, eval=FALSE}
+council_am_pre <-summarise(council_am, Pre =mean(Pre))
+
+
+datatable(council_am_pre, rownames = FALSE)
+
+
+```
+
+```{r updated am to db, echo=FALSE}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+### Write hr_history data to sqlite database
+dbWriteTable(conn = getReal_2016db, name = "am_history", value = am, row.names=FALSE, overwrite=TRUE)
+
+```
+

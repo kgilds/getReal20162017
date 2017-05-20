@@ -1,0 +1,371 @@
+---
+title: "student_survey_dm"
+author: "Kevin Gilds, MPA"
+date: '`r Sys.Date()`'
+output: html_document
+---
+# Data Management
+
+
+
+### Set working directory, library, and read raw data (needs updated data)
+
+
+```{r}
+########################Set Working Directories##################
+
+library(tidyverse)
+
+```
+
+
+### Change column names to make them human readable.
+```{r}
+rawdata <- readRDS("rawdata.Rds")
+
+########################### Change Column Name #################################
+
+colnames (rawdata)[6] <- "hr.sum"
+colnames (rawdata)[7] <- "hr.avg"
+colnames (rawdata)[8] <- "hr.stddev"
+colnames (rawdata)[9] <- "hr.disqualify.sum"
+colnames (rawdata)[10]<- "hr.disqualify.avg"
+colnames (rawdata)[11]<- "hr.disqualify.std"
+colnames (rawdata)[12] <- "ae.sum"
+colnames (rawdata)[13] <- "ae.avg"
+colnames (rawdata)[14] <- "ae.stddev"
+colnames (rawdata)[15] <- "am.sum"
+colnames (rawdata)[16] <- "am.avg"
+colnames (rawdata)[17] <- "am.stddev"
+colnames (rawdata)[18] <- "ae.disqualify.sum"
+colnames (rawdata)[19] <- "ae.disqualify.avg"
+colnames (rawdata)[20] <- "ae.disqualify.std"
+colnames (rawdata)[21] <- "am.disqualify.sum"
+colnames (rawdata)[22] <- "am.disqualify.avg"
+colnames (rawdata)[23] <- "am.disqualify.std"
+colnames (rawdata)[24] <- "council"
+colnames (rawdata)[25] <- "girlCode"
+colnames (rawdata)[26] <- "school"
+colnames (rawdata)[27] <- "grade"
+colnames (rawdata)[28] <- "Time"
+colnames (rawdata)[29] <- "inProgramLastYear"
+colnames (rawdata)[31] <- "iamMotivatedToGraduateHighSchool"
+colnames (rawdata)[32] <- "iReadBooksforFun"
+colnames (rawdata)[33] <- "ireallyLikeWhoIam..."
+colnames (rawdata)[34] <- "..ImproveMySkilsThisYear"
+colnames (rawdata)[35] <- "...UnderstandMyClassWork"
+colnames (rawdata)[36] <-  "learningatSchoolIsImportantToMe"
+colnames (rawdata)[37] <- "oneOfMyGoalsIstoLearn..."
+colnames (rawdata)[38] <- "...WillHelpMeLaterInLife"
+colnames (rawdata)[39] <- "ifIHaveASeriousProblem..."
+colnames (rawdata)[40] <- "inAnyRelationshipOrNotIMakeItClear"
+colnames (rawdata)[42] <- "iTalkWithMyTeachersBeforeOrAfter..."
+colnames (rawdata)[43] <- "iHandinMyAssignmentsOnTime"
+colnames (rawdata)[44] <- "iFinishMyHomeworkEvenIfItisBoring"
+colnames (rawdata)[45] <- "ifICantUnderstandMySchoolatFirstI..."
+colnames (rawdata)[46] <- "iLetPeopleKnowIfTheyHurtMyFeelings"
+colnames (rawdata)[47] <- "iLetMyFriendsKnowWhenIThinkTheyAreGoodAtSomething"
+colnames (rawdata)[49] <- "ILearnedFromTheBooksWeReadThisYear"
+colnames (rawdata)[50] <- "myReadingSkillsImprovedThisYear"
+colnames (rawdata)[51] <- "EstablishedAPostiveRelationship..."
+colnames (rawdata)[52] <- "...HelpedMeRecognizeThingsIDoWell"
+colnames (rawdata)[53] <- "whatDidYouLearnThisYear. "
+
+
+```
+
+### Make Student Code as class character and make all codes upper case.
+
+```{r}
+
+######################## Change Girl Code #################################
+
+rawdata$girlCode <- as.character(rawdata$girlCode)
+
+rawdata$girlCode <- toupper(rawdata$girlCode)
+
+
+
+
+
+
+
+
+str(rawdata$girlCode)
+
+dim(rawdata)
+
+```
+
+
+### Test Chunk
+```{r}
+###Test to see if any test girlCode in system
+#rawdata$girlCode
+
+####Test to see if any test schools in syste
+#rawdata$school
+
+###Fix if any girlCode is in Test
+rawdata <- filter(rawdata, girlCode !="TEST")
+
+council_girlCode <-with(rawdata,table(girlCode, council))
+
+#council_girlCode
+
+```
+
+
+
+
+### Subset all finished surveys
+
+```{r}
+
+####################Subset Finished#####################################
+# Finished 
+
+fin <- subset (rawdata, Finished  == 1)
+
+
+str(fin$girlCode)
+
+
+
+
+dim(fin)
+
+
+```
+
+#Pre Surveys
+
+### Subset Pre surveys
+
+```{r}
+
+############################## Subset Pre ############################3
+
+pre <- subset (fin, Time == "Pre")
+dim(pre)
+
+```
+
+
+### Subset Pre Surveys with unique student codes
+
+```{r}
+
+######################Find Unique Values################################################
+preUnique<- pre [!(duplicated(pre$girlCode) | duplicated(pre$girlCode, fromLast = TRUE)), ]
+
+dim(preUnique)
+
+head(preUnique)
+
+```
+
+
+#
+```{r pre_student_file_function}
+
+
+pre_student_file <- function(x) {
+    student_file <- filter(preUnique, council == x)
+    write.csv (student_file, file="pre_student_survey.csv", row.names=FALSE)
+    
+    
+}
+
+
+```
+
+
+
+
+
+### Subset Pre Surveys with duplicate student codes (needs updated data)
+```{r}
+##############################Subset duplicated girl codes##################
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+preDupes <-duplicated(pre$girlCode) | duplicated(pre$girlCode, fromLast=TRUE)
+
+preDupes <-pre[preDupes, ]
+
+dim(preDupes)
+
+
+
+
+```
+
+### Dupe Girl File Functions
+```{r}
+
+ 
+
+pre_student_dupe_file <- function(x) {
+    pre_survey_dupes <- filter(preDupes, council == x)
+    write.csv(pre_survey_dupes, "girl_survey_dupes.csv", row.names=FALSE)
+}
+
+```
+
+
+
+
+# Post Survey 
+
+### Subset post girl surveys
+
+```{r}
+##############################Subset Post###############################
+post <-subset (fin, Time == "Post")
+
+
+```
+
+
+### Find unique student codes from post surveys
+```{r}
+##########################Subset Unique Post Values####################
+
+postUnique<- post [!(duplicated(post$girlCode) | duplicated(post$girlCode, fromLast = TRUE)), ]
+
+dim(postUnique)
+```
+
+
+### Find duplicate student codes from post surveys
+```{r}
+
+#########################Subset Unique Post Values######################
+postDupes <-duplicated(post$girlCode) | duplicated(post$girlCode, fromLast=TRUE)
+
+##### I think this is pulling the actuall duplicate values####################
+postDupes <-post[postDupes, ]
+
+
+```
+
+### Save Data to Shiny (Web Application)
+```{r}
+
+setwd("~/GitHub/getReal20162017/Shiny_Apps")
+
+survey_app <- select(preUnique, Time, council, hr.avg, ae.avg, am.avg)
+
+saveRDS(survey_app, file="girl_survey_05062017.rds")
+
+```
+
+
+
+
+### Send data to Sqlite database
+```{r}
+library(sqldf)
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+### Write Q1 Expelled data to sqlite database
+dbWriteTable(conn = getReal_2016db, name = "girl_pre_1617", value = preUnique, row.names=FALSE, overwrite=TRUE)
+
+dbWriteTable(conn = getReal_2016db, name = "girl_pre_duplicates_1617", value = preDupes, row.names=FALSE, overwrite=TRUE)
+
+dbWriteTable(conn = getReal_2016db, name = "girl_post_1617", value = postUnique, row.names=FALSE, overwrite=TRUE)
+
+dbWriteTable(conn = getReal_2016db, name = "girl_post_duplicates_1617", value = postDupes, row.names=FALSE, overwrite=TRUE)
+
+
+
+```
+
+### Citrus Council
+```{r make_student}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/citrus_council")
+
+
+pre_student_file("Citrus Council")
+
+pre_student_dupe_file("Citrus Council")
+
+```
+
+
+### Gateway Council
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/gateway_council")
+
+pre_student_file("Gateway Council")
+
+pre_student_dupe_file("Gateway Council")
+
+
+
+```
+
+
+### Southeast Council
+```{r}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/southeast")
+
+
+pre_student_file("Southeast Council")
+
+pre_student_dupe_file("Southeast Council")
+
+
+```
+
+
+### Tropical Council
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/tropical_council")
+
+pre_student_file("Tropical Council")
+
+pre_student_dupe_file("Tropical Council")
+
+```
+
+
+### Panhandle Council
+
+```{r}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/panhandle_council")
+
+pre_student_file("Panhandle Council")
+
+pre_student_dupe_file("Panhandle Council")
+
+
+
+
+```
+
+### West Central Council
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Council_data/west_central_council")
+
+pre_student_file("West Central Council")
+
+
+pre_student_dupe_file("West Central Council")
+
+
+
+
+```
+=======
+
+

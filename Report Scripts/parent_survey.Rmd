@@ -1,0 +1,83 @@
+---
+title: "Parent survey"
+author: "Kevin Gilds, MPA"
+date: "March 12, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(likert)
+library(sqldf)
+library(knitr)
+```
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+getRealdb<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+pre_parent <-dbReadTable(getRealdb, "pre_parent_1617")
+
+
+
+
+```
+
+```{r}
+
+pre_parent_1 <- pre_parent %>%
+    select(11:16) %>%
+    rename(Q1 = graduate) %>%
+    rename(Q2 = sheHasSelfConfidence)%>%
+    rename(Q3 = goodAttitudeAboutSchool)%>%
+    rename(Q4 = readsBooksForFun)%>%
+    rename(Q5 = positiveRelationships)%>%
+    rename(Q6 = homeworkWithoutSupervision)
+
+
+
+```
+
+
+```{r}
+
+
+pre_parent_1$Q1 <- factor(pre_parent_1$Q1, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree/Disagree", "Slightly Agree", "Agree", "Strongly Agree"),ordered = TRUE) #make factor names consistent
+
+pre_parent_1$Q2 <- factor(pre_parent_1$Q2, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree/Disagree", "Slightly Agree", "Agree", "Strongly Agree"),ordered = TRUE) #make factor names consistent
+
+pre_parent_1$Q3 <- factor(pre_parent_1$Q3, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree/Disagree", "Slightly Agree", "Agree", "Strongly Agree"),ordered = TRUE) #make factor names consistent
+
+
+pre_parent_1$Q4 <- factor(pre_parent_1$Q4, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree/Disagree", "Slightly Agree", "Agree", "Strongly Agree"),ordered = TRUE) #make factor names consistent
+
+
+pre_parent_1$Q5 <- factor(pre_parent_1$Q5, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree/Disagree", "Slightly Agree", "Agree", "Strongly Agree"),ordered = TRUE) #make factor names consistent
+
+pre_parent_1$Q6 <- factor(pre_parent_1$Q6, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree/Disagree", "Slightly Agree", "Agree", "Strongly Agree"),ordered = TRUE) #make factor names consistent
+
+
+
+```
+
+```{r}
+pre_parent_tbl <- likert(pre_parent_1)
+
+kable(summary(pre_parent_tbl))
+
+plot(pre_parent_tbl)
+
+```
+
+
+```{r height=15}
+pre_parent_g <-likert(pre_parent_1, grouping =pre_parent$council)
+
+kable(summary(pre_parent_g))
+
+plot(pre_parent_g)
+
+```
+

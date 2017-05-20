@@ -1,0 +1,153 @@
+---
+title: "attendance"
+author: "Kevin Gilds, MPA"
+date: '`r Sys.Date()`'
+output:
+  html_document: default
+  github_document: default
+bibliography: get_real.json
+---
+---
+```{r attendance_libaries, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(pander)
+library(ggplot2)
+library(sqldf)
+library(psych)
+library(knitr)
+library(gridExtra)
+library(effsize)
+library(likert)
+library(getREAL)
+
+```
+
+
+```{r attendance_db, echo=FALSE}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+### Make connection with database
+getRealdb <- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+
+q1_attendance <- dbReadTable(getRealdb,"Q1_attendance_1617")
+
+```
+
+# Decrease in Absenteeism
+
+
+*Objective: 60% of participating students will either maintain or improve their attendance 
+rates as demonstrated by their decreased absences from the baseline grading period to the final grading period as evidenced by report cards/school report*
+
+
+```{r q1_attendance_mean, echo=FALSE}
+
+q1_attendance$total <- as.numeric(q1_attendance$total)
+
+
+```
+
+```{r no_abs, echo=FALSE}
+none_abs <- q1_attendance %>%
+    filter(total ==0)
+
+none_abs <- nrow(none_abs)/nrow(q1_attendance)
+
+none_abs <-round(none_abs*100,2)
+
+none_abs_p <-paste0(none_abs,"%", sep="")
+
+#none_abs_p
+
+
+```
+
+
+
+
+```{r more_4, echo=FALSE}
+
+more_4 <- q1_attendance %>% 
+    filter(total >=4) #filter those with 4 or more absences into dataset
+
+more_4 <- nrow(more_4)/nrow(q1_attendance) #obtain percent of those with more than 4 absences
+
+more_4 <-round(more_4*100,2) #make a pretty percent
+
+more_4_p <-paste0(more_4,"%", sep="") #make a % sign 
+
+less_4 <-100-more_4  #obtain who has less than 4 absences 
+
+#more_4_p
+
+less_4_p <- paste0(less_4, "%", sep="") #provide a percent sign. 
+
+```
+
+The number of valid data entry records is **`r nrow(q1_attendance)`**. The percent of students without an absence is **`r (none_abs_p)`**. The percent of students with 4 or less absences is **`r (less_4_p)`** and the percent of students with more than 4 absences is **`r (more_4_p)`**. Students with more than 4 absences are at risk for chronic absenteeism if they maintain their rate of absences. 
+
+```{r q1_absences_tbl, echo=FALSE}
+
+q1_absences <-with(q1_attendance,table(total))  #table of absences
+
+
+pander(q1_absences) #pretty table
+
+#q1_absences_c <-with(q1_attendance,table(council,total)) #table of absences by council
+
+#pander(q1_absences_c) #pretty table
+```
+
+
+
+
+```{r total_plot, echo=FALSE}
+
+
+total_absPlot <- ggplot(q1_attendance,(aes(x =total, y = council)))
+
+total_absPlot + geom_count()
+
+
+
+```
+
+
+### Unexcused Absences:
+```{r q1_unexcused_tbl, echo=FALSE}
+
+q1_unexcused <-with(q1_attendance,table(unexcused)) #unexcused table
+
+pander(q1_unexcused) #pretty table
+
+
+#q1_unexcused_c <-with(q1_attendance,table(council, unexcused)) #unexcused table by council
+
+#pander(q1_unexcused_c) #pretty table
+
+```
+
+
+
+### Excused Absences:
+```{r excused_tbls, echo=FALSE}
+q1_unexcused <-with(q1_attendance,table(excused)) #q1_unexucsed table
+
+pander(q1_unexcused) #make pretty
+
+
+#q1_unexcused_c <-with(q1_attendance,table(council, excused)) #q1_unexcused by council
+
+#pander(q1_unexcused_c) #pretty tables
+
+```
+
+
+### Attendance Analysis 
+
+Attendance is vital for academic success and data has shown that being absent 10 percent of school days excused or unexcused places students in danger of negative outcomes such as dropping out of school[@10]. This analysis shows that a little over 20% of the students in the program are in danger of chronic abseentism. Students with 4 or more absences in the first quarter could be labeled at risk for chronic absenteesim. 
+
+The Get REAL! program is designed to engage at risk students and provide incentives for attendance and positive behavior. Attendance rates of students should be monioroted closely to intervene as quick as possible. Last year 54% of the students improved their attendance from baseline to final grading period. 
+

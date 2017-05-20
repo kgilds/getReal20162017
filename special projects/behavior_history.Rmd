@@ -1,0 +1,526 @@
+---
+title: "Behavior History"
+author: "Kevin Gilds, MPA"
+date: "February 18, 2017"
+output: 
+        github_document
+        
+---
+
+```{r read_dbase_beha, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+library(sqldf)
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite") 
+
+getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite") #established connection with database
+
+library(DT)
+library(getREAL)
+library(dplyr)
+library(pander)
+library(ggplot2)
+library(effsize)
+library(knitr)
+library(catspec)
+library(formattable)
+
+```
+
+```{r read_1516_beh, echo=FALSE}
+
+suspensions_1516 <-dbReadTable(getReal_2016db, "suspensions_1516") #read readarts1516 table
+
+suspensions_1516 <- suspensions_1516 %>%
+     mutate("Year_Id" = "M3")%>%
+     rename(baseline = basline) %>%
+     rename(council = Council) %>%
+     rename(susp_diff = Suspensions_Change) %>%
+     select(1,2,3,4,6,7)#select variables of interest 
+      
+
+```
+
+
+
+```{r read_1415_beh, echo=FALSE}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Reports/MY-2014-2015/Summ Evaluation Report/data") #change working directory to find database
+
+getReal_2015db<- dbConnect(SQLite(),   dbname="data_Final_GetReal_2014_2015.sqlite") #read database
+
+
+suspenions_1415 <-dbReadTable(getReal_2015db, "behavior_data") #read read_1415
+
+
+
+suspenions_1415 <- suspenions_1415%>% 
+    mutate("Year_Id" = "M2") %>%
+    rename(final = total_final)%>%
+    rename(baseline = total_baseline)%>%
+    rename(susp_diff = total_diff)%>%
+    select(1,2,4,3,5,6)#add variable and name it M2. 
+
+```
+
+
+```{r susp_his, echo=FALSE }
+#names(suspensions_1516)
+#names(suspenions_1415)
+
+susp_his <- rbind(suspensions_1516, suspenions_1415)
+
+susp_unique<- susp_his [!(duplicated(susp_his$girlCode) | duplicated(susp_his$girlCode, fromLast = TRUE)), ]
+
+#dim(susp_unique)
+
+susp_unique <- susp_unique %>%
+    mutate("Match" = "No")
+
+#head(susp_unique)
+
+susp_dupes <-duplicated(susp_his$girlCode) | duplicated(susp_his$girlCode, fromLast=TRUE)
+
+susp_dupes <-susp_his[susp_dupes, ]
+
+#dim(susp_dupes)
+
+susp_dupes <- susp_dupes %>%
+    mutate("Match" = "Yes")
+
+
+susp_his <- rbind(susp_unique, susp_dupes)
+
+#dim(susp_his)
+
+
+    
+```
+
+
+```{r counci_name_susp, echo=FALSE}
+## Change council names to be consistent wiht how they displayed with the surveys
+susp_his$council <-sub("Girl Scouts of the Gateway Council", "Gateway Council", fixed=TRUE, susp_his$council)
+
+susp_his$council <-sub("Girl Scouts of Citrus Council", "Citrus Council", fixed=TRUE, susp_his$council)
+
+susp_his$council <-sub("Girl Scouts of Southeast Florida", "Southeast Council", fixed=TRUE, susp_his$council)
+
+susp_his$council <-sub("Southeast Council, Inc", "Southeast Council", fixed=TRUE, susp_his$council)
+
+susp_his$council <-sub("Southeast Council.", "Southeast Council", fixed=TRUE, susp_his$council)
+
+susp_his$council <-sub("Girl Scout Council of Tropical Florida", "Tropical Council", fixed = TRUE, susp_his$council)
+
+susp_his$council <-sub("Girl Scouts of West Central Florida", "West Central Council", fixed = TRUE, susp_his$council)
+
+susp_his$council <-sub("Girl Scout Council of the Panhandle", "Panhandle Council", fixed = TRUE, susp_his$council)
+
+susp_his$council <-sub("Pandhandle Council", "Panhandle Council", fixed = TRUE, susp_his$council)
+
+
+susp_his$council <-sub("Girl Scouts of Gulfcoast Florida",  "Gateway Council", fixed = TRUE, susp_his$council)
+
+```
+
+
+# Behavior Data (Suspensions)
+
+Matching attendance data set from the past two membership years. The number of students in the dataset is `r nrow(susp_his)` and the number of matched students across the two years is `r nrow(susp_dupes)`. 
+
+
+```{r update_year_behavior, echo=FALSE}
+susp_his$Year_Id <-sub("M2",  "14-15", fixed = TRUE, susp_his$Year_Id)
+
+susp_his$Year_Id <-sub("M3",  "15-16", fixed = TRUE, susp_his$Year_Id)
+
+
+```
+
+
+
+```{r council_stauts_behavior, echo=FALSE, eval=TRUE}
+council_status <- with(susp_his,table(council, Year_Id))
+
+council_status <- addmargins(council_status)
+
+pander(council_status)
+
+```
+
+
+
+
+
+
+# Successful Outcome
+
+```{r susp_suc, echo=FALSE}
+
+susp_suc <- function(){
+     
+     no_susp  <- filter(susp_his, baseline == 0, final ==0)
+     dec_susp <- filter(susp_his, susp_diff < 0)
+     suc      <- rbind(no_susp, dec_susp)
+     
+}
+
+#susp_suc
+
+no_sup <- susp_his %>%
+    filter(baseline == 0, final == 0)
+    
+
+no_per <-nrow(no_sup)/nrow(susp_his)
+
+no_per <- percent(no_per)
+
+#no_per
+
+decrease_susp <- susp_his %>%
+    filter(susp_diff < 0)
+
+#nrow(decrease_susp)
+#nrow(no_sup)
+#nrow(susp_his)
+
+dec_per <- nrow(decrease_susp) / nrow(susp_his)
+
+dec_per <- percent(dec_per)
+
+tot_suc <- dec_per + no_per
+
+#tot_suc
+
+```
+
+
+```{r percent, echo=FALSE}
+
+susp_suc_y <- function(x){
+     no_susp_y  <- filter(susp_his, Year_Id == x, baseline == 0, final ==0)
+     dec_susp_y <- filter(susp_his, Year_Id == x, susp_diff < 0)
+     suc_y      <- rbind(no_susp_y, dec_susp_y)
+     suc_y
+     
+    }
+
+
+
+
+
+
+
+
+
+```
+
+
+
+```{r bev_suc, echo=FALSE}
+bev_suc <- susp_suc()
+
+bev_suc <- bev_suc %>%
+    mutate(Success = "TRUE")
+
+#nrow(bev_suc)
+
+
+
+```
+
+```{r not_successful, echo=FALSE}
+bev_not <- susp_his%>%
+    filter( final !=0)%>%
+    filter( susp_diff >=0)
+
+#nrow(bev_not)
+
+bev_not <- bev_not %>%
+    mutate(Success = "FALSE")
+
+```
+
+```{r susp_his_binded, echo=FALSE}
+susp_his1 <- rbind(bev_suc, bev_not)
+
+#nrow(susp_his1)
+```
+
+### By Council
+```{r susp_his2, echo=FALSE}
+susp_his2 <- susp_his1 %>%
+    group_by(council)%>%
+    count(Success)%>%
+    mutate(percent = n /sum(n))
+
+susp_his2$percent <- percent(susp_his2$percent)
+
+susp_his2 <- susp_his2 %>%
+    filter(Success == "TRUE")
+
+kable(susp_his2)
+```
+
+### By Match
+
+```{r susp_m, echo=FALSE}
+susp_his1_m <- susp_his1 %>%
+    group_by(Match)%>%
+    count(Success)%>%
+    mutate(percent = n /sum(n))
+
+susp_his1_m$percent <- percent(susp_his1_m$percent)
+
+susp_his1_m <- susp_his1_m %>%
+    filter(Success == "TRUE")
+
+kable(susp_his1_m)
+```
+
+
+
+
+```{r all, echo=FALSE, eval=FALSE}
+all <- susp_suc()
+
+all <- table(all$council)
+
+all <- as.data.frame(all)
+
+
+susp_his_c <- table(susp_his$council)
+
+susp_his_c <- as.data.frame(susp_his_c)
+
+#susp_his_c
+
+all <- all %>%
+    rename(council = Var1)%>%
+    rename(success = Freq)
+
+all_per <-cbind(susp_his_c, all)
+
+all_per <- all_per%>%
+    mutate(percent = success /Freq)
+
+all_per$percent <- percent(all_per$percent)
+
+all_per <- all_per %>%
+    select(3,4,5)
+
+kable(all_per)
+
+
+
+```
+
+
+
+
+```{r m2, echo=FALSE, eval=FALSE}
+m2 <- susp_suc_y("14-15")
+
+m2 <- table(m2$council)
+
+m2 <- as.data.frame(m2)
+
+
+
+#head(susp_his)
+
+m2_all <- susp_his %>%
+    filter(Year_Id == "M2")
+
+
+m2_all_tbl <- table(m2_all$council)
+
+m2_all_tbl <- as.data.frame(m2_all_tbl)
+
+#m2_all_tbl
+
+m2 <- m2 %>%
+    rename(council = Var1)%>%
+    rename(success = Freq)
+
+m2_per <-cbind(m2_all_tbl, m2)
+
+m2_per <- m2_per%>%
+    mutate(percent = success /Freq)
+
+m2_per$percent <- percent(m2_per$percent)
+
+m2_per <- m2_per %>%
+    select(3,4,5)
+
+kable(m2_per)
+
+```
+
+
+```{r m3, echo=FALSE, eval=FALSE}
+
+m3 <- susp_suc_y("15-16")
+
+m3 <- table(m3$council)
+
+m3 <- as.data.frame(m3)
+
+#m3
+
+m3_all <- susp_his %>%
+    filter(Year_Id == "M3")
+
+
+m3_all_tbl <- table(m3_all$council)
+
+m3_all_tbl <- as.data.frame(m3_all_tbl)
+
+#m3_all_tbl
+
+m3 <- m3 %>%
+    rename(council = Var1)%>%
+    rename(success = Freq)
+
+m3_per <-cbind(m3_all_tbl, m3)
+
+m3_per <- m3_per%>%
+    mutate(percent = success /Freq)
+
+m3_per$percent <- percent(m3_per$percent)
+
+m3_per <- m3_per %>%
+    select(3,4,5)
+
+kable(m3_per)
+
+
+```
+
+# Average Difference by Year
+
+```{r susp_avg_y, echo=FALSE}
+susp_avg_y <- susp_his %>%
+    filter(baseline != 0, final !=0) %>%
+    group_by(Year_Id)%>%
+    summarise(avg_diff =mean(susp_diff) )
+
+kable(susp_avg_y)
+```
+
+
+```{r susp_avg, echo=FALSE}
+susp_avg_c <- susp_his %>%
+    filter(baseline != 0, final !=0) %>%
+    group_by(council, Year_Id)%>%
+    summarise(avg_diff =mean(susp_diff) )
+
+kable(susp_avg_c)
+```
+
+```{r susp_avg_cm, echo=FALSE, eval=FALSE}
+
+susp_avg_cm <- susp_his %>%
+    count(Match)
+
+kable(susp_avg_cm)
+
+```
+
+
+
+
+```{r susp_avg_m, echo=FALSE, eval=TRUE}
+susp_avg_m <- susp_his %>%
+    filter(baseline != 0, final !=0) %>%
+    group_by(Match)%>%
+    summarise(avg_diff =mean(susp_diff) )
+    
+kable(susp_avg_m)
+
+```
+
+
+# Plots
+
+```{r plots, echo=FALSE, fig.path='Figs/'}
+
+
+susp_plot <- ggplot(susp_his,(aes(x =susp_diff, y =council)))
+susp_plot + geom_count() + labs(x="Difference in Suspensions", title="Suspensions: Difference between baseline and final")
+
+susp_plot_m <- ggplot(susp_his, (aes(x =susp_diff, y =Match)))
+susp_plot_m + geom_count() + labs(x="Difference in Suspensions", title="Suspensions: Difference by Match")
+
+susp_plot_m <- ggplot(susp_his, (aes(x =susp_diff, y = Year_Id)))
+susp_plot_m + geom_count() + labs(x="Difference in Suspensions", title="Suspensions: Difference by Membership Year", y="Membership Year")
+
+
+
+```
+
+
+
+
+
+```{r no_sup, echo=FALSE, eval=FALSE}
+
+no_susp_c <- susp_his %>%
+    filter(baseline ==0 & final == 0)%>%
+    count(council) 
+
+
+kable(no_susp_c)
+
+
+
+no_susp_y <- susp_his %>%
+    filter(baseline ==0 & final == 0)%>%
+    count(Year_Id, council)
+
+kable(no_susp_y)
+
+
+
+no_susp_m <- susp_his %>%
+    filter(baseline ==0 & final == 0)%>%
+    count(Match, council)
+
+kable(no_susp_m)
+
+#table(no_susp_m)
+
+
+```
+
+
+
+```{r decrease_susp, echo=FALSE, eval=FALSE}
+decrease_susp_c <- susp_his %>%
+    filter(susp_diff < 0)%>%
+    count(council)
+
+kable(decrease_susp_c)
+
+decrease_susp_y <- susp_his %>%
+    filter(susp_diff < 0)%>%
+    count(Year_Id, council)
+
+kable(decrease_susp_y)
+
+
+decrease_susp_m <- susp_his %>%
+    filter(susp_diff < 0)%>%
+    count(Match, council)
+
+kable(decrease_susp_m)
+
+
+```
+
+
+
+
+
+
+

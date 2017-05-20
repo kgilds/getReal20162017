@@ -1,0 +1,364 @@
+---
+title: "Academic Engagement Notebook"
+params:
+  council: West Central Council
+output:
+  pdf_document: default
+  html_document: default
+  github_document: default
+  word_document: default
+---
+
+```{r global_options_ae, include=FALSE}
+knitr::opts_chunk$set(fig.path='Figs/',
+                      echo=FALSE, warning=FALSE, message=FALSE, comment=FALSE)
+```
+
+
+```{r ae_import_libaries, echo=FALSE, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(pander)
+library(ggplot2)
+library(sqldf)
+library(psych)
+library(knitr)
+library(gridExtra)
+library(effsize)
+library(likert)
+library(getREAL)
+
+```
+
+
+
+
+```{r pre_ae_setup, echo=FALSE, warnings=FALSE, message=FALSE}
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+### Make connection with database
+getRealdb<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+pre_ae <- dbReadTable(getRealdb,"girl_pre_1617")
+
+ae_history <-dbReadTable(getRealdb, "basic_view")
+
+pre_ae_1415 <-dbReadTable(getRealdb, "girl_pre_1415")
+
+pre_ae_1314 <-dbReadTable(getRealdb, "girl_pre2013")
+
+pre_ae_1516 <- dbReadTable(getRealdb, "girl_pre_1516")
+
+```
+```{r pre_ae_1415, echo=FALSE}
+
+pre_ae_1415 <- pre_ae_1415 %>%
+    select(council, girlCode, ae.avg) %>% #select columns of interest
+    mutate("Year" = "MY-14-15") # add time frame
+
+
+high_1415 <- pre_ae_1415 %>%
+    filter(ae.avg >=4.5)  #find cases above 4.5
+
+
+#mean(pre_ae_1415$ae.avg)
+
+#nrow(high_1415)
+
+#nrow(pre_ae_1415)
+
+achieved_1415 <- nrow(high_1415) / nrow(pre_ae_1415)  #find percent
+
+achieved_1415 <- round(achieved_1415*100,2) #clean up percent
+
+achieved_1415 <- paste0(achieved_1415,"%", sep="")  # add percent sign
+
+#achieved_1415
+
+
+
+
+```
+
+
+```{r pre_ae_1516, echo=FALSE}
+
+pre_ae_1516 <- pre_ae_1516 %>%
+    select(council, girlCode, ae.avg) %>% #select columns of interest
+    mutate("Year" = "MY-15-16") # add time frame
+
+
+high_1516 <- pre_ae_1516 %>%
+    filter(ae.avg >=4.5)  #find cases above 4.5
+
+
+#mean(pre_ae_1516$ae.avg)
+
+#nrow(high_1516)
+
+#nrow(pre_ae_1516)
+
+achieved_1516 <- nrow(high_1516) / nrow(pre_ae_1516)  #find percent
+
+achieved_1516 <- round(achieved_1516*100,2) #clean up percent
+
+achieved_1516 <- paste0(achieved_1516,"%", sep="")  # add percent sign
+
+#achieved_1516
+
+
+
+
+```
+
+
+
+```{r pre_ae_1314, echo=FALSE}
+
+
+pre_ae_1314 <- pre_ae_1314 %>% #start cleaning up df
+    rename( council = girlScoutCouncil) %>% #rename council
+    select(council, girlCode, ae_avg) %>% #select columns of interest
+    mutate("Year" = "MY-13-14") # add time frame
+
+
+high_1314 <- pre_ae_1314 %>%
+    filter(ae_avg >=4.5)  #find cases above 4.5
+
+
+achieved_1314 <- nrow(high_1314) / nrow(pre_ae_1314)  #find percent
+
+achieved_1314 <- round(achieved_1314*100,2) #clean up percent
+
+achieved_1314 <- paste0(achieved_1314,"%", sep="")  # add percent sign
+
+#pander(achieved_1314)  #make nice with pander
+
+```
+
+
+
+```{r pre_ae, echo=FALSE}
+pre_ae_inprogram <- pre_ae %>%
+    select(council,grade, ae.avg,inProgramLastYear)
+
+
+
+
+```
+
+# Academic Engagement Outcome 
+
+Academic engagement questions gauge tangible behaviors that help students succeed in school. Questions that measure academic engagement include the following.
+
+**Acadeimc Engagement Questions**
+
+1.	I talk with my teachers before or after school, or during lunch about my assignments.
+2.	I hand in my assignments on time
+3.	I finish my homework even if it is boring
+4.	If I can't understand my schoolwork at first, I keep trying until I do understand it.
+
+## Pre Survey Analysis
+
+```{r pre_ae_num, echo=FALSE}
+pre_num <- pre_ae %>%
+    filter(ae.avg >=4.5) #select records with outcome score who achieved outcome at high level
+
+
+pre_ae_m <- mean(pre_ae$ae.avg)
+
+pre_ae_m <-round(pre_ae_m,2)
+
+#pre_ae_m
+
+```
+
+
+The number of valid surveys entered is  **`r nrow(pre_ae)`**, and the number of students achieving at a high level is **`r nrow(pre_num)`**
+and that equates to **`r ae_achieved_pre()`**. The average score from students is **`r pre_ae_m`**
+
+### Academic Engagement: Pre Outcome Score Summary
+
+```{r pre_ae_summary, echo=FALSE}
+pander(summary(pre_ae$ae.avg))
+```
+
+
+
+```{r pre_ae_hist, echo=FALSE}
+
+pre_ae_histq <- qplot(pre_ae$ae.avg, geom="histogram", main= "Pre Survey: Academic Engagment",ylim=c(0,125), bins=40, xlab="Outcome Scores") + geom_vline(xintercept = 4.5, col="red") 
+
+pre_ae_histq
+
+```
+
+
+# Pre Survey: Academic Engagement History
+
+
+```{r ae_histor_1, echo=FALSE}
+ae_history_1 <- ae_history %>%
+    select(Year, population, achieved, outcome.1, percent_achieved, mean) %>% #select variables of interest
+    filter(outcome.1 =="Academic Engagement") %>% #select variable of interest
+    select(Year, population, percent_achieved, mean ) # reselect variables of interest
+    
+    
+
+pander(ae_history_1)
+```
+
+
+## Cross Validation of Academic Engagment Skills
+
+Survey results from teachers and parents also provide useful baseline data to gauge life skills. Below are tables and graphs that provide a breakdown of questions on the pre survey from the parent and teacher surveys. 
+
+
+
+### Pre Parent Survey
+
+
+**Question 6: She works on her homework at home without supervision.** N=520
+
+
+
+
+```{r parent_df_ae, echo=FALSE}
+
+pre_parent  <- dbReadTable(getRealdb, "pre_parent_1617")
+
+#names(pre_parent)
+
+#post_parent <- dbReadTable(getReal_2016db, "post_parent_1617")
+
+
+```
+
+
+
+
+```{r ae_pre_parent, echo=FALSE}
+
+colnames(pre_parent)[16] <- "Q6"
+
+
+pre_parent_tbl <- pre_parent %>%
+    select(16)
+
+#str(pre_parent_tbl)
+#str(pre_parent_tbl)
+#table(pre_parent_tbl)
+
+#names(pre_parent_tbl)
+
+pre_parent_tbl$Q6 <- factor(pre_parent_tbl$Q6, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree/Disagree", "Slightly Agree", "Agree", "Strongly Agree"),ordered = TRUE)
+
+
+
+```
+
+
+```{r "ae_q5_parent", fig.width=17, fig.path='Figs/', dev.args='cario-png', echo=FALSE}
+
+pre_parent_test <- table(pre_parent_tbl) #make tbl for testing
+
+#nrow(pre_parent_tbl)
+
+#pander(pre_parent_test)  #test pre parent
+
+pre_parent_tbl <- likert(pre_parent_tbl)
+
+summary(pre_parent_tbl)
+
+plot(pre_parent_tbl, type="heat") +ggtitle("Parent Pre Survey Question 6") + theme(axis.text = element_text(size = 12, colour="black"))
+
+```
+
+
+### Teacher Survey
+
+**Question 5: She positively participates in class.**  N= 360
+
+**Question 6: She completes the homework given to her.** N= 360
+
+
+```{r read_database_ae, echo=FALSE}
+
+pre_teacher <- dbReadTable(getRealdb, "pre_teacher_1617") #read database
+
+#names(pre_teacher)
+
+post_teacher <- dbReadTable(getRealdb, "post_teacher_1617") #read database
+
+```
+
+
+
+
+
+
+```{r  "ae_load_teacher", fig.height=15, echo=FALSE}
+
+
+#names(post_teacher) checked 
+
+colnames(pre_teacher)[14] <- "Q5"
+colnames(pre_teacher)[15] <- "Q6"
+
+#nrow(post_teacher)
+
+pre_teacher_tbl <- pre_teacher %>%
+    select(14,15)
+
+#str(pre_teacher_tbl)
+#table(pre_teacher_tbl$Q5)
+#table(pre_teacher_tbl$Q6)
+
+
+
+
+pre_teacher_tbl$Q5 <- factor(pre_teacher_tbl$Q5, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree nor Disagree", "Slightly  Agree", "Agree", "Strongly Agree"),ordered = TRUE)
+
+pre_teacher_tbl$Q6 <- factor(pre_teacher_tbl$Q6, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree nor Disagree", "Slightly  Agree", "Agree", "Strongly Agree"),ordered = TRUE)
+
+
+
+
+
+
+```
+
+
+
+```{r "ae_teacher_plots", fig.height=5,  fig.width=15, fig.path='Figs/', dev.args='cario-png', echo=FALSE}
+
+pre_teacher_tbl <- likert(pre_teacher_tbl)
+
+summary(pre_teacher_tbl)
+
+#plot(pre_teacher_tbl)
+
+plot(pre_teacher_tbl, type="heat") + ggtitle("Teacher Post Survey Question 5 & 6")  + theme(axis.text = element_text(size = 12, colour="black"))
+
+
+
+```
+
+
+### Analysis Academic Engagment
+
+Students in the Get REAL! program typically do not come into the program with a high academic engagement scores. This year is no different but the outcomes scores are much lower than expected. Typically around 40 percent of students come to the program with solid academic behaviors but this year it was 20 percent. 
+
+Parent and teacher pre surveys support evidence from the student survey. Pre teacher surveys indicate about 60 percent believe the student positively participates in class. A little more than half of teachers agreed that the student completes home work given to her. More than three-quarters of parents had high agreement that their child does school work without supervision. However, this is nearly a 10 percent decrease from the pre survey results last year. 
+
+This life skill outcome presents another growth opportunity for the students. Reviewing the outcome distribution 137 students are between 3.45 and the cutpoint for achieving this outcome at a high level. Last year 80 percent of students had a positive outcome, and a quarter of the students went from low achievement to high achievement. 
+
+
+```{r close_ae, echo=FALSE, eval=FALSE}
+close_ae <- pre_ae %>%
+    filter(ae.avg >=3.5 & ae.avg <4.5)
+
+#close_ae$ae.avg
+
+#nrow(close_ae)
+```
+

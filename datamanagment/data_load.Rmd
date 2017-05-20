@@ -1,0 +1,93 @@
+---
+title: "read_data"
+author: "Kevin Gilds, MPA"
+date: '`r Sys.Date()`'
+output: 
+        github_document: default
+---
+
+```{r student_survey, echo=FALSE}
+library(pander)
+library(tidyverse)
+
+```
+
+
+
+
+
+```{r read_data, echo=FALSE}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/2016-2017/May 2017")
+
+rawdata <- read_csv("student_05062017.csv", skip=1) #reads student survey
+
+
+parent <- read_csv("parent_05062017.csv", skip=1) #reads parent survey
+
+
+teacher <- read_csv("teacher_05062017.csv", skip=1) # reads teacher survey
+
+
+q1_dm <- read_csv("q1_05062017.csv", skip = 1) #read  q1_dmcsv file
+
+q2_dm <- read_csv("q2_05062017.csv", skip =1)
+
+q3_dm <- read_csv("q3_05062017.csv", skip=1)
+
+```
+
+
+```{r rds_files}
+
+saveRDS(rawdata,"rawdata.Rds") #save student survey data in rds format
+
+saveRDS(parent, "parent.Rds") #save parent survey data in rds format
+
+saveRDS(teacher, "teacher.Rds") #save teacher survey data in rds format
+
+saveRDS(q1_dm, "q1_data.RDS") #save q1 data in rds format
+
+saveRDS(q2_dm, "q2_data.Rds")
+
+saveRDS(q3_dm, "q3_data.Rds")
+
+
+```
+
+
+
+```{r source_markdowns, echo=FALSE}
+
+rmarkdown::render("student_survey_dm.Rmd") #run student_survey
+
+rmarkdown::render("parent_survey_dm.Rmd") #run parent_survey
+
+rmarkdown::render("teacher_survey_dm.Rmd") #run teacher_survey
+
+rmarkdown::render("q1_dm.Rmd") #run q1_dm file
+
+rmarkdown::render("q1_tropical.Rmd")
+
+rmarkdown::render("q2_dm.Rmd") #run q2_dm file
+
+rmarkdown::render("q3_dm.Rmd") #run q3_dm file
+
+
+
+
+```
+
+
+
+```{r render_status_report}
+setwd("~/GitHub/getReal20162017/Report Scripts")
+
+rmarkdown::render("status_report.Rmd")
+
+#rmarkdown::render("results.Rmd")# run results file
+
+#rmarkdown::render("langarts_report.Rmd")# run results file
+
+```
+

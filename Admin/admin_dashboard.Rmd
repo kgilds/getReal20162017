@@ -1,0 +1,257 @@
+---
+title: "Get REAL Administrative Data as of January 1st, 2017"
+runtime: shiny
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(sqldf)
+library(plotly)
+
+library(leaflet)
+library(tidyverse)
+
+
+council <- read_csv("coor.csv")
+```
+`
+```{r}
+
+library(dplyr)
+library(pander)
+library(ggplot2)
+
+library(knitr)
+library(catspec)
+
+```
+
+
+
+
+Councils and Enrollment
+=====================================  
+
+
+Row
+------------------------------------
+
+### Girl Scout Councils Across Florida
+
+```{r}
+leaflet(data = council) %>% addTiles() %>%
+  addMarkers(~long, ~lat, popup = ~as.character(council))
+```
+
+
+Row {.tabset .tabset-fade}
+-------------------------
+
+### Enrollment Data
+
+```{r}
+
+enrollment <- readRDS("enrollment.rds")
+
+enrollment <- enrollment %>%
+    filter(time == "01/13/2017")
+
+enrollment <- enrollment %>%
+    select(4:7, 9)
+    
+enrollment <- enrollment[, c(5,1:4)]
+
+
+
+enrollment_total <-enrollment %>%
+    rename(council = council_name)%>%
+    group_by(council)%>%
+    summarise(Total = sum(Total))
+
+
+enrollment_total$council <- factor(enrollment_total$council, levels =enrollment_total$council[order(enrollment_total$Total)])
+
+
+
+#enrollment_total
+
+enrollment_2 <- enrollment
+#total <-colSums(enrollment_2)
+
+#total
+
+#enroll<-ggplot(enrollment_total, aes(factor(council),y=Total)) + geom_bar(stat = "identity")
+
+
+#enroll
+
+enroll_p <- plot_ly(enrollment_total, x=~council, y = ~Total, type = 'bar') %>%
+    layout(title="Enrollment by Council",
+           xaxis=list(title="Council"),
+           yaxis =list(title="Number of Student"))
+
+
+enroll_p
+
+
+
+```
+
+### Enrollment Table
+```{r}
+kable(enrollment_2)
+```
+
+
+
+Monthly Attendance{data-orientation=columns}
+=====================================  
+
+Row {.tabset .tabset-fade}
+-------------------------------
+### Monthly Attendance
+
+```{r}
+students_served <- readRDS("students_served2.rds")
+
+students_s <- students_served %>%
+    group_by(date)%>%
+    summarise(students_served =sum(students_served))
+
+
+
+#students_served <- ggplot(students_served, aes( x= date, y=students_served)) + geom_bar(stat = "identity") 
+
+
+
+#students_served <- ggplotly(students_served)
+
+ss <- plot_ly(students_s, x= ~date, y = ~students_served) %>%
+    layout(title="Students Served by Month",
+           xaxis=list(title="Time Frame"),
+           yaxis=list(title="Students Served"))
+
+
+ss
+
+
+
+
+```
+
+
+-----------------------------
+### Monthly Attendance by Council
+```{r}
+students_served_tbl <- students_served %>%
+    select(2,4,6)
+    
+students_served_tbl <- students_served_tbl[,c(3,2,1)]
+
+
+kable(students_served_tbl)
+```
+
+
+Row {.tabset .tabset-fade}
+-----------------------------
+
+### Sessions Held 
+
+```{r}
+sh <- students_served %>%
+    group_by(date)%>%
+    summarise(sessions_held =sum(sessions_held))
+
+sh_p <- plot_ly(sh, x =~date, y = ~sessions_held) %>%
+    layout(title="Sessions Held by Month",
+           xaxis=list(title="Time Frame"),
+           yaxis=list(title= "Sessions Held"))
+
+sh_p
+```
+
+-----------------------------------
+### Sessions Held by Council
+
+```{r}
+sh_tbl <- students_served %>%
+    select(6,4,3)
+    
+
+kable(sh_tbl)
+```
+
+Mentor Data {data-orientation=columns}
+=====================================  
+
+Row {.tabset .tabset-fade}
+--------------------------------
+
+### Number of Mentors
+
+
+```{r}
+
+mentor_dat <- readRDS("mentor_dat.rds")
+
+mentor_dat <- mentor_dat %>%
+    select(10,11,12, 14)%>%
+    filter(Year == "16-17")
+
+
+#kable(mentor_dat)
+
+mentor_n <- plot_ly(mentor_dat, x = ~council_name, y =~mentors, type= 'bar') %>%
+    layout(title="Mentors by Council",
+           xaxis=list(title="Council"),
+           yaxis=list(title="Number of Mentors"))
+
+mentor_n
+
+
+```
+
+------------------------------
+###Number of Mentors by Council
+
+```{r}
+
+mentor_tbl <- mentor_dat %>%
+    select(4,1)
+
+
+kable(mentor_tbl)
+```
+
+
+Row {.tabset .tabset-fade}
+--------------------------------
+### Logged Mentor Hours
+
+```{r}
+logged_hrs <- plot_ly(mentor_dat, x =~council_name, y =~logged_hours, type="bar") %>%
+    layout(title="Logged Hours by Mentors",
+           xaxis=list(title="Council"),
+           yaxis=list(title="Mentors Logged Hours"))
+
+logged_hrs
+
+
+```
+
+----------------------------------
+### Logged Hours by Mentors: Council
+
+```{r}
+logged_tbl <- mentor_dat %>%
+    select(4,2)
+
+kable(logged_tbl)
+```
+

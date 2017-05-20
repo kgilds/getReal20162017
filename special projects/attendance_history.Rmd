@@ -1,0 +1,364 @@
+---
+title: "Attendance_history"
+author: "Kevin Gilds, MPA"
+date: "February 18, 2017"
+output: 
+    github_document
+        
+---
+
+```{r read_dbase_attendance, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+library(sqldf)
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite") 
+
+getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite") #established connection with database
+
+library(DT)
+library(getREAL)
+library(dplyr)
+library(pander)
+library(ggplot2)
+library(effsize)
+library(knitr)
+library(catspec)
+library(formattable)
+library(bookdown)
+```
+
+```{r read_1516_att, echo=FALSE}
+attendance_1516 <-dbReadTable(getReal_2016db, "attendance_1516") #read readarts1516 table
+
+#names(attendance_1516)
+
+attendance_1516 <- attendance_1516 %>%
+     mutate("Year_Id" = "M3")%>%
+     rename(baseline = basline)%>%
+     rename(Att_diff = Abs_Change)%>%
+     select(1, 2, 3, 4, 6,7) #select variables of interest 
+      
+#names(attendance_1516)
+
+```
+
+
+
+```{r read_1415_att, echo=FALSE}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Reports/MY-2014-2015/Summ Evaluation Report/data") #change working directory to find database
+
+getReal_2015db<- dbConnect(SQLite(),   dbname="data_Final_GetReal_2014_2015.sqlite") #read database
+
+attendance_1415 <-dbReadTable(getReal_2015db, "absences_final") #read read_1415
+
+#names(attendance_1415)
+
+attendance_1415 <- attendance_1415%>% 
+    mutate("Year_Id" = "M2") %>% #add variable data
+    rename(Att_diff = diff)%>%
+    rename(Council = council)%>%
+    rename(final= total_abs_final)%>%
+    rename(baseline = total_abs_baseline)%>%#rename variable/column name
+    select(1,2, 4,3, 5,6)#select column of interest
+
+#names(attendance_1415)
+
+```
+
+```{r attendance_his, echo=FALSE}
+
+
+
+attendance_his <- rbind(attendance_1415, attendance_1516)
+
+
+
+```
+
+
+```{r attendance_unique, echo=FALSE }
+
+
+attendance_unique <- attendance_his[!(duplicated(attendance_his$girlCode) | duplicated(attendance_his$girlCode, fromLast = TRUE)), ]
+
+#dim(attendance_unique)
+
+attendance_unique <- attendance_unique %>%
+    mutate("Match" = "No")
+
+#head(attendance_unique)
+
+
+
+
+
+
+```
+
+```{r attendance_dupes, echo=FALSE}
+
+attendance_dupes <-duplicated(attendance_his$girlCode) | duplicated(attendance_his$girlCode, fromLast=TRUE)
+
+attendance_dupes <-attendance_his[attendance_dupes, ]
+
+#dim(susp_dupes)
+
+attendance_dupes <- attendance_dupes %>%
+    mutate("Match" = "Yes")
+
+
+attendance_his <- rbind(attendance_unique, attendance_dupes)
+
+#dim(susp_his)
+
+#dim(attendance_his)
+
+```
+
+
+
+
+```{r council_name_fix_att, echo=FALSE}
+## Change council names to be consistent wiht how they displayed with the surveys
+attendance_his$Council <-sub("Girl Scouts of the Gateway Council", "Gateway Council", fixed=TRUE, attendance_his$Council)
+
+attendance_his$Council <-sub("Girl Scouts of Citrus Council", "Citrus Council", fixed=TRUE, attendance_his$Council)
+
+attendance_his$Council <-sub("Girl Scouts of Southeast Florida", "Southeast Council", fixed=TRUE, attendance_his$Council)
+
+attendance_his$Council <-sub("Southeast Council, Inc", "Southeast Council", fixed=TRUE, attendance_his$Council)
+
+attendance_his$Council <-sub("Southeast Council.", "Southeast Council", fixed=TRUE, attendance_his$Council)
+
+attendance_his$Council <-sub("Girl Scout Council of Tropical Florida", "Tropical Council", fixed = TRUE, attendance_his$Council)
+
+attendance_his$Council <-sub("Girl Scouts of West Central Florida", "West Central Council", fixed = TRUE, attendance_his$Council)
+
+attendance_his$Council <-sub("Girl Scout Council of the Panhandle", "Panhandle Council", fixed = TRUE, attendance_his$Council)
+
+attendance_his$Council <-sub("Pandhandle Council", "Panhandle Council", fixed = TRUE, attendance_his$Council)
+
+
+attendance_his$Council <-sub("Girl Scouts of Gulfcoast Florida Inc.",  "Gulfcoast Council", fixed = TRUE, attendance_his$Council)
+
+```
+
+
+```{r update_year_attendance, echo=FALSE}
+attendance_his$Year_Id <-sub("M2",  "14-15", fixed = TRUE, attendance_his$Year_Id)
+
+attendance_his$Year_Id <-sub("M3",  "15-16", fixed = TRUE, attendance_his$Year_Id)
+
+
+```
+
+
+
+
+
+
+
+
+```{r council_stauts_lang, echo=FALSE,eval=FALSE}
+council_status <- with(attendance_his,table(Council, Year_Id))
+
+
+
+#council_status <- addmargins(council_status)
+
+pander(council_status)
+
+```
+
+
+
+
+
+```{r att_dif2, echo=FALSE}
+attendance_his <- attendance_his %>%
+    mutate(Att_diff2 = final - baseline)
+
+
+```
+
+
+```{r succcess_att, echo=FALSE}
+perfect_att <- attendance_his%>%
+    filter(final ==0 & baseline ==0)%>%  #filter out students with perfect attendance
+    mutate("Success" = "TRUE")
+
+
+reduce_att <-attendance_his %>%
+    filter(Att_diff2 < 0) %>%  #filter out students who reduced their attenance
+    mutate("Success" = "TRUE")  #add success variable
+
+
+
+
+attendance_his1 <-rbind(perfect_att, reduce_att)  
+
+increase_att <- attendance_his %>%
+    filter(final !=0) %>%
+    filter(Att_diff2 >=0)%>%    #find students who increased their attendance and did not decreased # number of times 
+    mutate("Success" = "FALSE")  #add success variable
+
+attendance_his <- rbind(attendance_his1, increase_att)  #bind all together for analysis down the pipleline. 
+
+attendance_suc_1 <- nrow(reduce_att) + nrow(perfect_att)
+
+#attendance_suc_1
+
+attendance_suc_2 <- (attendance_suc_1) / nrow(attendance_his)
+
+
+
+
+
+attendance_suc <- percent(attendance_suc_2)
+
+
+```
+
+```{r att_suc_att, eval=FALSE, echo=FALSE}
+attendance_succ <- attendance_his %>%
+    count(Success)%>%
+    mutate(percent = n /sum(n))
+
+attendance_succ
+
+attendance_succ$n[2]
+
+```
+
+
+
+# Attendance Data
+
+The number of students in the dataset are **`r nrow(attendance_his)`** and the number of students that could be matched across two years is **`r nrow(attendance_dupes)`**.The percent of students with a succesful outcome is **`r (attendance_suc)`**.  A successful outcome means not missing a day of school and the student decreasing their number of absences from baseline grading period to the final grading period.
+
+
+```{r succ_table, echo=FALSE }
+attendance_succ <- attendance_his %>%
+    count(Success)%>%
+    mutate(percent = n /sum(n))
+
+attendance_succ$percent <- percent(attendance_succ$percent)
+
+
+
+kable(attendance_succ)
+
+
+```
+
+
+```{r attendance_suc_match, echo=FALSE}
+attendance_succ_m <- attendance_his %>%
+    group_by(Match) %>%
+    count(Success) %>%
+    mutate(percent = n /sum(n))
+
+attendance_succ_m$percent <- percent(attendance_succ_m$percent)
+
+attendance_succ_m <- attendance_succ_m %>%
+    filter(Success == "TRUE")
+
+kable(attendance_succ_m)
+```
+
+
+
+### Achievment by Council
+
+```{r attendance_succ_c, echo=FALSE}
+attendance_succ_c <- attendance_his %>%
+    group_by(Council)%>%
+    count(Success)%>%
+    mutate(percent = n /sum(n))
+    
+    
+attendance_succ_c$percent <- percent(attendance_succ_c$percent)  
+
+attendance_succ_c <- attendance_succ_c %>%
+    filter(Success == "TRUE")
+
+kable(attendance_succ_c)
+    
+```
+
+### Decrease in Absences
+
+```{r att_avg_allstudents, echo=FALSE, eval=FALSE}
+attendance_avg <- attendance_his %>%
+    summarise(Att_diff2 = mean(Att_diff2))
+
+kable(attendance_avg)
+
+```
+
+### Average Decrease for students who had a chance to improve attendance
+
+```{r attendance_avg1, echo=FALSE}
+
+attendance_avg_1 <- attendance_his %>%
+    filter(baseline >0 & final >0)
+    
+#head(attendance_avg_1)
+#tail(attendance_avg_1)
+
+attendance_avg_1 <- attendance_his %>%
+    filter(baseline >0 & final >0)%>%
+    summarise(Avg_Change = mean(Att_diff2))
+
+
+attendance_count <- attendance_his %>%
+    count(Att_diff2 > 0)
+
+#kable(attendance_count)
+
+kable(attendance_avg_1)
+```
+
+```{r echo=FALSE}
+att_sum_m <- attendance_his %>%
+    filter(baseline !=0 & final !=0) %>%
+    group_by(Match) %>%
+    summarise(Avg_Change =mean(Att_diff2))
+
+kable(att_sum_m)
+
+```
+
+
+
+```{r att_sum_year, echo=FALSE}
+att_sum_y <- attendance_his %>%
+    group_by(Year_Id)%>%
+    summarise(Avg_Change=mean(Att_diff2))
+
+kable(att_sum_y)
+
+```
+
+
+
+
+```{r sum_att_council, echo=FALSE}
+att_sum_c <- attendance_his %>%
+    group_by(Council)%>%
+    summarise(Att_diff2 =mean(Att_diff2))
+
+#kable(att_sum_c)
+
+#year_id_lang_summary <-summarise(year_id_lang_summary, Grade_Change #=mean(Grade_Change)) #summarize Grade change by year id
+```
+```{r abs_plot, echo=FALSE, fig.path='Figs/'}
+
+abs_plot <- ggplot(att_sum_c,(aes(x = Att_diff2, y =Council)))
+abs_plot + geom_count() + labs(x="Average Attendance Difference", title="Attendance History: Average Difference")
+
+
+
+```
+

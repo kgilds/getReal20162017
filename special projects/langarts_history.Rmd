@@ -1,0 +1,528 @@
+---
+title: "language_arts_history"
+author: "Kevin Gilds, MPA"
+date: "September 24, 2016"
+output: 
+     
+     github_document: default
+---
+
+
+```{r lang_dbase, echo=FALSE, warning=FALSE, message=FALSE}
+
+
+library(sqldf)
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite") 
+
+getReal_2016db<- dbConnect(SQLite(), dbname="outcome_history.sqlite") #established connection with database
+
+library(DT)
+library(getREAL)
+library(dplyr)
+library(pander)
+library(ggplot2)
+library(effsize)
+library(knitr)
+library(catspec)
+library(formattable)
+
+```
+
+```{r lang_1516, echo=FALSE}
+lang_1516 <-dbReadTable(getReal_2016db, "langarts_1516") #read langarts1516 table
+
+lang_1516 <- lang_1516 %>%
+    select(council, 1:4,6) %>%  #select variables of interest
+    mutate("Year_Id" = "M3")  # add new variable and name M3
+    
+
+
+```
+
+```{r lang_1415, echo=FALSE}
+
+setwd("C:/Users/kevin/Dropbox/GetReal/Reports/MY-2014-2015/Summ Evaluation Report/data") #change working directory to find database
+
+getReal_2015db<- dbConnect(SQLite(),   dbname="data_Final_GetReal_2014_2015.sqlite") #read database
+
+lang_1415 <-dbReadTable(getReal_2015db, "langarts_final_matched") #read lang_1415
+
+
+
+lang_1415 <- lang_1415%>% 
+    select(girlCode,council.x, q4Grade, q1Grade, langDiff) %>% #select variables
+    rename(council = council.x, final = q4Grade, baseline = q1Grade, Grade_Change =langDiff) %>%  #rename variable names to match rest of df
+    mutate("Year_Id" = "M2") #add variable and name it M2. 
+
+```
+
+
+
+```{r lang_1314, echo=FALSE}
+setwd("C:/Users/kevin/Dropbox/GetReal/Analyis_data")
+
+getReal_2014db<- dbConnect(SQLite(), dbname="getReal.sqlite") #find database 
+
+lang_1314 <-dbReadTable(getReal_2014db, "langArtsFinal") #Need langarts table 13_14
+
+
+
+```
+
+```{r three_14, echo=FALSE}
+three_14 <- lang_1314[grep("^314", lang_1314$girlCode),] #find and subset council codes with 314
+
+
+
+three_14 <- three_14 %>%
+    mutate("council" = "Gulfcoast Council") %>% #add council variable and name it
+    mutate("langdiff" = finish - start) #add vairable and name it to match other df
+
+```
+
+
+
+```{r three_13, echo=FALSE}
+
+three_13 <- lang_1314[grep("^313", lang_1314$girlCode),] #find and subset girl codess with 313
+
+
+
+three_13 <-three_13 %>% 
+    mutate("council" = "Gateway Council") %>% #add council varialbe and name it
+    mutate("langdiff" = finish- start) #add variable to find grade difference for comparison
+
+
+```
+
+```{r three_20, echo=FALSE}
+
+three_20 <- lang_1314[grep("^320", lang_1314$girlCode),] #find girlcodes that start with 320 and subset them
+
+
+three_20 <- three_20 %>%
+    mutate("council" = "West Central Council") %>% #add council varialbe to summarize data and match other datasets
+    mutate("langdiff" = finish - start) #add calculdated field to provide analyiss.
+
+
+```
+
+
+```{r three_21, echo=FALSE}
+three_21 <- lang_1314[grep("^321", lang_1314$girlCode),] #find girlCode that starts with 321 and subset them
+
+
+three_21 <- three_21 %>%
+    mutate("council" = "Southeast Council") %>% #add council to match other data sets and 
+    mutate("langdiff" = finish - start)#add calculated fied to mathch other datasets for analysis
+
+
+```
+
+
+```{r three_22, echo=FALSE}
+
+three_22 <- lang_1314[grep("^322", lang_1314$girlCode),] #find girlCode records that start with 322 and subset theem
+
+
+three_22 <- three_22 %>%
+    mutate("council" = "Pandhandle Council") %>% #add variable council to summarize data and match other datasets
+    mutate("langdiff" = finish - start) #add calculated field to match other datasets 
+   
+
+```
+
+
+```{r the_binding, echo=FALSE}
+
+gateway_gulf <- rbind(three_13, three_14) #bind council 313 and 314
+
+wcf <- rbind(gateway_gulf, three_20) #bind council wcf with 313_314
+
+southeast <- rbind(wcf, three_21)  #bind southeast, with 313, 314, and 320
+
+lang_1314_a <- rbind(southeast, three_22) #bind southeast with 322)
+
+
+
+lang_1314_a <- lang_1314_a %>%
+    mutate("Year_Id" = "M1") %>% #add MY variable to remind what year this is
+    rename(baseline = start, final = finish, Grade_Change = langdiff) # re-name variable to match other set and merge all togheter
+
+```
+
+```{r reorder_1516, echo=FALSE}
+lang_1516 <- lang_1516[,c(2,1,6,3,4,5)] #reorder variables
+#df2[,c(1,3,2,4)]
+
+
+
+```
+
+
+
+```{r reorder 1314, echo=FALSE}
+lang_1314_a<-lang_1314_a[,c(1,4, 6,2,3,5)] #rearrange variables
+#df2[,c(1,3,2,4)]
+
+
+
+```
+
+```{r reorder_1415, echo=FALSE}
+lang_1415 <- lang_1415[,c(1,2,6, 4, 3, 5)] #reorder 1415
+
+
+
+```
+
+```{r lang_history, echo=FALSE}
+
+lang_1 <-rbind(lang_1314_a, lang_1415) #combine 1314 and 1415
+
+lang_history <- rbind(lang_1, lang_1516) #combined 1415_1314 & 1516
+
+
+
+```
+
+
+```{r echo=FALSE}
+
+#dim(lang_history)
+
+lang_history_unique<- lang_history[!(duplicated(lang_history$girlCode) | duplicated(lang_history$girlCode, fromLast = TRUE)), ] #find and subset uniquie students
+
+#dim(lang_history_unique)
+
+lang_history_unique <- lang_history_unique %>%
+    mutate("Match" = "No")
+
+lang_history_dupes <-duplicated(lang_history$girlCode) | duplicated(lang_history$girlCode, fromLast=TRUE) #find duplicated cases
+
+lang_history_dupes <- lang_history[lang_history_dupes, ] # subset dupes
+
+
+lang_history_dupes <- lang_history_dupes %>%
+    mutate("Match" = "Yes")
+
+#dim(lang_history_dupes)
+
+
+
+
+```
+
+
+
+```{r echo=FALSE}
+lang_history <- rbind(lang_history_dupes, lang_history_unique) #bind in unique df and dup df with labels. 
+
+#dim(lang_history)
+```
+
+
+
+
+
+```{r council_name_fix_lang, echo=FALSE}
+## Change council names to be consistent wiht how they displayed with the surveys
+lang_history$council <-sub("Girl Scouts of the Gateway Council", "Gateway Council", fixed=TRUE, lang_history$council)
+
+lang_history$council <-sub("Girl Scouts of Citrus Council", "Citrus Council", fixed=TRUE, lang_history$council)
+
+lang_history$council <-sub("Girl Scouts of Southeast Florida", "Southeast Council", fixed=TRUE, lang_history$council)
+
+lang_history$council <-sub("Southeast Council, Inc", "Southeast Council", fixed=TRUE, lang_history$council)
+
+lang_history$council <-sub("Southeast Council.", "Southeast Council", fixed=TRUE, lang_history$council)
+
+lang_history$council <-sub("Girl Scout Council of Tropical Florida", "Tropical Council", fixed = TRUE, lang_history$council)
+
+lang_history$council <-sub("Girl Scouts of West Central Florida", "West Central Council", fixed = TRUE, lang_history$council)
+
+lang_history$council <-sub("Girl Scout Council of the Panhandle", "Panhandle Council", fixed = TRUE, lang_history$council)
+
+lang_history$council <-sub("Pandhandle Council", "Panhandle Council", fixed = TRUE, lang_history$council)
+
+
+lang_history$council <-sub("Girl Scouts of Gulfcoast Florida Inc.",  "Gulfcoast Council", fixed = TRUE, lang_history$council)
+
+```
+
+
+```{r update_year_reading, echo=FALSE}
+
+#change name of year to be consistent across domain reports
+lang_history$Year_Id <-sub("M1",  "13-14", fixed = TRUE, lang_history$Year_Id) 
+
+lang_history$Year_Id <-sub("M2",  "14-15", fixed = TRUE, lang_history$Year_Id)
+
+lang_history$Year_Id <-sub("M3",  "15-16", fixed = TRUE, lang_history$Year_Id)
+
+
+```
+
+
+
+```{r lang_success_h, echo=FALSE}
+
+lang_success_h <- function() {
+    lang_dat <- filter(lang_history, final >=2, Grade_Change >=0)
+    lang_dat <- nrow(lang_dat)/nrow(lang_history)
+    lang_dat <- round(lang_dat*100,2)
+    pander(paste0(lang_dat,"%", sep= ""))
+
+}
+
+
+
+```
+
+
+```{r lang_success_df, echo=FALSE}
+lang_success_df <- lang_history %>%
+    filter(final >=2, Grade_Change >=0)
+
+
+```
+
+```{r lang_increase, echo=FALSE}
+lang_increase <- lang_history %>%
+    filter(final >=2, Grade_Change >0)
+```
+
+
+
+```{r lang_main, echo=FALSE}
+lang_main <- lang_history %>%
+    filter(final >=2, Grade_Change ==0)
+
+
+```
+
+
+
+```{r fail_baseline, echo=FALSE}
+
+fail_baseline <- lang_history %>%
+    filter(baseline <= 1)
+
+
+```
+
+
+
+```{r fail_to_pass, echo=FALSE}
+
+fail_to_pass <- lang_history %>%
+    filter(baseline <=1, final >=2)
+
+fail_to_pass_p <- nrow(fail_to_pass) /nrow(fail_baseline)
+
+fail_to_pass_p <- round(fail_to_pass_p*100,2)
+fail_to_pass_p <- pander(paste0(fail_to_pass_p,"%", sep= ""))
+
+
+
+
+
+```
+
+# Language Arts Grade Data
+
+The number of students that were matched from the past 3 Membership Years is **`r nrow(lang_history)`**
+
+The percent of students with a successful outcome is **`r lang_success_h()`**
+
+* The number of students who increased their grade or maintained at least a C grade is **`r nrow(lang_success_df)`**
+
+    * The number of students with a final grade of C and increased their grade is **`r nrow(lang_increase)`**
+    
+    * The number of students who maintained at least a C grade is **`r nrow(lang_main)`**
+
+
+The percent of students who went from failing to passing is **`r fail_to_pass_p`**
+
+*   The number of students who started with a failing grade is **`r nrow (fail_baseline)`**
+
+
+*   The number of students who increased grade from failing to passing **`r nrow(fail_to_pass)`**
+
+
+
+
+### Achievement by Council
+
+```{r echo=FALSE}
+
+
+
+lang_success_s <- lang_history %>%
+    filter(final >=2, Grade_Change >=0)%>%
+    mutate("Success" = "TRUE")
+
+lang_success_n <- lang_history %>%
+    filter(final >=2, Grade_Change  < 0) %>%
+    mutate("Success" = "FALSE")
+
+#nrow(read_success_n)
+
+lang_success_x <- lang_history %>%
+    filter(final < 2) %>%
+    mutate("Success" = "FALSE")
+
+
+lang_success_1 <- rbind(lang_success_s, lang_success_n)
+
+lang_success_2 <- rbind(lang_success_1, lang_success_x)
+
+
+#read_success_2
+
+
+```
+
+
+
+```{r lang_success_c, eval=TRUE, echo=FALSE}
+
+lang_success <- lang_success_2 %>%
+    group_by(council) %>%
+    count(Success) %>%
+    mutate(percent = n /sum(n))
+    
+lang_success$percent <- percent(lang_success$percent)
+
+lang_success <- lang_success %>%
+    filter(Success ==TRUE)
+
+
+kable(lang_success)
+
+
+```
+
+```{r lang_suc_m, echo=FALSE}
+lang_success_m <- lang_success_2 %>%
+    group_by(Match) %>%
+    count(Success) %>%
+    mutate(percent = n /sum(n))
+    
+lang_success_m$percent <- percent(lang_success_m$percent)
+
+lang_success_m <- lang_success_m %>%
+    filter(Success == TRUE)
+
+kable(lang_success_m)
+
+
+
+```
+
+
+
+```{r lang_increase_tbl, echo=FALSE, eval=FALSE}
+
+lang_increase_tbl <- lang_history %>%
+    group_by(council, Year_Id) %>%
+    count(final >=2, Grade_Change >=0)
+    
+pander(lang_increase_tbl)
+```
+
+
+
+
+
+
+
+
+
+
+
+```{r lang_history_filtered, echo=FALSE, eval=FALSE}
+lang_history_filtered <- lang_history %>%
+    filter(baseline !=4 | final != 4) #filter out all A's. Compare means
+
+summary(lang_history_filtered$Grade_Change) #summarize filtered data
+
+
+hist(lang_history_filtered$Grade_Change) #create historgram to look at distribution
+
+
+```
+
+
+```{r stat_test_lang, echo=FALSE, eval=FALSE}
+
+pander(t.test(lang_history$baseline, lang_history$final))
+
+cohen.d(lang_history$baseline, lang_history$final)
+
+```
+
+
+```{r stat test filtered_lang, echo=FALSE, eval=FALSE}
+
+pander(t.test(lang_history_filtered$baseline, lang_history_filtered$final))
+
+cohen.d(lang_history_filtered$baseline, lang_history_filtered$final)
+
+```
+
+
+```{r council_lang_summary, echo=FALSE}
+
+year_id_lang_summary <- lang_history %>%
+    group_by(Year_Id) #groupd data by Year_Id
+
+
+
+year_id_lang_summary <-summarise(year_id_lang_summary, Grade_Change =mean(Grade_Change)) #summarize Grade change by year id
+
+pander(year_id_lang_summary) #review the data
+
+
+```
+
+
+
+
+```{r plot_council_lang_summary, echo=FALSE, fig.path='Figs/'}
+
+ggplot(year_id_lang_summary, aes(y=Grade_Change, x=Year_Id, group=2)) + geom_line() + geom_point() + labs (title= "Average Grade Change by Year", x="Membership Year", y="Average Difference")
+
+```
+
+
+
+```{r lang_summary_council, echo=FALSE, fig.path='Figs/' }
+
+council_lang_summary_c <- lang_history %>%
+    group_by(council,Year_Id)
+
+
+council_lang_summary_c <-summarise(council_lang_summary_c, Grade_Change =mean(Grade_Change)) #summarize council grade change
+
+
+pander(council_lang_summary_c)  #print summary nicely
+
+ggplot(council_lang_summary_c, aes(y=Grade_Change, x=Year_Id, colour=council, group=2))  + geom_point(size=3) + labs(title= "Average Grade Change by Year and Council", x="Membership Year", y="Average Grade Difference")   #graphical summary
+
+```
+
+
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+
+getReal_db<- dbConnect(SQLite(), dbname="outcome_history.sqlite") #established connection with d
+
+dbWriteTable(conn =getReal_db, name= "langarts_history", value= lang_history, row.names=FALSE, overwrite=TRUE)
+
+
+```
+
+
