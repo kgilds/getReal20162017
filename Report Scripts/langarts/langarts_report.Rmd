@@ -7,6 +7,7 @@ output: html_document
 
 ```{r lang_libraries}
 library(dplyr)
+library(ggplot2)
 library(pander)
 library(getREAL)
 library(knitr)
@@ -72,23 +73,29 @@ dim(lang_f)
 increased <- langarts %>%
     filter(final >=2, pt_diff >0)
 
-increased<-nrow(increased)
+
+
+
 
 maintain <- langarts %>%
     filter(final >=2, pt_diff ==0)
 
-maintain<-nrow(maintain)
 
 
 
-success_table <- data.frame(increased, maintain)
 
-kable(success_table)
+#success_table <- data.frame(increased, maintain)
+#kable(success_table)
+
+fail_baseline <- langarts %>%
+    filter(baseline < 2)
 
 fail_topass <- langarts %>%
     filter(baseline < 2, final >=2)
 
 nrow(fail_topass)
+
+
 
 ```
 
@@ -102,25 +109,56 @@ langarts <- rbind(lang_success, lang_f)
 dim(langarts)
 ```
 
-```{r mean_lang_pt}
-lang_pt <- langarts %>%
-    summarise(Avg =mean(pt_diff))
 
-lang_pt
-```
+# Language Arts Grade Data
+
+The number of students that were matched from a baseline grade to a final grade is **`r nrow(langarts)`**
+
+The percent of students with a successful outcome is **`r lang_success()`**
+
+* The number of students who increased their grade or maintained at least a C grade is **`r nrow(lang_success)`**
+
+
+    * The number of students with a final grade of C and increased their grade is **`r nrow(increased)`**
+    
+    * The number of students who maintained at least a C grade is **`r nrow(maintain)`**
+
+
+The percent of students who went from a grade of D or lower to a grade C or above is *
+
+*   The number of students who started with a D grade or below is **`r nrow (fail_baseline)`**
+
+
+*   The number of students who increased grade from a D or lower to a C grade **`r nrow(fail_topass)`**
+
+
+
+
 
 
 
 ```{r table_succes}
-lang_success <- langarts %>%
+lang_success_1 <- langarts %>%
     count(Success) %>%
     mutate(percent = n /sum(n))
     
-lang_success$percent <- percent(lang_success$percent)
+lang_success_1$percent <- percent(lang_success_1$percent)
 
 
 
-kable(lang_success)
+kable(lang_success_1)
+
+#g <- ggplot(lang_success_1, aes(Success = TRUE))
+#g + geom_bar()
+
+#lang_plot <-qplot(lang_success$Success==TRUE, geom="geom_col", main="Pre survey Results", xlab="Achievment at High Level")
+
+
+#lang_plot
+
+#hr_bar_pre <-qplot(hr_2016$Pre >=4.45, geom="bar", ylim=c(0, 300), main="Pre survey Results", xlab="Achievment at High Level")
+
+
 ```
 
 
@@ -138,5 +176,26 @@ lang_success_c <- lang_success_c %>%
 
 
 kable(lang_success_c)
+```
+
+
+# Grade Change
+
+```{r mean_lang_pt}
+lang_pt <- langarts %>%
+    summarise(Avg =mean(pt_diff))
+
+lang_pt
+```
+
+
+
+```{r}
+langarts_change_plot2 <- ggplot(langarts,(aes(x = pt_diff, y = baseline)))
+
+langarts_change_plot2 + geom_count() + labs (title= "Grade Change from baseline to final", x="Grade Change", y="Baseline Grade")
+
+
+
 ```
 
