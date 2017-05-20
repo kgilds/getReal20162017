@@ -33,6 +33,7 @@ q1_dm <- read_csv("q1_05062017.csv", skip = 1) #read  q1_dmcsv file
 
 q2_dm <- read_csv("q2_05062017.csv", skip =1)
 
+q3_dm <- read_csv("q3_05062017.csv", skip=1)
 
 ```
 
@@ -49,6 +50,8 @@ saveRDS(q1_dm, "q1_data.RDS") #save q1 data in rds format
 
 saveRDS(q2_dm, "q2_data.Rds")
 
+saveRDS(q3_dm, "q3_data.Rds")
+
 
 ```
 
@@ -64,6 +67,12 @@ rmarkdown::render("teacher_survey_dm.Rmd") #run teacher_survey
 
 rmarkdown::render("q1_dm.Rmd") #run q1_dm file
 
+rmarkdown::render("q1_tropical.Rmd")
+
+rmarkdown::render("q2_dm.Rmd") #run q2_dm file
+
+rmarkdown::render("q3_dm.Rmd") #run q3_dm file
+
 
 
 
@@ -76,9 +85,9 @@ setwd("~/GitHub/getReal20162017/Report Scripts")
 
 rmarkdown::render("status_report.Rmd")
 
-rmarkdown::render("results.Rmd")# run results file
+#rmarkdown::render("results.Rmd")# run results file
 
-rmarkdown::render("langarts_report.Rmd")# run results file
+#rmarkdown::render("langarts_report.Rmd")# run results file
 
 ```
 
