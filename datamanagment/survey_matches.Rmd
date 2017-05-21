@@ -2,7 +2,7 @@
 title: "survey_matches"
 author: "Kevin Gilds, MPA"
 date: "May 18, 2017"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -36,20 +36,21 @@ post_student_survey <-dbReadTable(getRealdb, "girl_post_1617")
 #Healthy Relationships
 ```{r}
 pre_hr <- pre_student_survey  %>%
-    select(council, girlCode, hr.avg) %>%
-    mutate("Year_Id" = "16-17")
+    select(council, girlCode, hr.avg) %>% # select outcome measures from pre and other variables
+    mutate("Year_Id" = "16-17") # add variable for year to when adding to db
 
 
+#select outcome measure from post survey and add year id 
 post_hr <- post_student_survey %>%
-    select(council, girlCode, hr.avg) %>%
+    select(council, girlCode, hr.avg) %>% #
     mutate("Year_Id" = "16-17")
 
 
-
+# Merge pre and post by girlCode
 hr <- inner_join(pre_hr, post_hr, by="girlCode")
 
-head(hr)
 
+# select columns of interest and rename the columns for easier human reading. Add column to calculate difference between Pre and Post
 hr <- hr %>%
     select(Year_Id.x, council.x, girlCode, hr.avg.x, hr.avg.y) %>%
     rename("Year_Id" = Year_Id.x) %>%
@@ -58,20 +59,24 @@ hr <- hr %>%
     rename("Post" = hr.avg.y) %>%
     mutate ("hr.diff" = Post - Pre)
 
-head(hr)
+
+
 
 
 
 ```
-
+## HR Success
 
 ```{r}
+
+#Subset students acheiving at high level and add success variable
 hr_1 <- hr %>%
     filter(Post >=4.45)%>%
     mutate("Success" = "TRUE")
 
 #dim(hr_1)
 
+#Subset those that did not reach at high level but incresed outcome score and add success variable 
 hr_2 <- hr %>%
     filter(Post <4.45 & hr.diff >0)%>%
     mutate("Success" = "TRUE")
@@ -80,11 +85,12 @@ hr_2 <- hr %>%
 
 #dim(hr_2)
 
+#Subset those that did not achieve at high level or increase from pre to post
 hr_3 <- hr %>%
     filter(Post < 4.45 & hr.diff <=0)%>%
     mutate("Success" = "FALSE")
 
-
+#merge all the subsets back in for a complete data frame for more analsysis laster. 
 hr_1 <- rbind(hr_1, hr_2)
 
 hr <- rbind(hr_1, hr_3)
@@ -92,9 +98,139 @@ hr <- rbind(hr_1, hr_3)
 
 ```
 
-
+# Academic Engagment
 
 ```{r}
-head(hr)
+# select ae variable from pre survey along with others and add year id
+pre_ae <- pre_student_survey  %>%
+    select(council, girlCode, ae.avg) %>%
+    mutate("Year_Id" = "16-17")
+
+# select ae variable from post survey along with others and add year id
+post_ae <- post_student_survey %>%
+    select(council, girlCode, ae.avg) %>%
+    mutate("Year_Id" = "16-17")
+
+
+#Merge pre and post by girlCode
+ae <- inner_join(pre_ae, post_ae, by="girlCode")
+
+head(ae)
+
+#select columns of interest; rename them for humans, add calculated difference field. 
+ae <- ae %>%
+    select(Year_Id.x, council.x, girlCode, ae.avg.x, ae.avg.y) %>%
+    rename("Year_Id" = Year_Id.x) %>%
+    rename("council" = council.x) %>%
+    rename("Pre" = ae.avg.x) %>%
+    rename("Post" = ae.avg.y) %>%
+    mutate ("ae.diff" = Post - Pre)
+
+head(ae)
+
+
+
+```
+
+## AE Success
+
+```{r}
+
+#subset those that achieved at a high level and added success variable
+ae_1 <- ae %>%
+    filter(Post >=4.5)%>%
+    mutate("Success" = "TRUE")
+
+#dim(hr_1)
+#subset those that did not achieve at high level but increased from pre and post and added success variable
+ae_2 <- ae %>%
+    filter(Post <4.5 & ae.diff >0)%>%
+    mutate("Success" = "TRUE")
+
+
+
+#dim(hr_2)
+
+#subset those that did not achieve at high level nor increased from pre to post; add success variable. 
+ae_3 <- ae %>%
+    filter(Post < 4.5 & ae.diff <=0)%>%
+    mutate("Success" = "FALSE")
+
+# Merged dataframes back in 
+ae_1 <- rbind(ae_1, ae_2)
+
+ae <- rbind(ae_1, ae_3)
+
+head(ae)
+
+```
+
+# Academic Mastery
+
+```{r}
+
+# select pre am observations and add year_id as variable 
+pre_am <- pre_student_survey  %>%
+    select(council, girlCode, am.avg) %>%
+    mutate("Year_Id" = "16-17")
+
+#select post survey am and add year id
+post_am <- post_student_survey %>%
+    select(council, girlCode, am.avg) %>%
+    mutate("Year_Id" = "16-17")
+
+
+#Merge pre and post by girl code
+am <- inner_join(pre_am, post_am, by="girlCode")
+
+head(am)
+
+#select variables of interest, change variable names for human reading and create calculated field.  
+am <- am %>%
+    select(Year_Id.x, council.x, girlCode, am.avg.x, am.avg.y) %>%
+    rename("Year_Id" = Year_Id.x) %>%
+    rename("council" = council.x) %>%
+    rename("Pre" = am.avg.x) %>%
+    rename("Post" = am.avg.y) %>%
+    mutate ("am.diff" = Post - Pre)
+
+head(am)
+
+
+
+```
+
+# AM Success
+
+```{r}
+
+#Subset  those that achieved at high level to add success variable
+am_1 <- am %>%
+    filter(Post >=4.8)%>%
+    mutate("Success" = "TRUE")
+
+#dim(hr_1)
+
+#Subset those that did not achieve at high level but increased score from pre to post, add success variable. 
+am_2 <- am %>%
+    filter(Post <4.5 & am.diff >0)%>%
+    mutate("Success" = "TRUE")
+
+
+
+#dim(hr_2)
+#Subset those that did not achieve at high level or increase score form pre to post and added success variable. 
+am_3 <- am %>%
+    filter(Post < 4.5 & am.diff <=0)%>%
+    mutate("Success" = "FALSE")
+
+# Merge data frames back in for complete data frame 
+am_1 <- rbind(am_1, am_2)
+
+am <- rbind(am_1, am_3)
+
+head(am)
+
+
 ```
 
