@@ -24,11 +24,11 @@ setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
 ### Make connection with database
 getRealdb<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
 
-q1_langarts <- dbReadTable(getRealdb,"Q1_langarts_1617")
+q1_langarts <- dbReadTable(getRealdb,"Q1_langarts_1617") # read the table
 
-q2_langarts <- dbReadTable(getRealdb, "Q2_langarts_1617")
+q2_langarts <- dbReadTable(getRealdb, "Q2_langarts_1617") # read the table to object
 
-q3_langarts <- dbReadTable(getRealdb, "Q3_langarts_1617")
+q3_langarts <- dbReadTable(getRealdb, "Q3_langarts_1617") # read the table to object
 
 dim(q1_langarts)
 
@@ -41,6 +41,8 @@ dim(q2_langarts)
 ```{r}
 
 #students <- with(q1_reading, tapply(girl_code, reading_pts, mean))
+
+#for every grading period bring it down to a single grade point with average and add Time Variable 
 
 q1_lang_avg <- aggregate(lang_pts ~ girl_code + council, data = q1_langarts, mean)
 
@@ -59,9 +61,10 @@ q3_lang_avg_s <- q3_lang_avg %>%
 
 ```
 
-
-
+# Start Q1 Run
+## Match Q1-Q3
 ```{r}
+#Merge matching girl Code data from Q1 to Q3; rename variables to human readable form; select variables of interest
 q1q3 <- inner_join(q1_lang_avg_s,q3_lang_avg_s, by="girl_code") %>%
     rename(council = council.x) %>%
     rename(baseline = lang_pts.x) %>%
@@ -75,8 +78,10 @@ head(q1q3)
 dim(q1q3)
 ```
 
-
+# No Matches Q1-Q3
 ```{r}
+
+#Find students where there is not match between Q1-Q3; to see if there is a match somewhere else
 no_q1q3 <- anti_join(q1_lang_avg_s, q3_lang_avg_s, by="girl_code")
 
 head(no_q1q3)
@@ -85,7 +90,10 @@ dim(no_q1q3)
 
 ```
 
+# Joins No Matches from Q1-Q3 to Q2
 ```{r}
+
+#Try to match students who did not match in Q1-Q3 to Q2. This will find matches between Q1-Q2 where there was no match between Q1-Q3
 q1q2 <- inner_join(no_q1q3, q2_lang_avg_s, by="girl_code") %>%
     rename(council = council.x) %>%
     rename(baseline = lang_pts.x) %>%
@@ -98,8 +106,12 @@ q1q2 <- inner_join(no_q1q3, q2_lang_avg_s, by="girl_code") %>%
 
 ```
 
+# End Q1 run
+##No matches Q1-Q3-Q2
 
 ```{r}
+
+# Finds cases where there was no match between Q1-Q2 or Q3
 no_matches <- anti_join(no_q1q3, q2_lang_avg_s, by="girl_code")
 
 dim(no_matches)
@@ -107,6 +119,7 @@ dim(no_matches)
 head(no_matches)
 ```
 
+#Matches to Q1
 ```{r}
 q1_run <- rbind(q1q3, q1q2)
 
@@ -116,10 +129,18 @@ head(q1_run)
 
 ```
 
-
+# Start Q2 Run: Match Q2-Q3
 ```{r}
+#Merge matches between Students in Quarter 2 and Quarter 3
 q2q3 <- inner_join(q2_lang_avg_s, q3_lang_avg_s, by="girl_code")
 
+
+
+```
+
+# Q2 Run 
+```{r}
+#Because Q1 is the priority match; this code will select those that are not already in the Q1 run
 q2_run <- anti_join(q2q3, q1_run, by="girl_code")%>%
     rename(council = council.x) %>%
     rename(baseline = lang_pts.x) %>%
@@ -130,16 +151,20 @@ q2_run <- anti_join(q2q3, q1_run, by="girl_code")%>%
 
 
 dim(q2_run)
+```
 
+
+
+# Merge Q1 Run and Q2 Run
+```{r}
+#Merge the Q1 Run and Q2 Run
 q1_q2_run <- rbind(q1_run, q2_run)
 
 dim(q1_q2_run)
 
-
-
-
 ```
 
+# Save data to RDs
 
 ```{r}
 setwd("~/GitHub/getReal20162017/Report Scripts/langarts")
