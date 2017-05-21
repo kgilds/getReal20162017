@@ -164,7 +164,7 @@ dim(q1_q2_run)
 
 ```
 
-# Save data to RDs
+# Save data to RDS
 
 ```{r}
 setwd("~/GitHub/getReal20162017/Report Scripts/langarts")
@@ -187,14 +187,6 @@ q1_q2_run_t
 ```
 
 
-```{r}
-q3_test <- rbind(q1_lang_avg_s, q2_lang_avg_s)
-
-q3_test <- rbind(q3_test,q3_lang_avg_s)
-
-
-head(q3_test)
-```
 
 
 
@@ -206,28 +198,8 @@ head(q3_test)
 
 
 
-```{r eval=FALSE}
-
-lang_arts_comparisons <- inner_join(q2_lang_avg, q1_lang_avg, by="girl_code")
 
 
 
 
-```
-
-
-
-```{r eval=FALSE}
-lang_arts_comparisons <- lang_arts_comparisons %>%
-    rename(Q2_Avg = lang_pts.x)%>%
-    rename(Q1_Avg = lang_pts.y)%>%
-    rename(council = council.x)%>%
-    mutate(diff = Q2_Avg - Q1_Avg)%>%
-    mutate("Data_Source" = "Q2-Q1")
-
-dim(lang_arts_comparisons)
-
-head(lang_arts_comparisons)
-
-```
 
