@@ -98,6 +98,9 @@ hr <- rbind(hr_1, hr_3)
 
 ```
 
+
+
+
 # Academic Engagment
 
 ```{r}
@@ -230,6 +233,38 @@ am_1 <- rbind(am_1, am_2)
 am <- rbind(am_1, am_3)
 
 head(am)
+
+
+```
+
+
+```{r}
+setwd("~/GitHub/getReal20162017/Report Scripts")
+
+
+saveRDS(hr, "hr_2017.Rds")
+saveRDS(ae, "ae_2017.Rds")
+saveRDS(am, "am_2017.Rds")
+
+```
+
+
+
+
+```{r eval=FALSE}
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+
+getReal_db<- dbConnect(SQLite(), dbname="outcome_history.sqlite") #established connection with database
+
+dbWriteTable(conn =getReal_db, name= "hr_history", value= hr, row.names=FALSE, overwrite=FALSE, append= TRUE)
+
+dbWriteTable(conn =getReal_db, name= "ae_history", value= ae, row.names=FALSE, overwrite=FALSE, append= TRUE)
+
+dbWriteTable(conn =getReal_db, name= "am_history", value= am, row.names=FALSE, overwrite=FALSE, append= TRUE)
+
+
+
 
 
 ```
