@@ -1,0 +1,355 @@
+---
+title: "Healthy Relationship Report"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(dplyr)
+library(getREAL)
+library(pander)
+library(knitr)
+library(formattable)
+library(ggplot2)
+library(effsize)
+library(gridExtra)
+library(sqldf)
+library(likert)
+
+
+
+
+hr <-readRDS("hr_2017.rds") #read hr rds file
+
+```
+
+
+```{r}
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
+
+### Make connection with database
+getRealdb<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+```
+
+
+```{r matched_hr, echo=FALSE}
+matched_hr <- hr  # set up for hr success function in narraive
+
+
+```
+
+
+# Counts
+```{r}
+high_l <- hr %>%
+    filter(Post >=4.45) #filter out group of students who finished at high level. I want to nrow it out for narrative sectin.
+
+nrow(high_l)
+
+increased <- hr %>%
+    filter(Post < 4.45, hr.diff > 0) # filter out group of students who did not achieve at high level but increased outcome score.
+
+nrow(increased)
+
+```
+
+```{r}
+
+hr_suc <- hr %>%
+    count(Success)%>%
+    mutate(percent = n/sum(n))
+
+hr_suc$percent <- percent(hr_suc$percent)
+
+kable(hr_suc)
+
+hr_suc_test <- hr_suc %>%
+    filter(Success == TRUE)
+
+
+p_acheived <- hr_suc_test$percent
+
+p_acheived
+
+
+
+```
+
+```{r}
+hr_suc_c <- hr %>%
+    group_by(council)%>%
+    count(Success)%>%
+    mutate(percent = n/sum(n))
+
+hr_suc_c$percent <- percent(hr_suc_c$percent)
+
+kable(hr_suc_c)
+```
+
+
+
+
+# Healthy Relationship Outcome
+
+Relationship skills are a critical component of success in all realms of life. The Healthy Relationship questions measures the behaviors and attitudes of the respondent regarding their relationship skills. Questions that measure healthy relationships skills include the following:
+
+*Healthy Relationship Questions*
+
+1. If I have a serious problem, I have people to talk with.
+
+2. I let people know if they have hurt my feelings.
+
+3. I let my friends know when I think they are good at something.
+
+4. In any relationship - romantic or not - I make it clear when I don't feel comfortable.
+
+### Results
+
+The number of pre and post survey that could be matched is **`r nrow(hr)`**, and the percent of students with a successful outcome is: **`r p_acheived`**
+
+
+The number of students who achieved at a high level is: **`r nrow(high_l)`**
+
+The number of students who did not achieve at high level but increased outcome score: **`r nrow(increased)`**
+
+
+```{r}
+
+
+
+hr_bar_pre <-qplot(hr$Pre >=4.45, geom="bar", ylim=c(0, 300), main="Pre survey Results", xlab="Achievment at High Level")
+
+hr_bar_post <-qplot(hr$Post >=4.45, geom ="bar",ylim=c(0,300), main="Post Survey Results", xlab="Achievment at High Level")
+
+grid.arrange(hr_bar_pre, hr_bar_post, ncol=2)
+
+
+
+```
+
+
+### Change 
+
+```{r}
+
+hr_diff <- hr %>%
+    group_by(Success)%>%
+    summarise(mean= mean(hr.diff)) 
+    
+kable(hr_diff)
+
+```
+
+
+Change in the outcome score from pre to post  is graphically represented below.
+
+```{r hr_change_p, echo=FALSE, fig.path='Figs/'}
+healthy_change_p <- ggplot(hr,(aes(x=hr.diff, y=Success)))
+healthy_change_p + geom_count() + geom_vline(xintercept = 0, col="red") + labs(x="Pre and Post Difference", y="High Level", title="Healthy Relationship Survey Results")
+
+
+```
+
+Test for Difference
+
+Two statistical tests were administered on the matched survey results the Wilcox test and Cohen's D test.
+
+The outcome distributions did not approximate a normal distribution, thus A Wilcox.test was administered and the results show that the difference between the pre and post outcome scores are significant at 05 level.
+
+```{r}
+pander(wilcox.test(hr$Pre, hr$Post, "less"))
+```
+
+
+
+```{r}
+cohen.d(hr$Post, hr$Pre, paired=TRUE)
+```
+
+
+The Cohen D test indicates that the effect was small.
+
+## Cross Validation of Healthy Relationship Skills
+
+Survey results from teachers and parents also provide useful baseline data to gauge life skills. Below are tables and graphs that provide a breakdown of questions on the pre survey from the parent and teacher surveys. 
+
+
+### Pre Parent Survey
+
+
+
+```{r parent_df, echo=FALSE}
+
+pre_parent  <- dbReadTable(getRealdb, "pre_parent_1617")
+
+post_parent <- dbReadTable(getRealdb, "post_parent_1617")
+
+
+```
+
+
+
+**Question 5: She develops positive relationships with her classmates.** 
+
+
+
+```{r pre_parent, echo=FALSE}
+
+pre_parent_hr1 <- pre_parent %>% #select this question
+    select(14)
+
+colnames(pre_parent_hr1) [1] <- "Q5" #change name to Question 5
+
+
+
+post_parent_hr1 <- post_parent %>% #select this question
+    select(14)
+
+colnames(post_parent_hr1) [1] <- "Q5" #change name to Question 5
+
+
+
+
+
+```
+
+
+
+```{r pre_parent_factor, echo=FALSE}
+
+pre_parent_hr1$Q5 <- factor(pre_parent_hr1$Q5, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree/Disagree", "Slightly Agree", "Agree", "Strongly Agree"),ordered = TRUE) #make factor names consistent
+
+
+#str(pre_parent_hr1)
+
+post_parent_hr1$Q5 <- factor(post_parent_hr1$Q5, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree/Disagree", "Slightly Agree", "Agree", "Strongly Agree"),ordered = TRUE) #make factor names consistent
+
+```
+
+
+```{r pre_parent_tbl, echo=FALSE}
+
+pre_parent_tbl_hr2 <- table(pre_parent_hr1) #test q5 
+
+#nrow(pre_parent_hr1) #test to figure how total with testing %s
+
+
+#pander(pre_parent_tbl) 
+
+
+#class(pre_parent_hr1)
+```
+
+
+```{r pre_parent_likert, echo=FALSE}
+
+pre_parent_hr2 <- likert(pre_parent_hr1) #change to likert
+
+kable(summary(pre_parent_hr2))
+
+#summary(pre_parent_hr2) #test
+
+post_parent_hr2 <- likert(post_parent_hr1) #change to likert
+
+kable(summary(post_parent_hr2)) #test
+
+
+
+
+
+
+plot(pre_parent_hr2) + ggtitle("Pre Parent Survey Question 5") +  theme(axis.text = element_text(size = 12, colour="black")) 
+
+plot(post_parent_hr2) + ggtitle("Post Parent Survey Question 5") +  theme(axis.text = element_text(size = 12, colour="black"))
+
+
+```
+
+
+### Teacher Survey
+
+```{r read_database, echo=FALSE}
+
+pre_teacher <- dbReadTable(getRealdb, "pre_teacher_1617") #read database
+
+post_teacher <- dbReadTable(getRealdb, "post_teacher_1617") #read database
+
+```
+
+
+
+
+
+**Question 7: She has developed positive relationships with her classmates.** 
+
+
+```{r makeq7, echo=FALSE}
+
+colnames(pre_teacher) [16] <- "Q7" #change name to q7 for graph
+
+pre_teacher_tbl <- pre_teacher %>% # select variable 16 which is q7.
+    select(16)
+
+
+colnames(post_teacher) [16] <- "Q7" #change name to q7 for graph
+
+post_teacher_tbl <- post_teacher %>% # select variable 16 which is q7.
+    select(16)
+
+
+
+#pre_teacher_tbl_q7 <- table(pre_teacher_tbl$Q7) #test 
+
+#pre_teacher_tbl_q7P <- prop.table(pre_teacher_tbl_q7)
+
+#pander(pre_teacher_tbl_q7P)
+
+#pander(pre_teacher_tbl_q7)  #test teacher post q7
+
+#str(pre_teacher_tbl)
+
+```
+
+
+
+
+
+
+
+
+
+```{r factor_q7, echo=FALSE}
+pre_teacher_tbl$Q7 <- factor(pre_teacher$Q7, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree nor Disagree", "Slightly  Agree", "Agree", "Strongly Agree"),ordered = TRUE)
+
+
+post_teacher_tbl$Q7 <- factor(post_teacher$Q7, levels=c("Strongly Disagree", "Disagree", "Slightly Disagree", "Neither Agree nor Disagree", "Slightly  Agree", "Agree", "Strongly Agree"),ordered = TRUE)
+
+
+
+```
+
+
+
+```{r likert_q7, echo=FALSE }
+#nrow(post_teacher_tbl) #check to determine number of rows; what to divide to get %
+
+pre_teacher_tbl <- likert(pre_teacher_tbl) #likert table
+
+
+kable(summary(pre_teacher_tbl)) #likert summary
+
+post_teacher_tbl <- likert(post_teacher_tbl) #likert table
+
+
+kable(summary(post_teacher_tbl)) #likert summary
+
+
+
+#plot(pre_teacher_tbl)
+
+plot(pre_teacher_tbl) + ggtitle("Pre Teacher Survey Question 7") +  theme(axis.text = element_text(size = 12, colour="black"))
+
+plot(post_teacher_tbl) + ggtitle("Post Teacher Survey Question 7") +  theme(axis.text = element_text(size = 12, colour="black"))
+
+```
