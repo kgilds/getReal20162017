@@ -19,9 +19,6 @@ library(likert)
 
 
 
-
-hr <-readRDS("hr_2017.rds") #read hr rds file
-
 ```
 
 
@@ -30,24 +27,41 @@ setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
 
 ### Make connection with database
 getRealdb<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
+
+hr <- dbReadTable(getRealdb, "hr_history")
+
+hr_17 <- hr %>%
+    filter(Year_Id == "16-17")
 ```
 
+# Matches
 
-```{r matched_hr, echo=FALSE}
-matched_hr <- hr  # set up for hr success function in narraive
+```{r}
+hr_year <- hr %>%
+    group_by(Year_Id)%>%
+    count(Year_Id)
+    
+
+kable(hr_year)
+
+
+
+
+ggplot(hr_year, aes(y=n, x=Year_Id, group=2)) + geom_line() + geom_point() + labs (x="Year", y= "Number of Matches", title="Healthy Relationships:Pre and Post Matches" )
 
 
 ```
+
 
 
 # Counts
 ```{r}
-high_l <- hr %>%
+high_l <- hr_17 %>%
     filter(Post >=4.45) #filter out group of students who finished at high level. I want to nrow it out for narrative sectin.
 
 nrow(high_l)
 
-increased <- hr %>%
+increased <- hr_17 %>%
     filter(Post < 4.45, hr.diff > 0) # filter out group of students who did not achieve at high level but increased outcome score.
 
 nrow(increased)
@@ -56,7 +70,7 @@ nrow(increased)
 
 ```{r}
 
-hr_suc <- hr %>%
+hr_suc <- hr_17 %>%
     count(Success)%>%
     mutate(percent = n/sum(n))
 
@@ -76,13 +90,37 @@ p_acheived
 
 ```
 
+
 ```{r}
-hr_suc_c <- hr %>%
+hr_suc_y <- hr %>%
+    group_by(Year_Id)%>%
+    count(Success)%>%
+    mutate(percent = n/sum(n))
+
+hr_suc_y$percent <- percent(hr_suc_y$percent)
+
+hr_suc_y <- hr_suc_y %>%
+    filter(Success == TRUE)
+
+kable(hr_suc_y)
+
+
+
+
+```
+
+
+
+```{r}
+hr_suc_c <- hr_17 %>%
     group_by(council)%>%
     count(Success)%>%
     mutate(percent = n/sum(n))
 
 hr_suc_c$percent <- percent(hr_suc_c$percent)
+
+hr_suc_c <- hr_suc_c %>%
+    filter(Success == TRUE)
 
 kable(hr_suc_c)
 ```
@@ -106,7 +144,7 @@ Relationship skills are a critical component of success in all realms of life. T
 
 ### Results
 
-The number of pre and post survey that could be matched is **`r nrow(hr)`**, and the percent of students with a successful outcome is: **`r p_acheived`**
+The number of pre and post survey that could be matched is **`r nrow(hr_17)`**, and the percent of students with a successful outcome is: **`r p_acheived`**
 
 
 The number of students who achieved at a high level is: **`r nrow(high_l)`**
@@ -116,11 +154,24 @@ The number of students who did not achieve at high level but increased outcome s
 
 ```{r}
 
+kable(hr_suc)
+
+kable(hr_suc_y)
 
 
-hr_bar_pre <-qplot(hr$Pre >=4.45, geom="bar", ylim=c(0, 300), main="Pre survey Results", xlab="Achievment at High Level")
+kable(hr_suc_c)
 
-hr_bar_post <-qplot(hr$Post >=4.45, geom ="bar",ylim=c(0,300), main="Post Survey Results", xlab="Achievment at High Level")
+```
+
+
+
+```{r}
+
+
+
+hr_bar_pre <-qplot(hr_17$Pre >=4.45, geom="bar", ylim=c(0, 300), main="Pre survey Results", xlab="Achievment at High Level")
+
+hr_bar_post <-qplot(hr_17$Post >=4.45, geom ="bar",ylim=c(0,300), main="Post Survey Results", xlab="Achievment at High Level")
 
 grid.arrange(hr_bar_pre, hr_bar_post, ncol=2)
 
@@ -133,7 +184,7 @@ grid.arrange(hr_bar_pre, hr_bar_post, ncol=2)
 
 ```{r}
 
-hr_diff <- hr %>%
+hr_diff <- hr_17 %>%
     group_by(Success)%>%
     summarise(mean= mean(hr.diff)) 
     
@@ -142,29 +193,40 @@ kable(hr_diff)
 ```
 
 
+```{r}
+hr_diff_y <- hr %>%
+    group_by(Year_Id)%>%
+    summarise(mean= mean(hr.diff)) 
+    
+kable(hr_diff_y)
+
+```
+
+
+
 Change in the outcome score from pre to post  is graphically represented below.
 
 ```{r hr_change_p, echo=FALSE, fig.path='Figs/'}
-healthy_change_p <- ggplot(hr,(aes(x=hr.diff, y=Success)))
-healthy_change_p + geom_count() + geom_vline(xintercept = 0, col="red") + labs(x="Pre and Post Difference", y="High Level", title="Healthy Relationship Survey Results")
+healthy_change_p <- ggplot(hr_17,(aes(x=hr.diff, y=Success)))
+healthy_change_p + geom_count() + geom_vline(xintercept = 0, col="red") + labs(x="Pre and Post Difference", y="High Level", title="Healthy Relationship: Change from Pre to Post Survey")
 
 
 ```
 
-Test for Difference
+### Test for Difference
 
 Two statistical tests were administered on the matched survey results the Wilcox test and Cohen's D test.
 
 The outcome distributions did not approximate a normal distribution, thus A Wilcox.test was administered and the results show that the difference between the pre and post outcome scores are significant at 05 level.
 
 ```{r}
-pander(wilcox.test(hr$Pre, hr$Post, "less"))
+pander(wilcox.test(hr_17$Pre, hr_17$Post, "less"))
 ```
 
 
 
 ```{r}
-cohen.d(hr$Post, hr$Pre, paired=TRUE)
+cohen.d(hr_17$Post, hr_17$Pre, paired=TRUE)
 ```
 
 
