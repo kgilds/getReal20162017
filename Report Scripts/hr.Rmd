@@ -23,12 +23,13 @@ library(likert)
 
 
 ```{r}
-setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
 
+setwd("C:/Users/kevin/Dropbox/GetReal/Data/sqlite")
 ### Make connection with database
 getRealdb<- dbConnect(SQLite(), dbname="outcome_history.sqlite")
 
 hr <- dbReadTable(getRealdb, "hr_history")
+
 
 hr_17 <- hr %>%
     filter(Year_Id == "16-17")
